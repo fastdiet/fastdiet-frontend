@@ -1,0 +1,183 @@
+{
+  "auth": {
+    "login": {
+      "titleParagraph": {
+        "title": "Log in",
+        "paragraph": "Create your ideal diet, easy and fast"
+      },
+      "username": "Username or email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password? ",
+      "recoverLink": "Recover",
+      "notAccount": "Don't have an account? ",
+      "registerLink": "Sign up for free",
+      "google": "Sign in with Google"
+    },
+    "register": {
+      "titleParagraph": {
+        "title": "Sign up for free",
+        "paragraph": "Start your journey toward a healthier life today."
+      },
+      "email": "Email",
+      "password": "Password",
+      "repeatPassword": "Repeat your password",
+      "passwordDetails": "Your password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character",
+      "alreadyAccount": "Already have an account? ",
+      "loginLink": "Log in"
+    },
+    "sendPasswordReset": {
+      "titleParagraph": {
+        "title": "Forgot your password?",
+        "paragraph": "Enter your email to receive a recovery code"
+      },
+      "email": "Email",
+      "backToLogin": "Back to login",
+      "sendCode": "Send code"
+    },
+    "verifyCode": {
+      "titleParagraph": {
+        "title": "Verify code",
+        "paragraph": "Enter the 6-digit code we sent to "
+      },
+      "codePlaceholder": "6-digit code",
+      "noCode": "Didn't receive the code? ",
+      "sendOtherCodeLink": "Request a new code",
+      "verify": "Verify code",
+      "sending": "Sending..."
+    },
+    "resetPassword": {
+      "titleParagraph": {
+        "title": "New password",
+        "paragraph": "Set a new password for your account"
+      },
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "updatePassword": "Update password"
+    },
+    "completeRegister": {
+      "basic": {
+        "titleParagraph": {
+          "title": "Welcome to FastDiet!",
+          "paragraph": "Start by creating your profile to enjoy a personalized experience"
+        },
+        "name": "Name",
+        "username": "Username"
+      },
+      "diet": {
+        "titleParagraph": {
+          "title": "Select your diet type",
+          "paragraph": "Choose your eating style. If you don't follow a specific diet, select 'Balanced'"
+        }
+      },
+      "cuisine": {
+        "titleParagraph": {
+          "title": "What cuisines do you like?",
+          "paragraph": "Select the types of cuisine you prefer to include in your diet"
+        }
+      },
+      "intolerance": {
+        "titleParagraph": {
+          "title": "Do you have any intolerances?",
+          "paragraph": "Select the food you want to avoid in your meal plans"
+        }
+      }
+    }
+  },
+  "constants": {
+    "diets": {
+      "balanced": "Balanced",
+      "vegetarian": "Vegetarian",
+      "vegan": "Vegan",
+      "glutenFree": "Gluten-Free",
+      "pescetarian": "Pescetarian",
+      "ketogenic": "Keto",
+      "lactoVegetarian": "Lacto-Vegetarian",
+      "ovoVegetarian": "Ovo-Vegetarian",
+      "paleo": "Paleo",
+      "primal": "Primal",
+      "lowFodmap": "Low FODMAP",
+      "whole30": "Whole30"
+    },
+    "cuisines": {
+      "european": "European",
+      "american": "American",
+      "asian": "Asian",
+      "african": "African",
+      "mediterranean": "Mediterranean",
+      "latinAmerican": "Latin American",
+      "spanish": "Spanish",
+      "italian": "Italian",
+      "french": "French",
+      "british": "British",
+      "german": "German",
+      "greek": "Greek"
+    },
+    "intolerances": {
+      "dairy": "Dairy",
+      "gluten": "Gluten",
+      "egg": "Egg",
+      "peanut": "Peanut",
+      "treeNut": "Tree nuts",
+      "shellfish": "Shellfish and mollusks",
+      "seafood": "Seafood",
+      "soy": "Soy",
+      "wheat": "Wheat",
+      "sesame": "Sesame",
+      "sulfite": "Sulfites",
+      "grain": "Grains"
+    }
+  },
+  "errorsBackend": {
+    "invalidCredentials": "Incorrect username or password",
+    "userNotVerified": "User not verified. Please check your email",
+    "emailAlreadyRegistered": "Email already registered",
+    "userNotFound": "User not found",
+    "userAlreadyVerified": "User already verified",
+    "invalidEmail": "Invalid email",
+    "emailSendError": "Error sending email. Please try again",
+    "invalidRefreshToken": "Invalid or expired refresh token",
+    "invalidToken": "Invalid token",
+    "verifyEmailBeforeReset": "You must verify your email before resetting the password",
+    "invalidResetCode": "Incorrect or expired reset code",
+    "invalidCode": "Incorrect or expired verification code",
+    "usernameExists": "Username already exists",
+    "dietTypeNotFound": "Diet type not found",
+    "cuisineRegionsNotFound": "Cuisine types not found",
+    "genericError": "An unexpected error occurred",
+    "networkError": "Connection issue. Check your internet",
+    "timeoutError": "The request is taking too long",
+    "serverError": "Server error. Please try again later"
+  },
+  "errorsFrontend": {
+    "selectCuisine": "Please choose at least one type of cuisine",
+    "selectDiet": "Please choose a type of diet",
+    "validations": {
+      "emptyUserid": "Please enter your username or email",
+      "usernameRequired": "Username is required.",
+      "usernameLength": "Username must be between 3 and 20 characters.",
+      "usernameNoSpaces": "Username cannot contain spaces.",
+      "usernameInvalidChars": "Username can only contain letters, numbers, underscores, and hyphens.",
+
+      "emailRequired": "Email is required.",
+      "emailInvalid": "Email is not valid.",
+
+      "passwordRequired": "Password is required.",
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordDigit": "Password must contain at least one number",
+      "passwordSpecialChar": "Password must contain at least one special character",
+
+      "passwordCheckRequired": "Please confirm your password.",
+      "passwordsDontMatch": "Passwords do not match.",
+
+      "confirmationCodeRequired": "Please enter the verification code.",
+      "confirmationCodeInvalid": "The code must be 6 digits.",
+
+      "nameRequired": "Name is required.",
+      "nameLength": "Name must be between 3 and 50 characters."
+    }
+  },
+  "continue": "Continue",
+  "dividerText": "or if you prefer"
+}

@@ -1,36 +1,43 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+// React & React Native Imports
+import { useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useColorScheme } from '@/components/useColorScheme';
+// i18n
+import "@/i18n";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+// Component Imports
+import { LoadingScreen } from "@/components/LoadingScreen";
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+// Hook Imports
+import { useFonts } from "expo-font";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// Utility Imports
+import Toast from "react-native-toast-message";
+
+// Navigation Imports
+import { Slot,} from "expo-router";
+
+// Context Imports
+import { AuthProvider } from "@/context/AuthContext";
+
+// Splash Screen Imports
+import * as SplashScreen from "expo-splash-screen";
+
+// Reanimated Imports
+import "react-native-reanimated";
+
+// Avoid that the loading screen dissappears before
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
+  const [loaded] = useFonts({
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    InterRegular: require("@/assets/fonts/Inter_18pt-Regular.ttf"),
+    InterSemiBold: require("@/assets/fonts/Inter_18pt-SemiBold.ttf"),
+    InterBold: require("@/assets/fonts/Inter_18pt-Bold.ttf"),
+    InterMedium: require("@/assets/fonts/Inter_18pt-Medium.ttf"),
   });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
 
   useEffect(() => {
     if (loaded) {
@@ -39,21 +46,17 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return null;
+    return <LoadingScreen />;
   }
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <SafeAreaView style={{ flex: 1 }}>
+      <AuthProvider>
+          <Slot />
+          <Toast />
+          <StatusBar style="auto" />
+      </AuthProvider>
+    </SafeAreaView>
   );
 }
+

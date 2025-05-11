@@ -1,0 +1,183 @@
+{
+  "auth": {
+    "login": {
+      "titleParagraph": {
+        "title": "Inicia sesión",
+        "paragraph": "Crea tu dieta ideal, fácil y rápido"
+      },
+      "username": "Nombre de usuario o correo",
+      "password": "Contraseña",
+      "forgotPassword": "¿Has olvidado tu contraseña? ",
+      "recoverLink": "Recuperar",
+      "notAccount": "¿No tienes una cuenta? ",
+      "registerLink": "Regístrate gratis",
+      "google": "Inicia sesión con Google"
+    },
+    "register": {
+      "titleParagraph": {
+        "title": "Regístrate gratis",
+        "paragraph": "Empieza hoy a construir tu camino hacia una vida más saludable"
+      },
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "repeatPassword": "Repite tu contraseña",
+      "passwordDetails": "Tu contraseña debe tener al menos 8 caracteres e incluir una mayúscula, una minúscula, un número y un carácter especial",
+      "alreadyAccount": "¿Ya tienes cuenta? ",
+      "loginLink": "Inicia sesión"
+    },
+    "sendPasswordReset":{
+      "titleParagraph":{
+        "title": "¿Olvidaste tu contraseña?",
+        "paragraph": "Ingresa tu correo electrónico para recibir un código de recuperación"
+      },
+      "email": "Correo electrónico",
+      "backToLogin": "Volver al inicio de sesión",
+      "sendCode": "Enviar código"
+    },
+    "verifyCode": {
+      "titleParagraph": {
+        "title": "Verificar código",
+        "paragraph": "Ingresa el código de 6 dígitos que enviamos a "
+      },
+      "codePlaceholder": "Código de 6 dígitos",
+      "noCode": "¿No recibiste el código? ",
+      "sendOtherCodeLink": "Solicita otro",
+      "verify": "Verificar código",
+      "sending": "Enviando..."
+    },
+    "resetPassword": {
+      "titleParagraph": {
+        "title": "Nueva contraseña",
+        "paragraph": "Establece una nueva contraseña para tu cuenta"
+      },
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "updatePassword": "Actualizar contraseña"
+    },
+    "completeRegister":{
+      "basic": {
+        "titleParagraph": {
+          "title": "¡Bienvenido a FastDiet!",
+          "paragraph" : "Empieza creando tu perfil para disfrutar de una experiencia personalizada"
+        },
+        "name": "Nombre",
+        "username": "Nombre de usuario"
+      },
+      "diet": {
+        "titleParagraph": {
+          "title": "Selecciona tu tipo de dieta",
+          "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
+        }
+      },
+      "cuisine":{
+        "titleParagraph": {
+          "title": "¿Qué cocinas te gustan?",
+          "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
+        }
+      },
+      "intolerance":{
+        "titleParagraph": {
+          "title": "¿Tienes alguna intolerancia?",
+          "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
+        }
+      }
+    }
+  },
+  "constants": {
+    "diets": {
+      "balanced": "Equilibrada",
+      "vegetarian": "Vegetariana",
+      "vegan": "Vegana",
+      "glutenFree": "Sin Gluten",
+      "pescetarian": "Pescetariana",
+      "ketogenic": "Keto",
+      "lactoVegetarian": "Lacto-Vegetariana",
+      "ovoVegetarian": "Ovo-Vegetariana",
+      "paleo": "Paleo",
+      "primal": "Primal",
+      "lowFodmap": "Baja en FODMAP",
+      "whole30": "Whole30"
+    },
+    "cuisines":{
+      "european": "Europea",
+      "american": "Americana",
+      "asian": "Asiática",
+      "african": "Africana",
+      "mediterranean": "Mediterránea",
+      "latinAmerican": "Latinoamericana",
+      "spanish": "Española",
+      "italian": "Italiana",
+      "french": "Francesa",
+      "british": "Británica",
+      "german": "Alemana",
+      "greek": "Griega"
+    },
+    "intolerances":{
+      "dairy": "Lácteos",
+      "gluten": "Gluten",
+      "egg": "Huevo",
+      "peanut": "Cacahuete",
+      "treeNut": "Frutos secos",
+      "shellfish": "Mariscos y moluscos",
+      "seafood": "Pescados",
+      "soy": "Soja",
+      "wheat": "Trigo",
+      "sesame": "Sésamo",
+      "sulfite": "Sulfitos",
+      "grain": "Granos"
+    }
+  },
+  "errorsBackend": {
+    "invalidCredentials": "Usuario o contraseña incorrectos",
+    "userNotVerified": "Usuario no verificado. Por favor, verifica tu email",
+    "emailAlreadyRegistered": "El email ya está registrado",
+    "userNotFound": "Usuario no encontrado",
+    "userAlreadyVerified": "El usuario ya está verificado",
+    "invalidEmail": "Email no válido",
+    "emailSendError": "Error al enviar el email. Inténtalo de nuevo",
+    "invalidRefreshToken": "Token de refresco inválido o expirado",
+    "invalidToken": "Token inválido",
+    "verifyEmailBeforeReset": "Debes verificar tu email antes de restablecer la contraseña",
+    "invalidResetCode": "Código de restablecimiento incorrecto o expirado",
+    "invalidCode": "Código de verificación incorrecto o expirado",
+    "usernameExists": "El nombre de usuario ya existe",
+    "dietTypeNotFound": "Tipo de dieta no encontrado",
+    "cuisineRegionsNotFound": "Tipos de cocina no encontrados",
+    "genericError": "Ocurrió un error inesperado",
+    "networkError": "Problema de conexión. Verifica tu internet",
+    "timeoutError": "La solicitud está tardando demasiado",
+    "serverError": "Error del servidor. Inténtalo más tarde"
+  },
+  "errorsFrontend":{
+    "selectCuisine": "Por favor, elige al menos un tipo de cocina",
+    "selectDiet": "Por favor, elige un tipo de dieta",
+    "validations": {
+      "emptyUserid": "Por favor, ingresa tu usuario o correo",
+      "usernameRequired": "El nombre de usuario es obligatorio.",
+      "usernameLength": "El nombre de usuario debe tener entre 3 y 20 caracteres.",
+      "usernameNoSpaces": "El nombre de usuario no puede contener espacios.",
+      "usernameInvalidChars": "El nombre de usuario solo puede contener letras, números, guiones bajos y guiones.",
+
+      "emailRequired": "El correo electrónico es obligatorio.",
+      "emailInvalid": "El correo electrónico no es válido.",
+
+      "passwordRequired": "La contraseña es obligatoria.",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+      "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+      "passwordDigit": "La contraseña debe contener al menos un número",
+      "passwordSpecialChar": "La contraseña debe contener al menos un carácter especial",
+
+      "passwordCheckRequired": "Confirma tu contraseña.",
+      "passwordsDontMatch": "Las contraseñas no coinciden.",
+
+      "confirmationCodeRequired": "Por favor, ingresa el código de verificación.",
+      "confirmationCodeInvalid": "El código debe tener 6 dígitos.",
+
+      "nameRequired": "El nombre es obligatorio.",
+      "nameLength": "El nombre debe tener entre 3 y 50 caracteres."
+    }
+  },
+  "continue": "Continuar",
+  "dividerText": "o si lo prefieres"
+}
