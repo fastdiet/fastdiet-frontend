@@ -1,5 +1,5 @@
 // React & React Native Imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -26,6 +26,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 // Reanimated Imports
 import "react-native-reanimated";
+import initI18n from "@/i18n";
 
 // Avoid that the loading screen dissappears before
 SplashScreen.preventAutoHideAsync();
@@ -39,13 +40,19 @@ export default function RootLayout() {
     InterMedium: require("@/assets/fonts/Inter_18pt-Medium.ttf"),
   });
 
+  const [i18nReady, setI18nReady] = useState(false);
+  
+  useEffect(() => {
+    initI18n().then(() => setI18nReady(true));
+  }, []);
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, i18nReady]);
 
-  if (!loaded) {
+  if (!loaded || !i18nReady) {
     return <LoadingScreen />;
   }
 

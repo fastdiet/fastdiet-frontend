@@ -4,33 +4,37 @@ import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import translationEn from "@/i18n/locales/en-US/translation.json";
 import translationEs from "@/i18n/locales/es-ES/translation.json";
-import { Platform } from "react-native";
 
 const resources = {
   "es-ES": { translation: translationEs },
   "en-US": { translation: translationEn },
 };
 
-const getSavedLanguage = async (): Promise<string | null> => {
-  if (
-    Platform.OS === "web"
-  ) {
-    return Localization.locale;
-    //return window.localStorage.getItem("language");
-  } else {
-    return await AsyncStorage.getItem("language");
+const normalizeLanguageCode = (locale: string): string => {
+  if (locale.startsWith("es")) return "es-ES";
+  if (locale.startsWith("en")) return "en-US";
+  return "es-ES";
+};
+
+const getSavedLanguage = async (): Promise<string> => {
+  try {
+    const storedLang = await AsyncStorage.getItem("language");
+    if (storedLang) return normalizeLanguageCode(storedLang);
+
+    const systemLang = Localization.getLocales()[0]?.languageTag || "es-ES";
+    const normalizedLang = normalizeLanguageCode(systemLang);
+    await AsyncStorage.setItem("language", normalizedLang);
+    return normalizedLang;
+  } catch (error) {
+    console.error("Error getting saved language:", error);
+    return "es-ES";
   }
 };
 
 const initI18n = async () => {
-  let savedLanguage = await getSavedLanguage();
-
-  if (!savedLanguage) {
-    savedLanguage = Localization.locale;
-  }
+  const savedLanguage = await getSavedLanguage();
 
   i18n.use(initReactI18next).init({
-    compatibilityJSON: "v4",
     resources,
     lng: savedLanguage,
     fallbackLng: "es-ES",
@@ -39,7 +43,4 @@ const initI18n = async () => {
     },
   });
 };
-
-initI18n();
-
-export default i18n;
+export default initI18n;
