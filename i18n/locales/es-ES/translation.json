@@ -61,7 +61,23 @@
           "paragraph" : "Empieza creando tu perfil para disfrutar de una experiencia personalizada"
         },
         "name": "Nombre",
-        "username": "Nombre de usuario"
+        "username": "Nombre de usuario",
+        "gender": "Sexo",
+        "age": "Edad",
+        "weight": "Peso (kg)",
+        "height": "Altura (cm)"
+      },
+      "activity": {
+        "titleParagraph": {
+          "title": "Elige tu nivel de actividad física",
+          "paragraph": "Esto nos ayudará a calcular mejor tus necesidades calóricas diarias"
+        }
+      },
+      "goal": {
+        "titleParagraph": {
+          "title": "¿Cuál es tu objetivo?",
+          "paragraph": "Elige tu meta para ajustar tu plan nutricional"
+        }
       },
       "diet": {
         "titleParagraph": {
@@ -81,6 +97,42 @@
           "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
         }
       }
+    }
+  },
+   "activity": {
+    "sedentary": {
+      "title": "Sedentario",
+      "description": "Poco o ningún ejercicio físico, trabajo de oficina, vida mayormente inactiva."
+    },
+    "light": {
+      "title": "Actividad ligera",
+      "description": "Ejercicio ligero 1-3 días por semana o trabajo de baja intensidad física."
+    },
+    "moderate": {
+      "title": "Actividad moderada",
+      "description": "Ejercicio moderado 3-5 días por semana o un trabajo algo activo."
+    },
+    "high": {
+      "title": "Actividad alta",
+      "description": "Ejercicio intenso 6-7 días por semana o trabajo físicamente exigente."
+    },
+    "very_high": {
+      "title": "Actividad muy alta",
+      "description": "Entrenamientos muy intensos, atletas profesionales o dos sesiones de ejercicio al día."
+    }
+  },
+  "goal": {
+    "lose_weight": {
+      "title": "Perder peso",
+      "description": "Reducir la grasa corporal manteniendo masa muscular."
+    },
+    "maintain_weight": {
+      "title": "Mantener peso",
+      "description": "Conservar tu peso actual de forma saludable."
+    },
+    "gain_weight": {
+      "title": "Ganar masa muscular",
+      "description": "Aumentar peso con enfoque en masa muscular."
     }
   },
   "constants": {
@@ -151,6 +203,8 @@
   "errorsFrontend":{
     "selectCuisine": "Por favor, elige al menos un tipo de cocina",
     "selectDiet": "Por favor, elige un tipo de dieta",
+    "selectActivity": "Selecciona un nivel de actividad física",
+    "selectGoal": "Selecciona un objetivo",
     "validations": {
       "emptyUserid": "Por favor, ingresa tu usuario o correo",
       "usernameRequired": "El nombre de usuario es obligatorio.",
@@ -175,9 +229,42 @@
       "confirmationCodeInvalid": "El código debe tener 6 dígitos.",
 
       "nameRequired": "El nombre es obligatorio.",
-      "nameLength": "El nombre debe tener entre 3 y 50 caracteres."
+      "nameLength": "El nombre debe tener entre 3 y 50 caracteres.",
+
+      "ageRequired": "La edad es obligatoria.",
+      "ageInvalid": "Introduce una edad válida",
+      "weightRequired": "El peso es obligatorio.",
+      "weightInvalid": "Introduce un peso válido",
+      "heightRequired": "La altura es obligatoria.",
+      "heightInvalid": "Introduce una altura válida en cm",
+      "genderRequired": "Selecciona un sexo."
+    }
+  },
+  "index": {
+    "noMenu": {
+      "welcome": "¡Hola, {{name}}! 👋",
+      "subtitle": "Es hora de organizar tu alimentación",
+      "generateMenu": "Genera tu menú semanal",
+      "checkPreferences": "Revisa tus preferencias",
+      "featuresTitle": "Beneficios de tu menú personalizado",
+      "feature1": {
+        "title": "Ahorra tiempo",
+        "description": "Planificación automática basada en tus preferencias"
+      },
+      "feature2": {
+        "title": "Nutrición equilibrada",
+        "description": "Recetas adaptadas a tus necesidades nutricionales"
+      },
+      "feature3": {
+        "title": "Variedad garantizada",
+        "description": "Nunca más te quedes sin ideas para cocinar"
+      },
+      "tip": "Para obtener los mejores resultados, asegúrate de mantener tu perfil actualizado."
+
     }
   },
   "continue": "Continuar",
-  "dividerText": "o si lo prefieres"
+  "dividerText": "o si lo prefieres",
+  "male": "Hombre",
+  "female": "Mujer"
 }

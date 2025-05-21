@@ -34,7 +34,9 @@ interface AuthContextType {
   logout: () => void;
   login: (username: string, password: string) => Promise<ApiResponse>;
   register: (email: string, password: string) => Promise<ApiResponse>;
-  completeBasicInfo: (username: string, name: string) => Promise<ApiResponse>;
+  completeBasicInfo: (username: string, name: string, gender: string, age: number, weight: number, height: number) => Promise<ApiResponse>;
+  selectActivity: (activityLevel: string) => Promise<ApiResponse>;
+  selectGoal: (goal: string) => Promise<ApiResponse>;
   selectDiet: (diet_type_id: number) => Promise<ApiResponse>;
   selectCuisines: (cuisine_ids: number[]) => Promise<ApiResponse>;
   selectIntolerances: (intolerance_ids: number[]) => Promise<ApiResponse>;
@@ -171,13 +173,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const completeBasicInfo = async (
     username: string,
-    name: string
+    name: string,
+    gender: string,
+    age: number,
+    weight: number,
+    height: number
   ) => {
     try {
-      const updatedUser = { ...user, username, name };
+      const updatedUser = { ...user, username, name , gender, age, weight, height };
       await api.put(`/users/`, updatedUser);
       await saveUser(updatedUser);
       setUser(updatedUser);
+      return { success: true, error: "" };
+    } catch (error) {
+      return { success: false, error: handleApiError(error) };
+    }
+  };
+
+  const selectActivity = async (activity: string) => {
+    try {
+      const res = await api.patch("/user_preferences/activity-level", {activity_level: activity});
+      setUserPreferences(res.data);
+      saveUserPreferences(res.data);
+      return { success: true, error: "" };
+    } catch (error) {
+      return { success: false, error: handleApiError(error) };
+    }
+  };
+
+  const selectGoal = async (goal: string) => {
+    try {
+      const res = await api.patch("/user_preferences/goal", {goal: goal});
+      setUserPreferences(res.data);
+      saveUserPreferences(res.data);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -298,6 +326,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     login,
     register,
     completeBasicInfo,
+    selectActivity,
+    selectGoal,
     selectDiet,
     selectCuisines,
     selectIntolerances,

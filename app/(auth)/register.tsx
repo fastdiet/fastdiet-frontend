@@ -1,5 +1,5 @@
 // React & React Native Imports
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, ImageBackground, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -65,6 +65,7 @@ const RegisterScreen = () => {
       return;
     }
     router.push(`/verifyEmail`);
+    setLoading(false);
   };
 
   return (

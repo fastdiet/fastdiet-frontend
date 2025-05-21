@@ -17,7 +17,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { getDietOptions } from "@/constants/dietConstants";
 
 
-
 export default function SelectDietScreen() {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();

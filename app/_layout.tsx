@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// i18n
-import "@/i18n";
 
 // Component Imports
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -26,7 +24,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 // Reanimated Imports
 import "react-native-reanimated";
-import initI18n from "@/i18n";
+import {initI18n} from "@/i18n";
 
 // Avoid that the loading screen dissappears before
 SplashScreen.preventAutoHideAsync();

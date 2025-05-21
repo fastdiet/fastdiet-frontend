@@ -6,8 +6,8 @@ export default interface UserPreferences {
   vegan?: boolean;
   gluten_free?: boolean;
   dairy_free?: boolean;
-  very_healthy?: boolean;
-  cheap?: boolean;
+  activity_level?: string;
+  goal?: string;
   max_ready_min?: number;
   servings?: number;
   calories_goal?: number;

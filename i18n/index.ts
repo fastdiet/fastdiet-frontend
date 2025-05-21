@@ -31,7 +31,7 @@ const getSavedLanguage = async (): Promise<string> => {
   }
 };
 
-const initI18n = async () => {
+export const initI18n = async () => {
   const savedLanguage = await getSavedLanguage();
 
   i18n.use(initReactI18next).init({
@@ -43,4 +43,4 @@ const initI18n = async () => {
     },
   });
 };
-export default initI18n;
+export default i18n;
