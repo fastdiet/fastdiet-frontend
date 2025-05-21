@@ -62,7 +62,7 @@ const LoginForm = () => {
       setLoading(false); 
       return;
     }
-    router.dismissAll();
+    
     router.replace("/"); 
   };
 

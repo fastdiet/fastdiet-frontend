@@ -1,3 +1,4 @@
+import { WeeklyMenu } from "@/context/MenuContext";
 import UserPreferences from "@/models/user_preferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -17,3 +18,20 @@ export const getUserPreferences = async () => {
     throw new Error(error);
   }
 };
+
+export const saveMenu = async (menu: WeeklyMenu) => {
+  try {
+    await AsyncStorage.setItem("menu", JSON.stringify(menu));
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
+
+export const getMenu = async () => {
+  try {
+    const cachedMenu = await AsyncStorage.getItem("menu");
+    return cachedMenu ? JSON.parse(cachedMenu) : null;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}

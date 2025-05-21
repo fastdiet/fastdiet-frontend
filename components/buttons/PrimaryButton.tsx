@@ -66,8 +66,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.colors.neutral[100],
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 17,
   },
   disabledText: {
     color: Colors.colors.gray[400],
