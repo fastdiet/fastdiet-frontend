@@ -9,11 +9,19 @@ import ViewForm from "@/components/views/ViewForm";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import ErrorText from "@/components/text/ErrorText";
+
+// Hooks imports
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
+
+// Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { useAuth } from "@/hooks/useAuth";
+
+// Constants imports
 import { getCuisineOptions } from "@/constants/cuisineConstants";
+
+// Model imports
 import Cuisine from "@/models/cuisine";
 
 export default function SelectCuisineScreen() {
@@ -21,6 +29,7 @@ export default function SelectCuisineScreen() {
   const { t } = useTranslation();
   const [selectedCuisineIds, setSelectedCuisineIds] = useState<number[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
+
   const cuisineOptions = getCuisineOptions(t);
   const { selectCuisines } = useAuth();
   const router = useRouter();

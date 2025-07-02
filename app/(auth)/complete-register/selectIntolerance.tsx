@@ -10,11 +10,18 @@ import ViewForm from "@/components/views/ViewForm";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import ErrorText from "@/components/text/ErrorText";
+
+//Hooks imports
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
+
+//Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { useAuth } from "@/hooks/useAuth";
+
+//Constants imports
 import { getIntoleranceOptions } from "@/constants/intoleranceConstants";
+
 
 export default function SelectIntoleranceScreen() {
   const [loading, setLoading] = useState(false);
@@ -42,7 +49,7 @@ export default function SelectIntoleranceScreen() {
       return;
     }
 
-    router.replace("/");
+    router.replace("/menu/");
   };
 
   return (
@@ -71,10 +78,7 @@ export default function SelectIntoleranceScreen() {
                       onPress={() => toggleIntolerance(item.id)}
                     >
                       <Text
-                        style={[
-                          globalStyles.smallBodySemiBold,
-                          styles.chipText,
-                        ]}
+                        style={[globalStyles.smallBodySemiBold, styles.chipText,]}
                       >
                         {item.name} {item.emoji}
                       </Text>
@@ -103,11 +107,6 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 24,
     width: "100%",
-  },
-  columnWrapper: {
-    justifyContent: "flex-start",
-    gap: 12,
-    marginBottom: 12,
   },
   chip: {
     paddingVertical: 8,

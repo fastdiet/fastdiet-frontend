@@ -1,6 +1,6 @@
 // React & React Native Imports
-import { FlatList, Text, View, StyleSheet, ScrollView } from "react-native";
-import { act, useMemo, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
 // Component Imports
@@ -10,9 +10,13 @@ import TitleParagraph from "@/components/text/TitleParagraph";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import StyledRadioButtonList from "@/components/forms/StyledRadioButtonList";
 import ErrorText from "@/components/text/ErrorText";
+
+// Hooks imports
 import { useTranslation } from "react-i18next";
-import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/hooks/useAuth";
+
+// Style imports
+import { Colors } from "@/constants/Colors";
 
 
 export default function SelectActivityScreen() {

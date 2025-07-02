@@ -9,11 +9,19 @@ import ViewForm from "@/components/views/ViewForm";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import ErrorText from "@/components/text/ErrorText";
+
+// Hooks Imports
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
+
+// Model Imports
 import Diet from "@/models/diet";
+
+// Style Imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { useAuth } from "@/hooks/useAuth";
+
+// Constants Imports
 import { getDietOptions } from "@/constants/dietConstants";
 
 
@@ -22,6 +30,7 @@ export default function SelectDietScreen() {
   const { t } = useTranslation();
   const [selectedDietId, setSelectedDietId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  
   const dietOptions = getDietOptions(t);
   const { selectDiet } = useAuth();
   const scrollRef = useRef<ScrollView>(null);

@@ -10,19 +10,18 @@ import StyledTextInput from "@/components/forms/StyledTextInput";
 import ErrorText from "@/components/text/ErrorText";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PaddingView from "@/components/views/PaddingView";
-import ViewContentContinue from "@/components/views/ViewForContinueButton";
+import CustomRadioGroup from "@/components/forms/CustomRadioGroup";
+import ViewInputs from "@/components/views/ViewInputs";
+import ViewForm from "@/components/views/ViewForm";
 
 // Hook Imports
 import { useAuth } from "@/hooks/useAuth";
 import { useFormValidation } from "@/hooks/useFormValidation";
-
-// Utility Imports
-import { useValidations} from "@/utils/validations";
+import { useValidations } from "@/hooks/useValidations";
 import { useTranslation } from "react-i18next";
+
+// Style Imports
 import globalStyles from "@/styles/global";
-import CustomRadioGroup from "@/components/forms/CustomRadioGroup";
-import ViewInputs from "@/components/views/ViewInputs";
-import ViewForm from "@/components/views/ViewForm";
 import { Colors } from "@/constants/Colors";
 
 export default function BasicInfoScreen() {
@@ -33,11 +32,13 @@ export default function BasicInfoScreen() {
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const validations = useValidations();
+
   const genderOptions = useMemo(() => ([
     {
       id: '1',
@@ -72,7 +73,6 @@ export default function BasicInfoScreen() {
 
   const handleSaveProfile = async () => {
     setErrorMessage("");
-    console.log("gender", selectedGender);
     const isValid = validateForm({ name, username, gender: selectedGender, age, weight, height });
     if (!isValid) return;
     
@@ -187,7 +187,7 @@ export default function BasicInfoScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 120, // deja espacio para que no tape el botón
+    paddingBottom: 120,
   },
   fixedButton: {
     position: "absolute",

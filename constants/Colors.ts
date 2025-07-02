@@ -6,6 +6,7 @@ export const Colors = {
       300: "#52d689", 
       400: "#8beab3",
       500: "#bef4d4",
+      600: "#e0fbee"
     },
     success: {
       100: "#4BD395",

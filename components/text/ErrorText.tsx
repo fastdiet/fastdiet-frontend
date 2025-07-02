@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-// Utility Imports
+// Style Imports
 import { Colors } from '@/constants/Colors';
 
 interface ErrorTextProps {

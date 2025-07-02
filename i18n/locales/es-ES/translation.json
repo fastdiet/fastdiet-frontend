@@ -177,6 +177,30 @@
       "sesame": "Sésamo",
       "sulfite": "Sulfitos",
       "grain": "Granos"
+    },
+    "days": {
+      "0": "Lunes",
+      "1": "Martes",
+      "2": "Miércoles",
+      "3": "Jueves",
+      "4": "Viernes",
+      "5": "Sábado",
+      "6": "Domingo",
+      "today": "Hoy"
+    },
+    "daysShort": {
+      "0": "Lun",
+      "1": "Mar",
+      "2": "Mié",
+      "3": "Jue",
+      "4": "Vie",
+      "5": "Sáb",
+      "6": "Dom"
+    },
+    "meals":{
+      "breakfast": "Desayuno",
+      "lunch": "Almuerzo",
+      "dinner": "Cena"
     }
   },
   "errorsBackend": {
@@ -259,12 +283,94 @@
         "title": "Variedad garantizada",
         "description": "Nunca más te quedes sin ideas para cocinar"
       },
-      "tip": "Para obtener los mejores resultados, asegúrate de mantener tu perfil actualizado."
-
+      "tip": "Para obtener los mejores resultados, asegúrate de mantener tu perfil actualizado.",
+      "loading": {
+        "preparingKitchen": "Preparando la cocina...",
+        "sharpeningKnives": "Afilando los cuchillos...",
+        "cookingIdeas": "Cocinando tus ideas...",
+        "creatingMenu": "Creando tu menú personalizado...",
+        "platingOptions": "Emplatando tus opciones...",
+        "almostReady": "¡Tu menú está casi listo!"
+      }
+    },
+    "menu":{
+      "title" : "Menú Semanal",
+      "subtitle": "Aquí tienes tu plan para la semana",
+      "noMealsForDay": "No hay comidas",
+      "day": {
+        "noBreakfastPlanned": "No hay desayuno planificado",
+        "noLunchPlanned": "No hay almuerzo planificado",
+        "noDinnerPlanned": "No hay cena planificada"
+      },
+      "error": {
+        "invalidDayTitle": "Día no válido",
+        "invalidDayMessage": "El día seleccionado no es válido o no se pudo cargar el menú.",
+        "goBack": "Volver al menú"
+      },
+      "loading": "Cargando tu menú...",
+      "recipe": {
+        "detailTitleFallback": "Detalles de Receta",
+        "loading": "Cargando receta...",
+        "notFoundTitle": "Receta No Encontrada",
+        "notFound": "¡Vaya! No hemos podido encontrar la receta",
+        "couldNotLoad": "Hubo un problema al cargar los detalles. Por favor, inténtalo de nuevo.",
+        "ingredientsSectionTitle": "Ingredientes",
+        "instructionsSectionTitle": "Preparación",
+        "equipmentSectionTitle": "Equipamiento Necesario",
+        "nutritionalInfoSectionTitle": "Información Nutricional",
+        "showDetailedNutrients": "Mostrar todos los nutrientes",
+        "hideDetailedNutrients": "Ocultar nutrientes detallados"
+      }
     }
+  },
+  "units": {
+    "minutesShort": "min",
+    "kcal": "kcal",
+    "servings": "porciones",
+    "serving": "porción"
   },
   "continue": "Continuar",
   "dividerText": "o si lo prefieres",
   "male": "Hombre",
-  "female": "Mujer"
+  "female": "Mujer",
+  "retry": "Reintentar",
+  "backToMenu": "Volver al Menú",
+  "seeMore": "Ver más",
+  "seeLess": "Ver menos",
+  "nutrients": {
+    "calories": "Calorías",
+    "protein": "Proteínas",
+    "fat": "Grasas",
+    "saturatedfat": "Grasas Saturadas",
+    "carbohydrates": "Carbohidratos",
+    "netcarbohydrates": "Carbohidratos Netos",
+    "sugar": "Azúcares",
+    "cholesterol": "Colesterol",
+    "sodium": "Sodio",
+    "alcohol": "Alcohol",
+    "alcohol%": "Alcohol %",
+    "manganese": "Manganeso",
+    "phosphorus": "Fósforo",
+    "vitaminb1": "Vitamina B1 (Tiamina)",
+    "magnesium": "Magnesio",
+    "fiber": "Fibra",
+    "selenium": "Selenio",
+    "copper": "Cobre",
+    "iron": "Hierro",
+    "zinc": "Zinc",
+    "vitaminb6": "Vitamina B6",
+    "calcium": "Calcio",
+    "potassium": "Potasio",
+    "folate": "Folato (Vitamina B9)",
+    "vitaminb2": "Vitamina B2 (Riboflavina)",
+    "vitaminb3": "Vitamina B3 (Niacina)",
+    "vitamink": "Vitamina K",
+    "vitaminc": "Vitamina C",
+    "vitamine": "Vitamina E",
+    "vitaminb5": "Vitamina B5 (Ácido Pantoténico)",
+    "vitamina": "Vitamina A",
+    "vitaminb12": "Vitamina B12",
+    "vitamind": "Vitamina D",
+    "caffeine": "Cafeína"
+  }
 }

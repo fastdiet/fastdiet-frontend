@@ -1,24 +1,32 @@
 // React & React Native Imports
 import React, { useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 
 // Component Imports
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import PaddingView from '@/components/views/PaddingView';
+import TitleParagraph from '@/components/text/TitleParagraph';
+import FullScreenLoading from '@/components/FullScreenLoading';
+import ErrorText from '@/components/text/ErrorText';
 
 // Hook Imports
 import { useAuth } from '@/hooks/useAuth';
+import { useMenu } from '@/hooks/useMenu';
+import { useTranslation } from 'react-i18next';
 
 // Style Imports
 import globalStyles from '@/styles/global';
-import TitleParagraph from '@/components/text/TitleParagraph';
-import { useTranslation } from 'react-i18next';
-import ErrorText from '@/components/text/ErrorText';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 
-const FeatureItem = ({ icon, title, description }) => (
+
+
+const FeatureItem = ({icon, title, description}: {
+  icon: any;
+  title: string;
+  description: string;
+})=> (
   <View style={styles.featureContainer}>
     <View style={styles.iconContainer}>
       <FontAwesome 
@@ -38,7 +46,11 @@ const FeatureItem = ({ icon, title, description }) => (
   </View>
 );
 
-const SecondaryButton = ({ title, onPress, icon }) => (
+const SecondaryButton = ({title, onPress, icon,}: {
+  title: string;
+  onPress: () => void;
+  icon?: any;
+}) => (
   <TouchableOpacity 
     style={styles.secondaryButton}
     onPress={onPress}
@@ -63,6 +75,22 @@ const NoCurrentMenuIndex = () => {
   const { user} = useAuth();
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState("");
+  const {generateMenu}  = useMenu();
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateMenu = async () => {
+    console.log("Generar menu");
+    setIsGenerating(true);
+    setErrorMessage("");
+    const {success, error} = await generateMenu();
+    if(!success){
+      setErrorMessage(error);
+      setIsGenerating(false);
+      return;
+    }
+
+    setIsGenerating(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -70,14 +98,13 @@ const NoCurrentMenuIndex = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1}}
         >
-            
             <PaddingView>
                     {errorMessage ? <ErrorText text={errorMessage} /> : null}
                     <TitleParagraph
-                    title={t('index.noMenu.welcome', { name: user?.name})}
-                    paragraph={t('index.noMenu.subtitle')}
-                    titleStyle={{ fontSize: 28, lineHeight: 34}}
-                    containerStyle={{ marginTop: 16 }}
+                      title={t('index.noMenu.welcome', { name: user?.name})}
+                      paragraph={t('index.noMenu.subtitle')}
+                      titleStyle={{ fontSize: 28, lineHeight: 34}}
+                      containerStyle={{ marginTop: 16 }}
                     />
                 <View style={styles.featuresCard}>
                     <Text style={[globalStyles.subtitle, { color: Colors.colors.primary[100], marginBottom: 10 }]}>
@@ -105,8 +132,8 @@ const NoCurrentMenuIndex = () => {
                 <View style={styles.actionsContainer}>
                     <PrimaryButton 
                     title={t('index.noMenu.generateMenu')}
-                    onPress={() => console.log("Generar dieta")}
-                    style={styles.primaryButtonStyle}
+                    onPress={handleGenerateMenu}
+                    style={styles.primaryButton}
                     />
                     
                     <SecondaryButton 
@@ -131,6 +158,7 @@ const NoCurrentMenuIndex = () => {
                 <View style={{ height: 24 }} />
             </PaddingView>
       </ScrollView>
+      <FullScreenLoading visible={isGenerating} />
     </View>
   );
 };
@@ -140,15 +168,7 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: Colors.colors.neutral[100] 
   },
-  heroContainer: { 
-    alignItems: 'center', 
-    marginVertical: 16 
-  },
-  heroImage: { 
-    width: 200, 
-    height: 160, 
-    marginBottom: 16 
-  },
+  
   featuresCard: { 
     marginTop: 32,
     marginVertical: 24,
@@ -173,7 +193,7 @@ const styles = StyleSheet.create({
     marginTop: 8, 
     marginBottom: 24
   },
-  primaryButtonStyle: { 
+  primaryButton: { 
     paddingVertical: 16,
     marginBottom: 12,
   },
