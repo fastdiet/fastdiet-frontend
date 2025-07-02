@@ -1,5 +1,5 @@
 // React & React Native Imports
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -12,15 +12,15 @@ import ViewInputs from "@/components/views/ViewInputs";
 import PaddingView from "@/components/views/PaddingView";
 import ViewContentContinue from "@/components/views/ViewForContinueButton";
 import ViewForm from "@/components/views/ViewForm";
+import PasswordInput from "@/components/forms/PasswordInput";
 
 // Hook Imports
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
-
-// Utility Imports
-import { useValidations } from "@/utils/validations";
-import PasswordInput from "@/components/forms/PasswordInput";
 import { useTranslation } from "react-i18next";
+
+
 
 export default function ResetPasswordScreen() {
   const router = useRouter();

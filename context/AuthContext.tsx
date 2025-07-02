@@ -14,7 +14,7 @@ import {
 } from "@/utils/secureTokens";
 import api from "@/utils/api";
 import { handleApiError } from "@/utils/errorHandler";
-import { getUserPreferences, saveUserPreferences } from "@/utils/asyncStorage";
+import { getUserPreferences, saveMenu, saveUserPreferences } from "@/utils/asyncStorage";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -165,7 +165,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       saveUser(null),
       saveUserPreferences(null),
       deleteAccessToken(),
-      deleteRefreshToken()
+      deleteRefreshToken(),
+      saveMenu(null),
     ]);
     setUser(null);
     setUserPreferences(null);

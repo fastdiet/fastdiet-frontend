@@ -1,5 +1,5 @@
 // React & React Native Imports
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
@@ -8,9 +8,7 @@ import ConfirmationCodeForm from "@/components/forms/ConfirmationCodeForm";
 
 // Hook Imports
 import { useFormValidation } from "@/hooks/useFormValidation";
-
-// Utility Imports
-import { useValidations } from "@/utils/validations";
+import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
 
 

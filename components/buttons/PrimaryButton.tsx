@@ -4,8 +4,6 @@ import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent, ViewStyle, T
 
 // Style Imports
 import globalStyles from '@/styles/global';
-
-// Utility Imports
 import { Colors } from '@/constants/Colors';
 
 interface ButtonProps {
@@ -31,7 +29,7 @@ const PrimaryButton: React.FC<ButtonProps> = ({
       style={[styles.button, style, disabled && styles.disabledButton]}
       onPress={onPress}
       activeOpacity={0.8}
-      disabled={disabled}
+      disabled={isDisabled}
     >
       {loading ? (
         <ActivityIndicator size="small" color={Colors.colors.neutral[100]} />

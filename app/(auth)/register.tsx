@@ -14,19 +14,18 @@ import ViewContentContinue from "@/components/views/ViewForContinueButton";
 import ViewForm from "@/components/views/ViewForm";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import ViewInputs from "@/components/views/ViewInputs";
+import ErrorText from "@/components/text/ErrorText";
+import PasswordInput from "@/components/forms/PasswordInput";
 
 // Hook Imports
-import { useAuth } from "@/hooks/useAuth";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useValidations } from "@/hooks/useValidations";
+import { useTranslation } from "react-i18next";
 
 // Style Imports
 import globalStyles from "@/styles/global";
 
-// Utility Imports
-import { useValidations } from "@/utils/validations";
-import ErrorText from "@/components/text/ErrorText";
-import PasswordInput from "@/components/forms/PasswordInput";
-import { useTranslation } from "react-i18next";
+
 
 const RegisterScreen = () => {
   const router = useRouter();
@@ -35,6 +34,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const validations = useValidations();
   const { errors, validateForm } = useFormValidation({

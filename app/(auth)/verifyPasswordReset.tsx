@@ -1,9 +1,14 @@
+// React and Expo Imports
 import { useState } from "react";
 import { useRouter } from "expo-router";
-import ConfirmationCodeForm from "@/components/forms/ConfirmationCodeForm";
-import {useFormValidation} from "@/hooks/useFormValidation";
 import Toast from "react-native-toast-message";
-import { useValidations } from "@/utils/validations";
+
+// Components imports
+import ConfirmationCodeForm from "@/components/forms/ConfirmationCodeForm";
+
+// Hooks imports
+import {useFormValidation} from "@/hooks/useFormValidation";
+import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function VerifyPasswordResetScreen() {
@@ -12,6 +17,7 @@ export default function VerifyPasswordResetScreen() {
   const [resendLoading, setResendLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const {verifyPasswordResetCode, sendPasswordResetCode, emailReset } = useAuth();
+  
   const validations = useValidations();
   const { errors, validateForm } = useFormValidation({
     code: validations.confirmationCode,

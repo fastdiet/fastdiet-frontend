@@ -1,5 +1,5 @@
 // React & React Native Imports
-import React, { useState } from "react";
+import { useState } from "react";
 import { Keyboard, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -14,14 +14,14 @@ import ViewForm from "@/components/views/ViewForm";
 
 // Hook Imports
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useValidations } from "@/hooks/useValidations";
+import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 // Style Imports
 import globalStyles from "@/styles/global";
 
-// Utility Imports
-import { useValidations } from "@/utils/validations";
-import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from "react-i18next";
+
 
 export default function SendPasswordResetCodeScreen() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { WeeklyMenu } from "@/context/MenuContext";
+import { MealPlan } from "@/models/mealPlan";
 import UserPreferences from "@/models/user_preferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -19,7 +19,7 @@ export const getUserPreferences = async () => {
   }
 };
 
-export const saveMenu = async (menu: WeeklyMenu) => {
+export const saveMenu = async (menu: MealPlan | null) => {
   try {
     await AsyncStorage.setItem("menu", JSON.stringify(menu));
   } catch (error: any) {

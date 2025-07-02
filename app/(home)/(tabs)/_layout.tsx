@@ -23,13 +23,14 @@ export default function TabLayout() {
           tabBarButton: HapticTab,
           tabBarStyle: {
             backgroundColor: Colors.colors.neutral[100],
-            borderTopWidth: 0, // opcional, para estética más limpia
-            position: "absolute", // si usas iOS y quieres que flote
+            borderTopWidth: 0,
+            position: "absolute",
+            height: 68
           },
         }}
       >
         <Tabs.Screen
-          name="index"
+          name="menu"
           options={{
             title:"Menú",
             tabBarIcon: ({ focused }) => (

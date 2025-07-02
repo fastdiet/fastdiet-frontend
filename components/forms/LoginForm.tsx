@@ -1,5 +1,5 @@
 // React & React Native Imports
-import React, { useState } from "react";
+import { useState } from "react";
 import { Text, TouchableOpacity, ImageBackground, TouchableWithoutFeedback, Keyboard, View } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -20,10 +20,7 @@ import PasswordInput from "@/components/forms/PasswordInput";
 // Hook Imports
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useTranslation } from "react-i18next"
-
-// Utility Imports
-import { useValidations } from "@/utils/validations";
-import { LoadingScreen } from "@/components/LoadingScreen";
+import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
 
 
@@ -63,7 +60,7 @@ const LoginForm = () => {
       return;
     }
     
-    router.replace("/"); 
+    router.replace("/menu/"); 
   };
 
   return <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
