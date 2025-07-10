@@ -137,46 +137,46 @@
   },
   "constants": {
     "diets": {
-      "balanced": "Equilibrada",
-      "vegetarian": "Vegetariana",
-      "vegan": "Vegana",
-      "glutenFree": "Sin Gluten",
-      "pescetarian": "Pescetariana",
-      "ketogenic": "Keto",
-      "lactoVegetarian": "Lacto-Vegetariana",
-      "ovoVegetarian": "Ovo-Vegetariana",
-      "paleo": "Paleo",
-      "primal": "Primal",
-      "lowFodmap": "Baja en FODMAP",
-      "whole30": "Whole30"
+      "Balanced": "Equilibrada",
+      "Vegetarian": "Vegetariana",
+      "Vegan": "Vegana",
+      "Gluten Free": "Sin Gluten",
+      "Pescetarian": "Pescetariana",
+      "Ketogenic": "Keto",
+      "Lacto-Vegetarian": "Lacto-Vegetariana",
+      "Ovo-Vegetarian": "Ovo-Vegetariana",
+      "Paleo": "Paleo",
+      "Primal": "Primal",
+      "Low FODMAP": "Baja en FODMAP",
+      "Whole30": "Whole30"
     },
     "cuisines":{
-      "european": "Europea",
-      "american": "Americana",
-      "asian": "Asiática",
-      "african": "Africana",
-      "mediterranean": "Mediterránea",
-      "latinAmerican": "Latinoamericana",
-      "spanish": "Española",
-      "italian": "Italiana",
-      "french": "Francesa",
-      "british": "Británica",
-      "german": "Alemana",
-      "greek": "Griega"
+      "European": "Europea",
+      "American": "Americana",
+      "Asian": "Asiática",
+      "African": "Africana",
+      "Mediterranean": "Mediterránea",
+      "Latin American": "Latinoamericana",
+      "Spanish": "Española",
+      "Italian": "Italiana",
+      "French": "Francesa",
+      "British": "Británica",
+      "German": "Alemana",
+      "Greek": "Griega"
     },
     "intolerances":{
-      "dairy": "Lácteos",
-      "gluten": "Gluten",
-      "egg": "Huevo",
-      "peanut": "Cacahuete",
-      "treeNut": "Frutos secos",
-      "shellfish": "Mariscos y moluscos",
-      "seafood": "Pescados",
-      "soy": "Soja",
-      "wheat": "Trigo",
-      "sesame": "Sésamo",
-      "sulfite": "Sulfitos",
-      "grain": "Granos"
+      "Dairy": "Lácteos",
+      "Gluten": "Gluten",
+      "Egg": "Huevo",
+      "Peanut": "Cacahuete",
+      "Tree Nut": "Frutos secos",
+      "Shellfish": "Mariscos y moluscos",
+      "Seafood": "Pescados",
+      "Soy": "Soja",
+      "Wheat": "Trigo",
+      "Sesame": "Sésamo",
+      "Sulfite": "Sulfitos",
+      "Grain": "Granos"
     },
     "days": {
       "0": "Lunes",
@@ -219,6 +219,7 @@
     "usernameExists": "El nombre de usuario ya existe",
     "dietTypeNotFound": "Tipo de dieta no encontrado",
     "cuisineRegionsNotFound": "Tipos de cocina no encontrados",
+    "incorrectCurrentPassword": "La contraseña actual es incorrecta",
     "genericError": "Ocurrió un error inesperado",
     "networkError": "Problema de conexión. Verifica tu internet",
     "timeoutError": "La solicitud está tardando demasiado",
@@ -323,6 +324,81 @@
       }
     }
   },
+  "profile": {
+    "confirmDeleteTitle": "¿Eliminar cuenta?",
+    "confirmDeleteMessage": "Esta acción eliminará tu cuenta y todos tus datos de forma permanente. ¿Estás seguro?",
+    "confirmDeleteButton": "Sí, eliminar cuenta",
+    "goalUpdated": "Objetivo actualizado correctamente",
+    "activityUpdated": "Nivel de actividad actualizado",
+    "dietUpdated": "Tipo de dieta actualizado",
+    "cuisinesUpdated": "Cocinas preferidas actualizadas",
+    "intolerancesUpdated": "Intolerancias actualizadas",
+    "personalDataUpdated": "Datos personales actualizados",
+    "passwordUpdated": "Contraseña actualizada correctamente",
+    "notSpecifiedA": "No especificada",
+    "notSpecifiedO": "No especificado",
+    "edit": {
+      "goal": {
+        "title": "Actualiza tu objetivo",
+        "paragraph": "Elige el nuevo objetivo que quieres alcanzar.\nEsto recalculará tus necesidades calóricas."
+      },
+      "activity": {
+        "title": "Actualiza tu nivel de actividad",
+        "paragraph": "Esto es clave para calcular mejor tus necesidades calóricas diarias"
+      },
+      "diet": {
+        "title": "Actualiza tu tipo de dieta",
+        "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
+      },
+      "cuisines": {
+        "title": "Actualiza tus cocinas preferidas",
+        "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
+      },
+      "intolerances": {
+        "title": "Actualiza tus intolerancias",
+        "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
+      },
+      "personalData": {
+        "title": "Actualiza tus datos personales",
+        "paragraph": "Tu peso, altura y otros datos son importantes para ajustar tu plan nutricional"
+      },
+      "changePassword": {
+        "title": "Cambiar contraseña",
+        "paragraph": "Para proteger tu cuenta, introduce tu contraseña actual antes de establecer una nueva",
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña"
+      }
+    },
+    "dailyCalories": "Calorías diarias",
+    "goal": "Objetivo",
+    "currentWeight": "Peso actual",
+    "weight": "Peso",
+    "height": "Altura",
+    "myProfile": "Mi Perfil",
+    "myPlan": "Mi Plan",
+    "account": "Cuenta",
+    "email": "Correo electrónico",
+    "personalData": "Datos personales",
+    "changePassword": "Cambiar contraseña",
+    "password": "Contraseña",
+    "dietType": "Tipo de dieta",
+    "diet": "Dieta",
+    "activityLevel": "Nivel de actividad",
+    "cuisines": "Cocinas preferidas",
+    "cuisinesTitle": "Cocinas",
+    "cuisinesCount": "{{count}} seleccionadas",
+    "cuisinesCount_one": "1 seleccionada",
+    "intolerances": "Intolerancias",
+    "intolerancesCount": "{{count}} seleccionadas",
+    "intolerancesCount_one": "1 seleccionada",
+    "notSpecified": "No especificado",
+    "logout": "Cerrar Sesión",
+    "logout_confirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccount_confirm_title": "Eliminar tu cuenta",
+    "deleteAccount_confirm_message": "Esta acción es irreversible. Se eliminarán permanentemente tu perfil, tus menús y todas tus preferencias. ¿Estás seguro de que quieres continuar?"
+  },
   "units": {
     "minutesShort": "min",
     "kcal": "kcal",
@@ -330,6 +406,10 @@
     "serving": "porción"
   },
   "continue": "Continuar",
+  "back": "Atrás",
+  "save": "Guardar",
+  "accept": "Aceptar",
+  "cancel": "Cancelar",
   "dividerText": "o si lo prefieres",
   "male": "Hombre",
   "female": "Mujer",

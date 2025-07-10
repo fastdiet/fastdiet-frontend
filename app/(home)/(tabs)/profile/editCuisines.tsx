@@ -1,7 +1,8 @@
 // React & React Native Imports
 import { FlatList, Text, TouchableOpacity, View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -15,85 +16,88 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 
 // Model Imports
-import Diet from "@/models/diet";
+import Cuisine from "@/models/cuisine";
 
 // Style Imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
 
 // Constants Imports
-import { getDietOptions } from "@/constants/diets";
+import { getCuisineOptions } from "@/constants/cuisines";
 
-
-export default function SelectDietScreen() {
-  const [loading, setLoading] = useState(false);
+export default function EditCuisinesScreen() {
+  const router = useRouter();
   const { t } = useTranslation();
-  const [selectedDietId, setSelectedDietId] = useState<number | null>(null);
+  const { selectCuisines } = useAuth();
+  const params = useLocalSearchParams<{ currentCuisineIds: string }>();
+  
+  const [selectedCuisineIds, setSelectedCuisineIds] = useState<number[]>(
+    params.currentCuisineIds ? params.currentCuisineIds.split(',').map(Number) : []
+  );
+
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   
-  const dietOptions = getDietOptions(t);
-  const { selectDiet } = useAuth();
-  const scrollRef = useRef<ScrollView>(null);
-  const router = useRouter();
+  const cuisineOptions = getCuisineOptions(t);
 
-
-  const handleSaveDiet = async () => {
+  const toggleCuisine = (id: number) => {
+    setSelectedCuisineIds((prev) =>
+      prev.includes(id) ? prev.filter((cId) => cId !== id) : [...prev, id]
+    );
     setErrorMessage("");
-    if (!selectedDietId) {
-      setErrorMessage(t("errorsFrontend.selectDiet"));
-      scrollRef.current?.scrollTo({ y: 0, animated: true });
-      return;
-    }
-
-    setLoading(true);
-    
-    const { success, error } = await selectDiet(selectedDietId);
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
-
-    router.push("/complete-register/selectCuisine"); 
   };
 
-  const renderDietItem = ({ item }: {item: Diet}) => (
+  const handleSave = async () => {
+    setLoading(true);
+    setErrorMessage("");
+    
+    const { success, error } = await selectCuisines(selectedCuisineIds);
+
+    setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.cuisinesUpdated'),
+        position: 'bottom'
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
+  };
+
+  const renderCuisineItem = ({ item }: { item: Cuisine }) => (
     <TouchableOpacity
       style={[
-        styles.dietCard,
-        selectedDietId === item.id && styles.selectedDietCard,
+        styles.cuisineCard,
+        selectedCuisineIds.includes(item.id) && styles.selectedCuisineCard,
       ]}
-      onPress={() => {
-        setSelectedDietId(selectedDietId === item.id ? null : item.id);
-        setErrorMessage("");
-      }}
+      onPress={() => toggleCuisine(item.id)}
     >
-      <Text style={styles.dietIcon}>{item.emoji}</Text>
-      <Text style={[globalStyles.mediumBodySemiBold, styles.dietName]}>{item.name}</Text>
+      <Text style={styles.cuisineIcon}>{item.emoji}</Text>
+      <Text style={[globalStyles.mediumBodySemiBold, styles.cuisineName]}>
+        {item.name}
+      </Text>
     </TouchableOpacity>
   );
 
   return (
     <>
       <View style={{ flex: 1 }}>
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={{ paddingBottom: 80, paddingTop: 0 }}
-        >
-          <View style={{ height: 16 }}></View>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}>
+          <View style={{ height: 16 }} />
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.diet.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.diet.titleParagraph.paragraph"
-                )}
+                title={t("profile.edit.cuisines.title")}
+                paragraph={t("profile.edit.cuisines.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <View style={{ width: "100%" }}>
                 <FlatList
-                  data={dietOptions}
-                  renderItem={renderDietItem}
+                  data={cuisineOptions}
+                  renderItem={renderCuisineItem}
                   keyExtractor={(item) => item.id.toString()}
                   numColumns={2}
                   columnWrapperStyle={styles.columnWrapper}
@@ -107,10 +111,9 @@ export default function SelectDietScreen() {
         <View style={styles.fixedButtonContainer}>
           <PaddingView>
             <PrimaryButton
-              title={t("continue")}
+              title={t("save")}
               style={{ width: "100%" }}
-              onPress={handleSaveDiet}
-              disabled={!selectedDietId}
+              onPress={handleSave}
               loading={loading}
             />
           </PaddingView>
@@ -138,14 +141,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: "100%",
   },
-  dietCard: {
+  cuisineCard: {
     width: "48%",
     aspectRatio: 1.5,
     backgroundColor: Colors.colors.neutral[100],
     borderRadius: 12,
-    paddingHorizontal: 12,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: Colors.colors.gray[200],
     shadowColor: Colors.colors.gray[500],
@@ -154,18 +157,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  selectedDietCard: {
+  selectedCuisineCard: {
     backgroundColor: Colors.colors.primary[500],
     borderColor: Colors.colors.primary[200],
     shadowColor: Colors.colors.primary[200],
     shadowOpacity: 0.2,
   },
-  dietIcon: {
+  cuisineIcon: {
     fontSize: 32,
     marginBottom: 8,
     color: Colors.colors.gray[500],
   },
-  dietName: {
+  cuisineName: {
     textAlign: "center",
     color: Colors.colors.gray[500],
   },

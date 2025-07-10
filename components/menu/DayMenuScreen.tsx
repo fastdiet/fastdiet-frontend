@@ -33,8 +33,8 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
   const navigateToRecipeDetail = (recipe: RecipeShort, slot: number) => {
     if (recipe && recipe.id) {
       router.push({
-        pathname: `/(home)/(tabs)/menu/recipe/${recipe.id}`,
-        params: { day: dayIndex.toString(), slot: slot.toString() }
+        pathname: "/(home)/(tabs)/menu/recipe/[recipeId]",
+        params: { recipeId: recipe.id.toString(), day: dayIndex.toString(), slot: slot.toString() }
       });
     }
   };

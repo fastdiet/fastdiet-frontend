@@ -1,5 +1,5 @@
 import { MealPlan } from "@/models/mealPlan";
-import UserPreferences from "@/models/user_preferences";
+import { UserPreferences } from "@/models/user_preferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const saveUserPreferences = async (userPreferences : UserPreferences | null) => {

@@ -1,9 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
-import * as AuthSession from "expo-auth-session";
 import User from "@/models/user";
-import UserPreferences from "@/models/user_preferences";
 import {
   saveAccessToken,
   saveRefreshToken,
@@ -15,8 +11,11 @@ import {
 import api from "@/utils/api";
 import { handleApiError } from "@/utils/errorHandler";
 import { getUserPreferences, saveMenu, saveUserPreferences } from "@/utils/asyncStorage";
+import { UserPreferences } from "@/models/user_preferences";
+import { GoogleSignin, isErrorWithCode, statusCodes } from "@react-native-google-signin/google-signin";
+import { useRouter } from "expo-router";
 
-WebBrowser.maybeCompleteAuthSession();
+
 
 export type ApiResponse<T = never> = {
   success: boolean;
@@ -30,9 +29,10 @@ interface AuthContextType {
   userPreferences: UserPreferences | null;
   loading: boolean;
   // Auth methods
-  promptAsync: () => void;
-  logout: () => void;
+  logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   login: (username: string, password: string) => Promise<ApiResponse>;
+  handleGoogleLogin: () => Promise<ApiResponse>;
   register: (email: string, password: string) => Promise<ApiResponse>;
   completeBasicInfo: (username: string, name: string, gender: string, age: number, weight: number, height: number) => Promise<ApiResponse>;
   selectActivity: (activityLevel: string) => Promise<ApiResponse>;
@@ -48,6 +48,7 @@ interface AuthContextType {
   sendPasswordResetCode: (email: string) => Promise<ApiResponse>;
   verifyPasswordResetCode: (code: string) => Promise<ApiResponse>;
   resetPassword: (newPassword: string) => Promise<ApiResponse>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<ApiResponse>;
   emailReset: string;
 }
 
@@ -61,23 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [loading, setLoading] = useState(true);
   const [emailReset, setEmailReset] = useState<string>("");
   const [resetCode, setResetCode] = useState<string>("");
-  const redirectUri = AuthSession.makeRedirectUri({ scheme: "fastdiet" });
-  console.log("Redirección URI: ", redirectUri);
-
-  // Google Auth config
-  const webClientId = "x";
-  const iosClientId = "x";
-  const androidClientId = "x";
-  
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId,
-    iosClientId,
-    webClientId,
-    responseType: "id_token",
-    scopes: ["profile", "email"],
-    extraParams: { access_type: "offline", prompt: "consent" },
-    redirectUri,
-  });
+  const router = useRouter();
 
   // Load user on mount
   useEffect(() => {
@@ -95,17 +80,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setLoading(false);
   }, []);
 
-  // Handle Google auth response
-  useEffect(() => {
-    if (response?.type === "success") {
-      handleGoogleToken(response.params.id_token);
-    }
-  }, [response]);
+  
 
-  const handleGoogleToken = async (idToken: string | undefined) => {
-    if (!idToken) return;
-
+  const handleGoogleLogin = async () => {
     try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      const userInfo = await GoogleSignin.signIn();
+      const { idToken } = userInfo.data ?? {};
+
+      if (!idToken) throw new Error("Google Sign-In failed: No ID token received");
+
       const { data: authResponse } = await api.post(
         "/login-with-google",
         {},
@@ -116,35 +101,57 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         saveAccessToken(authResponse.tokens.access_token),
         saveRefreshToken(authResponse.tokens.refresh_token),
         saveUser(authResponse.user),
+        saveUserPreferences(authResponse.preferences)
       ]);
 
       setUser(authResponse.user);
+      setUserPreferences(authResponse.preferences);
+
+      if (authResponse.preferences === null) {
+        router.replace("/complete-register/basicInfo");
+      } else {
+        router.replace("/menu/");
+      }
+
       return { success: true, error: "" };
     } catch (error) {
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.SIGN_IN_CANCELLED:
+            return { success: false, error: "Sign in was cancelled by user" };
+          case statusCodes.IN_PROGRESS:
+            return { success: false, error: "Sign in already in progress" };
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            return { success: false, error: "Play services not available" };
+          default:
+            return { success: false, error: error.message || "Unknown Google Sign-In error" };
+        }
+      }
       return { success: false, error: handleApiError(error) };
     }
   };
 
-  // Auth methods
   const login = async (userid: string, password: string) => {
     try {
       const { data: authResponse } = await api.post(
         "/login",
         new URLSearchParams({ username: userid, password })
       );
-
       await Promise.all([
         saveAccessToken(authResponse.tokens.access_token),
         saveRefreshToken(authResponse.tokens.refresh_token),
         saveUser(authResponse.user),
+        saveUserPreferences(authResponse.preferences)
       ]);
-
+      await GoogleSignin.signOut();
+      setUserPreferences(authResponse.preferences);
       setUser(authResponse.user);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
   };
+
 
   const register = async (email: string, password: string) => {
     try {
@@ -160,7 +167,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const logout = async () => {
+  const clearData = async () => {
+
+    if (user?.auth_method === 'google') {
+      try {
+        await GoogleSignin.signOut();
+      } catch (e) {
+        console.warn('Could not sign out from Google:', e);
+      }
+    }
+
     await Promise.all([
       saveUser(null),
       saveUserPreferences(null),
@@ -172,6 +188,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUserPreferences(null);
   };
 
+  const logout = async () => {
+    try {
+      await api.post('/logout');
+    } catch (e) {
+      console.warn('Could not revoke tokens:', e);
+    }
+    await clearData();
+  };
+
+  const deleteAccount = async () => {
+    await api.delete('/users/me');
+    await clearData();
+  };
+
   const completeBasicInfo = async (
     username: string,
     name: string,
@@ -181,10 +211,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     height: number
   ) => {
     try {
-      const updatedUser = { ...user, username, name , gender, age, weight, height };
-      await api.put(`/users/`, updatedUser);
-      await saveUser(updatedUser);
-      setUser(updatedUser);
+      const normalizedUsername = username.toLowerCase().trim();
+      const updatedUser = { ...user, username: normalizedUsername, name , gender, age, weight, height };
+      const res = await api.patch(`/users/`, updatedUser);
+      
+      setUser(res.data.user);
+      if (res.data.calories_goal) {
+          setUserPreferences(prev => {
+              if (!prev) return prev;
+              return {
+                  ...prev,
+                  calories_goal: res.data.calories_goal,
+              };
+          });
+      }
+      await saveUser(res.data.user);
+      if (res.data.calories_goal) {
+          const updatedPrefsForStorage = { ...userPreferences, calories_goal: res.data.calories_goal };
+          await saveUserPreferences(updatedPrefsForStorage);
+        }
+
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -194,8 +240,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const selectActivity = async (activity: string) => {
     try {
       const res = await api.patch("/user_preferences/activity-level", {activity_level: activity});
-      setUserPreferences(res.data);
-      saveUserPreferences(res.data);
+
+      const newPreferences = {
+          ...userPreferences,
+          activity_level: res.data.activity_level,
+          calories_goal: res.data.calories_goal,
+      };
+      setUserPreferences(newPreferences);
+      await saveUserPreferences(newPreferences);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -205,8 +257,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const selectGoal = async (goal: string) => {
     try {
       const res = await api.patch("/user_preferences/goal", {goal: goal});
-      setUserPreferences(res.data);
-      saveUserPreferences(res.data);
+      const newPreferences = {
+        ...userPreferences,
+        goal: res.data.goal,
+        calories_goal: res.data.calories_goal,
+      };
+      setUserPreferences(newPreferences);
+      await saveUserPreferences(newPreferences);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -216,8 +273,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const selectDiet = async (diet_type_id: number) => {
     try {
       const res = await api.patch("/user_preferences/diet-type", {id: diet_type_id});
-      setUserPreferences(res.data);
-      saveUserPreferences(res.data);
+
+      const newPreferences = {
+        ...userPreferences,
+        diet: res.data.diet,
+      };
+      
+      setUserPreferences(newPreferences);
+      await saveUserPreferences(newPreferences);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -229,8 +292,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const res = await api.patch("/user_preferences/cuisine-types", {
         cuisine_ids: cuisine_ids,
       });
-      setUserPreferences(res.data);
-      saveUserPreferences(res.data);
+
+      const newPreferences = {
+        ...userPreferences,
+        cuisines: res.data.cuisines,
+      };
+      
+      setUserPreferences(newPreferences);
+      await saveUserPreferences(newPreferences);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
@@ -242,13 +311,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const res = await api.patch("/user_preferences/intolerances", {
         intolerance_ids: intolerance_ids,
       });
-      setUserPreferences(res.data);
-      saveUserPreferences(res.data);
+
+      const newPreferences = {
+        ...userPreferences,
+        intolerances: res.data.intolerances,
+      };
+      
+      setUserPreferences(newPreferences);
+      await saveUserPreferences(newPreferences);
       return { success: true, error: "" };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
   };
+
 
   // Verification methods
   const sendVerificationCode = async (email: string) => {
@@ -318,13 +394,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      await api.put('/users/change-password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+
+      return { success: true, error: "" };
+    } catch (error) {
+      return { success: false, error: handleApiError(error) };
+    }
+  };
+
   const value = {
     user,
     userPreferences,
     loading,
-    promptAsync,
     logout,
+    deleteAccount,
     login,
+    handleGoogleLogin,
     register,
     completeBasicInfo,
     selectActivity,
@@ -337,6 +427,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     sendPasswordResetCode,
     verifyPasswordResetCode,
     resetPassword,
+    changePassword,
     emailReset
   };
 

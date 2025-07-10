@@ -11,17 +11,15 @@ export default function HomeLayout() {
   const router = useRouter();
   if (!user) return <Redirect href="/login"/>
 
-  
   return (
     <MenuProvider>
       <Stack
         screenOptions={{
-        headerShown: false,
         contentStyle: { backgroundColor: Colors.colors.neutral[100] },
         animation: "slide_from_right",
       }}
       >
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </MenuProvider>
   );

@@ -1,6 +1,7 @@
 // React & React Native Imports
-import React, { useContext } from "react";
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { TouchableOpacity, Text, StyleSheet, View, Alert } from "react-native";
+import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from "@react-native-google-signin/google-signin";
 
 // Style Imports
 import globalStyles from "@/styles/global";
@@ -12,21 +13,19 @@ import { Colors } from "@/constants/Colors";
 import Svg, { Path } from "react-native-svg";
 
 // Context Imports
-import { AuthContext } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
 
 
 const GoogleSignInButton: React.FC = () => {
-  const auth = useContext(AuthContext);
+  
   const { t } = useTranslation();
-  if (!auth) {
-    return null;
-  }
+  const { handleGoogleLogin } = useAuth();
 
   return (
     <TouchableOpacity
       style={[styles.button, { borderColor: Colors.colors.gray[200] }]}
-      onPress={auth.promptAsync}
+      onPress={handleGoogleLogin}
     >
       <View style={styles.iconContainer}>
         <Svg width="24" height="24" viewBox="0 0 24 24">

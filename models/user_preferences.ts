@@ -1,4 +1,9 @@
-export default interface UserPreferences {
+import Cuisine from "@/models/cuisine";
+import Diet from "@/models/diet";
+import Intolerance from "@/models/intolerance";
+
+
+export interface UserPreferences {
   id?: number;
   user_id?: number;
   diet_type_id?: number;
@@ -13,4 +18,7 @@ export default interface UserPreferences {
   calories_goal?: number;
   sustainable?: boolean;
   low_fodmap?: boolean;
+  cuisines?: Cuisine[];
+  intolerances?: Intolerance[];
+  diet?: Diet;
 }

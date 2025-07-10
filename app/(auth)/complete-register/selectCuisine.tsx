@@ -19,7 +19,7 @@ import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
 
 // Constants imports
-import { getCuisineOptions } from "@/constants/cuisineConstants";
+import { getCuisineOptions } from "@/constants/cuisines";
 
 // Model imports
 import Cuisine from "@/models/cuisine";

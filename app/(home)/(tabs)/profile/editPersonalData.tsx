@@ -1,5 +1,5 @@
-// React & React Native Imports
-import { useEffect, useMemo, useState } from "react";
+/// React & React Native Imports
+import React, { useMemo, useState } from "react";
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
@@ -23,25 +23,27 @@ import { useTranslation } from "react-i18next";
 // Style Imports
 import globalStyles from "@/styles/global";
 import { Colors } from "@/constants/Colors";
+import LabeledTextInput from "@/components/forms/LabeledTextInput";
+import FormLabel from "@/components/forms/FormLabel";
 import { getGenderOptions } from "@/constants/genders";
 
-export default function BasicInfoScreen() {
-  const { completeBasicInfo } = useAuth();
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
-  const [age, setAge] = useState("");
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-
-  const [errorMessage, setErrorMessage] = useState("");
+export default function EditPersonalDataScreen() {
   const router = useRouter();
   const { t } = useTranslation();
+
+  const { user, completeBasicInfo } = useAuth();
+  const [username, setUsername] = useState(user?.username || "");
+  const [name, setName] = useState(user?.name || "");
+  const [selectedGender, setSelectedGender] = useState(user?.gender || "");
+  const [age, setAge] = useState(user?.age?.toString() || "");
+  const [weight, setWeight] = useState(user?.weight?.toString() || "");
+  const [height, setHeight] = useState(user?.height?.toString() || "");
+
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const validations = useValidations();
 
   const genderOptions = getGenderOptions(t);
-
   
   const { errors, validateForm } = useFormValidation({
     name: validations.name,
@@ -51,17 +53,8 @@ export default function BasicInfoScreen() {
     weight: validations.weight,
     height: validations.height,
   });
-  useEffect(() => {
-    Toast.show({
-      type: "success",
-      text1: "Email verificado",
-      text2: "Completa tu perfil",
-      position: "bottom",
-      bottomOffset: 80,
-    });
-  }, []);
 
-  const handleSaveProfile = async () => {
+  const handleSave = async () => {
     setErrorMessage("");
     const isValid = validateForm({ name, username, gender: selectedGender, age, weight, height });
     if (!isValid) return;
@@ -76,21 +69,25 @@ export default function BasicInfoScreen() {
       parseFloat(height)
     );
 
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
-    
-    router.push("/complete-register/selectActivity");
     setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.personalDataUpdated'),
+        position: 'bottom',
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
+      keyboardVerticalOffset={100}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
@@ -102,53 +99,51 @@ export default function BasicInfoScreen() {
             <PaddingView>
               <ViewForm>
                 <TitleParagraph
-                  title={t("auth.completeRegister.basic.titleParagraph.title")}
-                  paragraph={t("auth.completeRegister.basic.titleParagraph.paragraph")}
+                  title={t("profile.edit.personalData.title")}
+                  paragraph={t("profile.edit.personalData.paragraph")}
                 />
                 {errorMessage ? <ErrorText text={errorMessage} /> : null}
 
                 <ViewInputs>
-                  <StyledTextInput
-                    style={globalStyles.largeBodyMedium}
-                    placeholder={t("auth.completeRegister.basic.name")}
+                  <LabeledTextInput
+                    label={t("auth.completeRegister.basic.name")}
                     value={name}
                     onChangeText={setName}
                     errorMessage={errors.name}
                   />
-                  <StyledTextInput
-                    style={globalStyles.largeBodyMedium}
+                  <LabeledTextInput
+                    label={t("auth.completeRegister.basic.username")}
                     value={username}
-                    autoCapitalize="none"
                     onChangeText={(text) => setUsername(text.toLowerCase())}
-                    placeholder={t("auth.completeRegister.basic.username")}
                     errorMessage={errors.username}
+                    autoCapitalize="none"
                   />
-                  <CustomRadioGroup
-                    radioButtons={genderOptions}
-                    layout="row"
-                    onPress={setSelectedGender}
-                    selectedId={selectedGender}
-                    errorMessage={errors.gender}
-                  />
-                  <StyledTextInput
-                    style={globalStyles.largeBodyMedium}
-                    placeholder={t("auth.completeRegister.basic.age")}
+                  <View style={{ width: '100%'}}>
+                    <FormLabel text={t("auth.completeRegister.basic.gender")} />
+                    <CustomRadioGroup
+                        radioButtons={genderOptions}
+                        layout="row"
+                        onPress={setSelectedGender}
+                        selectedId={selectedGender}
+                        errorMessage={errors.gender}
+                    />
+                  </View>
+                  <LabeledTextInput
+                    label={t("auth.completeRegister.basic.age")}
                     keyboardType="numeric"
                     value={age}
                     onChangeText={setAge}
                     errorMessage={errors.age}
                   />
-                  <StyledTextInput
-                    style={globalStyles.largeBodyMedium}
-                    placeholder={t("auth.completeRegister.basic.weight")}
+                  <LabeledTextInput
+                    label={t("auth.completeRegister.basic.weight")}
                     keyboardType="numeric"
                     value={weight}
                     onChangeText={setWeight}
                     errorMessage={errors.weight}
                   />
-                  <StyledTextInput
-                    style={globalStyles.largeBodyMedium}
-                    placeholder={t("auth.completeRegister.basic.height")}
+                  <LabeledTextInput
+                    label={t("auth.completeRegister.basic.height")}
                     keyboardType="numeric"
                     value={height}
                     onChangeText={setHeight}
@@ -162,8 +157,8 @@ export default function BasicInfoScreen() {
           <View style={styles.fixedButton}>
             <PaddingView>
               <PrimaryButton
-                title={t("continue")}
-                onPress={handleSaveProfile}
+                title={t("save")}
+                onPress={handleSave}
                 style={{ width: "100%" }}
                 loading={loading}
               />
@@ -174,6 +169,7 @@ export default function BasicInfoScreen() {
     </KeyboardAvoidingView>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContent: {

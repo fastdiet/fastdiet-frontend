@@ -1,7 +1,8 @@
 // React & React Native Imports
 import { FlatList, Text, TouchableOpacity, View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -24,37 +25,42 @@ import globalStyles from "@/styles/global";
 // Constants Imports
 import { getDietOptions } from "@/constants/diets";
 
-
-export default function SelectDietScreen() {
-  const [loading, setLoading] = useState(false);
+export default function EditDietScreen() {
+  const router = useRouter();
   const { t } = useTranslation();
-  const [selectedDietId, setSelectedDietId] = useState<number | null>(null);
+
+  const { selectDiet } = useAuth();
+  const params = useLocalSearchParams<{ currentDietId: string }>();
+  
+  const [selectedDietId, setSelectedDietId] = useState<number | null>(
+    params.currentDietId ? parseInt(params.currentDietId, 10) : null
+  );
+  
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   
   const dietOptions = getDietOptions(t);
-  const { selectDiet } = useAuth();
-  const scrollRef = useRef<ScrollView>(null);
-  const router = useRouter();
 
-
-  const handleSaveDiet = async () => {
-    setErrorMessage("");
-    if (!selectedDietId) {
-      setErrorMessage(t("errorsFrontend.selectDiet"));
-      scrollRef.current?.scrollTo({ y: 0, animated: true });
-      return;
-    }
-
+  const handleSave = async () => {
+    if (!selectedDietId) return;
+    
     setLoading(true);
+    setErrorMessage("");
     
     const { success, error } = await selectDiet(selectedDietId);
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
 
-    router.push("/complete-register/selectCuisine"); 
+    setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.dietUpdated'),
+        position: 'bottom'
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
   };
 
   const renderDietItem = ({ item }: {item: Diet}) => (
@@ -63,10 +69,7 @@ export default function SelectDietScreen() {
         styles.dietCard,
         selectedDietId === item.id && styles.selectedDietCard,
       ]}
-      onPress={() => {
-        setSelectedDietId(selectedDietId === item.id ? null : item.id);
-        setErrorMessage("");
-      }}
+      onPress={() => setSelectedDietId(item.id)}
     >
       <Text style={styles.dietIcon}>{item.emoji}</Text>
       <Text style={[globalStyles.mediumBodySemiBold, styles.dietName]}>{item.name}</Text>
@@ -76,18 +79,13 @@ export default function SelectDietScreen() {
   return (
     <>
       <View style={{ flex: 1 }}>
-        <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={{ paddingBottom: 80, paddingTop: 0 }}
-        >
-          <View style={{ height: 16 }}></View>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}>
+          <View style={{ height: 16 }} />
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.diet.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.diet.titleParagraph.paragraph"
-                )}
+                title={t("profile.edit.diet.title")}
+                paragraph={t("profile.edit.diet.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <View style={{ width: "100%" }}>
@@ -107,11 +105,11 @@ export default function SelectDietScreen() {
         <View style={styles.fixedButtonContainer}>
           <PaddingView>
             <PrimaryButton
-              title={t("continue")}
+              title={t("save")}
               style={{ width: "100%" }}
-              onPress={handleSaveDiet}
-              disabled={!selectedDietId}
+              onPress={handleSave}
               loading={loading}
+              disabled={!selectedDietId}
             />
           </PaddingView>
         </View>
