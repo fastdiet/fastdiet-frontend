@@ -1,17 +1,15 @@
 // React & React Native Imports
-import React from "react";
-import { Platform } from "react-native";
 import { Tabs } from "expo-router";
 
 // Component Imports
 import { HapticTab } from "@/components/HapticTab";
-import TabBarBackground from "@/components/ui/TabBarBackground";
 
 // Utility Imports
 import { Colors } from "@/constants/Colors";
 
 // Icon Imports
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 export default function TabLayout() {
   return (
@@ -44,12 +42,26 @@ export default function TabLayout() {
        
         <Tabs.Screen
           name="profile"
-          options={{
-            title: "Perfil",
-            tabBarIcon: ({ focused }) => (
-              <FontAwesome name="user" size={35} strokeWidth={1} 
-              color={ focused ? Colors.colors.primary[200] : Colors.colors.gray[300] } />
-            ),
+          options={({ route }) => {
+
+            const routeName = getFocusedRouteNameFromRoute(route) ?? 'index';
+
+            const screensToHideTabBar = ['editGoal', 'editActivity', 'editDiet', 'editCuisines', 'editIntolerances', 'editPersonalData', 'changePassword'];
+            
+            return {
+              title: "Perfil",
+              tabBarIcon: ({ focused }) => (
+                <FontAwesome name="user" size={35} strokeWidth={1} 
+                color={ focused ? Colors.colors.primary[200] : Colors.colors.gray[300] } />
+              ),
+              tabBarStyle: {
+                display: screensToHideTabBar.includes(routeName) ? 'none' : 'flex',
+                backgroundColor: Colors.colors.neutral[100],
+                borderTopWidth: 0,
+                position: "absolute",
+                height: 68,
+              },
+            };
           }}
         />
       </Tabs>

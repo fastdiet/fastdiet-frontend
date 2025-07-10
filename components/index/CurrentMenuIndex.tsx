@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 120, 
+    paddingBottom: 100, 
   },
   pageTitle: {
     textAlign: "left",

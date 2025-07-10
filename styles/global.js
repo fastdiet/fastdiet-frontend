@@ -90,6 +90,19 @@ const globalStyles = StyleSheet.create({
     color: Colors.colors.primary[200],
     textDecorationLine: "underline",
   },
+  displayLarge: { fontFamily: "InterBold", fontSize: 48, lineHeight: 56 },
+  displayMedium: { fontFamily: "InterBold", fontSize: 40, lineHeight: 48 },
+
+  // Títulos de página y sección
+  headlineLarge: { fontFamily: "InterBold", fontSize: 32, lineHeight: 40 },
+  headlineMedium: { fontFamily: "InterSemiBold", fontSize: 28, lineHeight: 36 },
+  headlineSmall: { fontFamily: "InterSemiBold", fontSize: 24, lineHeight: 32, color: Colors.colors.gray[900] },
+
+  // Títulos de Cards o elementos
+  titleLarge: { fontFamily: "InterSemiBold", fontSize: 22, lineHeight: 28, color: Colors.colors.gray[900] },
+  titleMedium: { fontFamily: "InterSemiBold", fontSize: 18, lineHeight: 24, color: Colors.colors.gray[700] },
+  titleSmall: { fontFamily: "InterMedium", fontSize: 14, lineHeight: 20, textTransform: 'uppercase', letterSpacing: 0.5, color: Colors.colors.gray[500] },
+  largeBody: { fontFamily: "InterRegular", fontSize: 16, lineHeight: 24, color: Colors.colors.gray[700] },
 });
 
 export default globalStyles;

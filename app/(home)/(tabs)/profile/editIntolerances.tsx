@@ -1,55 +1,69 @@
 // React & React Native Imports
-import { Text, TouchableOpacity, View, StyleSheet} from "react-native";
-import { useState } from "react";
-import { useRouter } from "expo-router";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { useMemo, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
-import ViewContentContinue from "@/components/views/ViewForContinueButton";
 import ViewForm from "@/components/views/ViewForm";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import ErrorText from "@/components/text/ErrorText";
+import ViewContentContinue from "@/components/views/ViewForContinueButton";
 
-//Hooks imports
+// Hooks Imports
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 
-//Style imports
+// Style Imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
 
-//Constants imports
+// Constants Imports
 import { getIntoleranceOptions } from "@/constants/intolerances";
 
-
-export default function SelectIntoleranceScreen() {
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
-  const [selectedIntoleranceIds, setSelectedIntoleranceIds] = useState<number[]>([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const intoleranceOptions = getIntoleranceOptions(t);
-  const { selectIntolerances } = useAuth();
+export default function EditIntolerancesScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
+  const { selectIntolerances } = useAuth();
+  
+  const params = useLocalSearchParams<{ currentIntoleranceIds: string }>();
+  
+  const [selectedIntoleranceIds, setSelectedIntoleranceIds] = useState<number[]>(
+    params.currentIntoleranceIds ? params.currentIntoleranceIds.split(',').map(Number) : []
+  );
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  
+  const intoleranceOptions = getIntoleranceOptions(t);
 
   const toggleIntolerance = (id: number) => {
     setSelectedIntoleranceIds((prev) =>
-      prev.includes(id) ? prev.filter((cId) => cId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((prevId) => prevId !== id) : [...prev, id]
     );
     setErrorMessage("");
   };
 
-  const handleContinue = async () => {
-    setErrorMessage("");
+  const handleSave = async () => {
     setLoading(true);
+    setErrorMessage("");
+    
     const { success, error } = await selectIntolerances(selectedIntoleranceIds);
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
 
-    router.replace("/menu/");
+    setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.intolerancesUpdated'),
+        position: 'bottom'
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
   };
 
   return (
@@ -59,12 +73,8 @@ export default function SelectIntoleranceScreen() {
         <ViewContentContinue>
           <ViewForm>
             <TitleParagraph
-              title={t(
-                "auth.completeRegister.intolerance.titleParagraph.title"
-              )}
-              paragraph={t(
-                "auth.completeRegister.intolerance.titleParagraph.paragraph"
-              )}
+              title={t("profile.edit.intolerances.title")}
+              paragraph={t("profile.edit.intolerances.paragraph")}
             />
             {errorMessage ? <ErrorText text={errorMessage} /> : null}
             <View style={{ width: "100%" }}>
@@ -91,13 +101,14 @@ export default function SelectIntoleranceScreen() {
           <PrimaryButton
             title={t("continue")}
             style={{ width: "100%" }}
-            onPress={handleContinue}
+            onPress={handleSave}
             loading={loading}
           />
         </ViewContentContinue>
       </PaddingView>
     </>
   );
+
 }
 
 const styles = StyleSheet.create({

@@ -1,7 +1,8 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useMemo, useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -21,59 +22,66 @@ import { getGoalOptions } from "@/constants/goals";
 
 
 
+
 export default function SelectGoalScreen() {
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
-  const [goal, setGoal] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const { selectGoal } = useAuth();
-  const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
-  const goalOptions = getGoalOptions(t);
+  const { t } = useTranslation();
+  const { selectGoal } = useAuth();
   
+  const params = useLocalSearchParams<{ currentGoal: string }>();
+  
+  const [selectedGoal, setSelectedGoal] = useState(params.currentGoal || "");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleContinue = async () => {
-    setErrorMessage("");
-    if (!goal) {
-      setErrorMessage(t("errorsFrontend.selectGoal"));
-      scrollRef.current?.scrollTo({ y: 0, animated: true });
+  const goalOptions = getGoalOptions(t);
+
+  const handleSave = async () => {
+    if (!selectedGoal) {
+      router.back();
       return;
     }
-
-    setLoading(true);
     
-    const { success, error } = await selectGoal(goal);
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
+    setErrorMessage("");
+    
+    const { success, error } = await selectGoal(selectedGoal);
 
-    router.push("/complete-register/selectDiet");
     setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.goalUpdated'),
+        position: 'bottom',
+        bottomOffset: 120,
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
   };
 
   return (
     <>
       <View style={{ flex: 1 }}>
         <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={{ paddingBottom: 80, paddingTop: 0 }}
+          contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}
         >
           <View style={{ height: 16 }}></View>
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.goal.titleParagraph.title")}
+                title={t("profile.edit.goal.title")}
                 paragraph={t(
-                  "auth.completeRegister.goal.titleParagraph.paragraph"
+                  "profile.edit.goal.paragraph"
                 )}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <StyledRadioButtonList
                 options={goalOptions}
-                selectedValue={goal}
-                onSelect={setGoal}
+                selectedValue={selectedGoal}
+                onSelect={setSelectedGoal}
             />
             </ViewForm>
           </PaddingView>
@@ -81,11 +89,11 @@ export default function SelectGoalScreen() {
         <View style={styles.fixedButtonContainer}>
           <PaddingView>
             <PrimaryButton
-              title={t("continue")}
+              title={t("save")}
               style={{ width: "100%" }}
-              onPress={handleContinue}
+              onPress={handleSave}
               loading={loading}
-              disabled={!goal}
+              disabled={!selectedGoal}
             />
           </PaddingView>
         </View>

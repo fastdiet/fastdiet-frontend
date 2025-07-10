@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 // Style imports
 import { Colors } from "@/constants/Colors";
+import { getActivityOptions } from "@/constants/activity_levels";
 
 
 export default function SelectActivityScreen() {
@@ -28,38 +29,7 @@ export default function SelectActivityScreen() {
   const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
 
-  const activityOptions = useMemo(() => ([
-      {
-        id: '1',
-        label: t("activity.sedentary.title"),
-        description: t("activity.sedentary.description"),
-        value: 'sedentary',
-      },
-    {
-        id: '2',
-        label: t("activity.light.title"),
-        description: t("activity.light.description"),
-        value: 'light',
-    },
-    {
-        id: '3',
-        label: t("activity.moderate.title"),
-        description: t("activity.moderate.description"),
-        value: 'moderate',
-    },
-    {
-        id: '4',
-        label: t("activity.high.title"),
-        description: t("activity.high.description"),
-        value: 'high',
-    },
-    {
-        id: '5',
-        label: t("activity.very_high.title"),
-        description: t("activity.very_high.description"),
-        value: 'very_high',
-    },
-    ]), []);
+  const activityOptions = getActivityOptions(t);
 
   const handleContinue = async () => {
     setErrorMessage("");

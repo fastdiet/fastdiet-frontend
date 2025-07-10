@@ -1,7 +1,8 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useMemo, useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -17,75 +18,72 @@ import { useAuth } from "@/hooks/useAuth";
 
 // Style imports
 import { Colors } from "@/constants/Colors";
-import { getGoalOptions } from "@/constants/goals";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { getActivityOptions } from "@/constants/activity_levels";
 
-
-
-export default function SelectGoalScreen() {
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
-  const [goal, setGoal] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const { selectGoal } = useAuth();
-  const scrollRef = useRef<ScrollView>(null);
+export default function EditActivityScreen() {
   const router = useRouter();
-  const goalOptions = getGoalOptions(t);
-  
+  const { t } = useTranslation();
+  const { selectActivity } = useAuth();
+  const params = useLocalSearchParams<{ currentActivity: string }>();
+  const [selectedActivity, setSelectedActivity] = useState(params.currentActivity || "");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleContinue = async () => {
-    setErrorMessage("");
-    if (!goal) {
-      setErrorMessage(t("errorsFrontend.selectGoal"));
-      scrollRef.current?.scrollTo({ y: 0, animated: true });
-      return;
-    }
+  const activityOptions = getActivityOptions(t);
 
-    setLoading(true);
+  const handleSave = async () => {
+    if (!selectedActivity) return;
     
-    const { success, error } = await selectGoal(goal);
-    if (!success) {
-      setErrorMessage(error);
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
+    setErrorMessage("");
+    
+    const { success, error } = await selectActivity(selectedActivity);
 
-    router.push("/complete-register/selectDiet");
     setLoading(false);
+
+    if (success) {
+      Toast.show({
+        type: 'success',
+        text1: t('profile.activityUpdated'), 
+        position: 'bottom'
+      });
+      router.back();
+    } else {
+      setErrorMessage(error);
+    }
   };
 
   return (
     <>
       <View style={{ flex: 1 }}>
         <ScrollView
-          ref={scrollRef}
-          contentContainerStyle={{ paddingBottom: 80, paddingTop: 0 }}
+          contentContainerStyle={{ paddingBottom: 100, paddingTop: 0 }}
         >
-          <View style={{ height: 16 }}></View>
+          <View style={{ height: 16 }} />
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.goal.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.goal.titleParagraph.paragraph"
-                )}
+                title={t("profile.edit.activity.title")}
+                paragraph={t("profile.edit.activity.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <StyledRadioButtonList
-                options={goalOptions}
-                selectedValue={goal}
-                onSelect={setGoal}
-            />
+                options={activityOptions}
+                selectedValue={selectedActivity}
+                onSelect={setSelectedActivity}
+              />
             </ViewForm>
           </PaddingView>
         </ScrollView>
         <View style={styles.fixedButtonContainer}>
           <PaddingView>
             <PrimaryButton
-              title={t("continue")}
+              title={t("save")}
               style={{ width: "100%" }}
-              onPress={handleContinue}
+              onPress={handleSave}
               loading={loading}
-              disabled={!goal}
+              disabled={!selectedActivity}
             />
           </PaddingView>
         </View>
@@ -104,5 +102,4 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.colors.gray[200],
   },
-  
 });

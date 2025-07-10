@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 // Component Imports
 import { LoadingScreen } from "@/components/LoadingScreen";
 
@@ -14,7 +13,7 @@ import { useFonts } from "expo-font";
 import Toast from "react-native-toast-message";
 
 // Navigation Imports
-import { Slot,} from "expo-router";
+import { Slot, } from "expo-router";
 
 // Context Imports
 import { AuthProvider } from "@/context/AuthContext";
@@ -25,9 +24,15 @@ import * as SplashScreen from "expo-splash-screen";
 // Reanimated Imports
 import "react-native-reanimated";
 import {initI18n} from "@/i18n";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 // Avoid that the loading screen dissappears before
 SplashScreen.preventAutoHideAsync();
+
+GoogleSignin.configure({
+  webClientId: '1029285084877-2b68aomhptg9jr5b6hi1k07q1k5dr1hg.apps.googleusercontent.com',
+  iosClientId: '1029285084877-up0oqd75c8jofll6he0vs10959v2r4ub.apps.googleusercontent.com'
+});
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -37,6 +42,7 @@ export default function RootLayout() {
     InterBold: require("@/assets/fonts/Inter_18pt-Bold.ttf"),
     InterMedium: require("@/assets/fonts/Inter_18pt-Medium.ttf"),
   });
+
 
   const [i18nReady, setI18nReady] = useState(false);
   

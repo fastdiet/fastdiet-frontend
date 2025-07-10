@@ -91,7 +91,7 @@ const LoginForm = () => {
                 placeholder={t("auth.login.username")}
                 autoCapitalize="none"
                 value={userid}
-                onChangeText={setUserid}
+                onChangeText={(text) => setUserid(text.toLowerCase())}
                 errorMessage={errors.userid}
               />
               <PasswordInput
