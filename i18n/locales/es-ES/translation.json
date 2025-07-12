@@ -1,0 +1,528 @@
+{
+  "auth": {
+    "login": {
+      "titleParagraph": {
+        "title": "Inicia sesión",
+        "paragraph": "Crea tu dieta ideal, fácil y rápido"
+      },
+      "username": "Nombre de usuario o correo",
+      "password": "Contraseña",
+      "forgotPassword": "¿Has olvidado tu contraseña? ",
+      "recoverLink": "Recuperar",
+      "notAccount": "¿No tienes una cuenta? ",
+      "registerLink": "Regístrate gratis",
+      "google": "Inicia sesión con Google"
+    },
+    "register": {
+      "titleParagraph": {
+        "title": "Regístrate gratis",
+        "paragraph": "Empieza hoy a construir tu camino hacia una vida más saludable"
+      },
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "repeatPassword": "Repite tu contraseña",
+      "passwordDetails": "Tu contraseña debe tener al menos 8 caracteres e incluir una mayúscula, una minúscula, un número y un carácter especial",
+      "alreadyAccount": "¿Ya tienes cuenta? ",
+      "loginLink": "Inicia sesión"
+    },
+    "sendPasswordReset":{
+      "titleParagraph":{
+        "title": "¿Olvidaste tu contraseña?",
+        "paragraph": "Ingresa tu correo electrónico para recibir un código de recuperación"
+      },
+      "email": "Correo electrónico",
+      "backToLogin": "Volver al inicio de sesión",
+      "sendCode": "Enviar código"
+    },
+    "verifyCode": {
+      "titleParagraph": {
+        "title": "Verificar código",
+        "paragraph": "Ingresa el código de 6 dígitos que enviamos a "
+      },
+      "codePlaceholder": "Código de 6 dígitos",
+      "noCode": "¿No recibiste el código? ",
+      "sendOtherCodeLink": "Solicita otro",
+      "verify": "Verificar código",
+      "sending": "Enviando..."
+    },
+    "resetPassword": {
+      "titleParagraph": {
+        "title": "Nueva contraseña",
+        "paragraph": "Establece una nueva contraseña para tu cuenta"
+      },
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "updatePassword": "Actualizar contraseña"
+    },
+    "completeRegister":{
+      "basic": {
+        "titleParagraph": {
+          "title": "¡Bienvenido a FastDiet!",
+          "paragraph" : "Empieza creando tu perfil para disfrutar de una experiencia personalizada"
+        },
+        "name": "Nombre",
+        "username": "Nombre de usuario",
+        "gender": "Sexo",
+        "age": "Edad",
+        "weight": "Peso (kg)",
+        "height": "Altura (cm)"
+      },
+      "activity": {
+        "titleParagraph": {
+          "title": "Elige tu nivel de actividad física",
+          "paragraph": "Esto nos ayudará a calcular mejor tus necesidades calóricas diarias"
+        }
+      },
+      "goal": {
+        "titleParagraph": {
+          "title": "¿Cuál es tu objetivo?",
+          "paragraph": "Elige tu meta para ajustar tu plan nutricional"
+        }
+      },
+      "diet": {
+        "titleParagraph": {
+          "title": "Selecciona tu tipo de dieta",
+          "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
+        }
+      },
+      "cuisine":{
+        "titleParagraph": {
+          "title": "¿Qué cocinas te gustan?",
+          "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
+        }
+      },
+      "intolerance":{
+        "titleParagraph": {
+          "title": "¿Tienes alguna intolerancia?",
+          "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
+        }
+      }
+    }
+  },
+   "activity": {
+    "sedentary": {
+      "title": "Sedentario",
+      "description": "Poco o ningún ejercicio físico, trabajo de oficina, vida mayormente inactiva."
+    },
+    "light": {
+      "title": "Actividad ligera",
+      "description": "Ejercicio ligero 1-3 días por semana o trabajo de baja intensidad física."
+    },
+    "moderate": {
+      "title": "Actividad moderada",
+      "description": "Ejercicio moderado 3-5 días por semana o un trabajo algo activo."
+    },
+    "high": {
+      "title": "Actividad alta",
+      "description": "Ejercicio intenso 6-7 días por semana o trabajo físicamente exigente."
+    },
+    "very_high": {
+      "title": "Actividad muy alta",
+      "description": "Entrenamientos muy intensos, atletas profesionales o dos sesiones de ejercicio al día."
+    }
+  },
+  "goal": {
+    "lose_weight": {
+      "title": "Perder peso",
+      "description": "Reducir la grasa corporal manteniendo masa muscular."
+    },
+    "maintain_weight": {
+      "title": "Mantener peso",
+      "description": "Conservar tu peso actual de forma saludable."
+    },
+    "gain_weight": {
+      "title": "Ganar masa muscular",
+      "description": "Aumentar peso con enfoque en masa muscular."
+    }
+  },
+  "constants": {
+    "diets": {
+      "Balanced": "Equilibrada",
+      "Vegetarian": "Vegetariana",
+      "Vegan": "Vegana",
+      "Gluten Free": "Sin Gluten",
+      "Pescetarian": "Pescetariana",
+      "Ketogenic": "Keto",
+      "Lacto-Vegetarian": "Lacto-Vegetariana",
+      "Ovo-Vegetarian": "Ovo-Vegetariana",
+      "Paleo": "Paleo",
+      "Primal": "Primal",
+      "Low FODMAP": "Baja en FODMAP",
+      "Whole30": "Whole30"
+    },
+    "cuisines":{
+      "European": "Europea",
+      "American": "Americana",
+      "Asian": "Asiática",
+      "African": "Africana",
+      "Mediterranean": "Mediterránea",
+      "Latin American": "Latinoamericana",
+      "Spanish": "Española",
+      "Italian": "Italiana",
+      "French": "Francesa",
+      "British": "Británica",
+      "German": "Alemana",
+      "Greek": "Griega"
+    },
+    "intolerances":{
+      "Dairy": "Lácteos",
+      "Gluten": "Gluten",
+      "Egg": "Huevo",
+      "Peanut": "Cacahuete",
+      "Tree Nut": "Frutos secos",
+      "Shellfish": "Mariscos y moluscos",
+      "Seafood": "Pescados",
+      "Soy": "Soja",
+      "Wheat": "Trigo",
+      "Sesame": "Sésamo",
+      "Sulfite": "Sulfitos",
+      "Grain": "Granos"
+    },
+    "days": {
+      "0": "Lunes",
+      "1": "Martes",
+      "2": "Miércoles",
+      "3": "Jueves",
+      "4": "Viernes",
+      "5": "Sábado",
+      "6": "Domingo",
+      "today": "Hoy"
+    },
+    "daysShort": {
+      "0": "Lun",
+      "1": "Mar",
+      "2": "Mié",
+      "3": "Jue",
+      "4": "Vie",
+      "5": "Sáb",
+      "6": "Dom"
+    },
+    "meals":{
+      "breakfast": "Desayuno",
+      "lunch": "Almuerzo",
+      "dinner": "Cena"
+    }
+  },
+  "errorsBackend": {
+    "invalidCredentials": "Usuario o contraseña incorrectos",
+    "userNotVerified": "Usuario no verificado. Por favor, verifica tu email",
+    "emailAlreadyRegistered": "El email ya está registrado",
+    "userNotFound": "Usuario no encontrado",
+    "userAlreadyVerified": "El usuario ya está verificado",
+    "invalidEmail": "Email no válido",
+    "emailSendError": "Error al enviar el email. Inténtalo de nuevo",
+    "invalidRefreshToken": "Token de refresco inválido o expirado",
+    "invalidToken": "Token inválido",
+    "verifyEmailBeforeReset": "Debes verificar tu email antes de restablecer la contraseña",
+    "invalidResetCode": "Código de restablecimiento incorrecto o expirado",
+    "invalidCode": "Código de verificación incorrecto o expirado",
+    "usernameExists": "El nombre de usuario ya existe",
+    "dietTypeNotFound": "Tipo de dieta no encontrado",
+    "cuisineRegionsNotFound": "Tipos de cocina no encontrados",
+    "incorrectCurrentPassword": "La contraseña actual es incorrecta",
+    "genericError": "Ocurrió un error inesperado",
+    "networkError": "Problema de conexión. Verifica tu internet",
+    "timeoutError": "La solicitud está tardando demasiado",
+    "serverError": "Error del servidor. Inténtalo más tarde"
+  },
+  "errorsFrontend":{
+    "selectCuisine": "Por favor, elige al menos un tipo de cocina",
+    "selectDiet": "Por favor, elige un tipo de dieta",
+    "selectActivity": "Selecciona un nivel de actividad física",
+    "selectGoal": "Selecciona un objetivo",
+    "validations": {
+      "required": "Este campo es obligatorio",
+      "numericInvalid": "El valor debe ser un número válido",
+      "positiveNumberInvalid": "El valor debe ser un número positivo",
+      "emptyUserid": "Por favor, ingresa tu usuario o correo",
+      "usernameRequired": "El nombre de usuario es obligatorio.",
+      "usernameLength": "El nombre de usuario debe tener entre 3 y 20 caracteres.",
+      "usernameNoSpaces": "El nombre de usuario no puede contener espacios.",
+      "usernameInvalidChars": "El nombre de usuario solo puede contener letras, números, guiones bajos y guiones.",
+
+      "emailRequired": "El correo electrónico es obligatorio.",
+      "emailInvalid": "El correo electrónico no es válido.",
+
+      "passwordRequired": "La contraseña es obligatoria.",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+      "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+      "passwordDigit": "La contraseña debe contener al menos un número",
+      "passwordSpecialChar": "La contraseña debe contener al menos un carácter especial",
+
+      "passwordCheckRequired": "Confirma tu contraseña.",
+      "passwordsDontMatch": "Las contraseñas no coinciden.",
+
+      "confirmationCodeRequired": "Por favor, ingresa el código de verificación.",
+      "confirmationCodeInvalid": "El código debe tener 6 dígitos.",
+
+      "nameRequired": "El nombre es obligatorio.",
+      "nameLength": "El nombre debe tener entre 3 y 50 caracteres.",
+
+      "ageRequired": "La edad es obligatoria.",
+      "ageInvalid": "Introduce una edad válida",
+      "weightRequired": "El peso es obligatorio.",
+      "weightInvalid": "Introduce un peso válido",
+      "heightRequired": "La altura es obligatoria.",
+      "heightInvalid": "Introduce una altura válida en cm",
+      "genderRequired": "Selecciona un sexo."
+    }
+  },
+  "index": {
+    "noMenu": {
+      "welcome": "¡Hola, {{name}}! 👋",
+      "subtitle": "Es hora de organizar tu alimentación",
+      "generateMenu": "Genera tu menú semanal",
+      "checkPreferences": "Revisa tus preferencias",
+      "featuresTitle": "Beneficios de tu menú personalizado",
+      "feature1": {
+        "title": "Ahorra tiempo",
+        "description": "Planificación automática basada en tus preferencias"
+      },
+      "feature2": {
+        "title": "Nutrición equilibrada",
+        "description": "Recetas adaptadas a tus necesidades nutricionales"
+      },
+      "feature3": {
+        "title": "Variedad garantizada",
+        "description": "Nunca más te quedes sin ideas para cocinar"
+      },
+      "tip": "Para obtener los mejores resultados, asegúrate de mantener tu perfil actualizado.",
+      "loading": {
+        "preparingKitchen": "Preparando la cocina...",
+        "sharpeningKnives": "Afilando los cuchillos...",
+        "cookingIdeas": "Cocinando tus ideas...",
+        "creatingMenu": "Creando tu menú personalizado...",
+        "platingOptions": "Emplatando tus opciones...",
+        "almostReady": "¡Tu menú está casi listo!"
+      }
+    },
+    "menu":{
+      "title" : "Menú Semanal",
+      "subtitle": "Aquí tienes tu plan para la semana",
+      "noMealsForDay": "No hay comidas",
+      "day": {
+        "noBreakfastPlanned": "No hay desayuno planificado",
+        "noLunchPlanned": "No hay almuerzo planificado",
+        "noDinnerPlanned": "No hay cena planificada"
+      },
+      "deleteMeal": {
+        "confirmTitle": "Eliminar comida",
+        "confirmMessage": "¿Estás seguro de que quieres eliminar esta comida del menú?",
+        "success": "Comida eliminada correctamente"
+      },
+      "error": {
+        "invalidDayTitle": "Día no válido",
+        "invalidDayMessage": "El día seleccionado no es válido o no se pudo cargar el menú.",
+        "goBack": "Volver al menú"
+      },
+      "loading": "Cargando tu menú...",
+      "recipe": {
+        "detailTitleFallback": "Detalles de Receta",
+        "loading": "Cargando receta...",
+        "notFoundTitle": "Receta No Encontrada",
+        "notFound": "¡Vaya! No hemos podido encontrar la receta",
+        "couldNotLoad": "Hubo un problema al cargar los detalles. Por favor, inténtalo de nuevo.",
+        "ingredientsSectionTitle": "Ingredientes",
+        "instructionsSectionTitle": "Preparación",
+        "equipmentSectionTitle": "Equipamiento Necesario",
+        "nutritionalInfoSectionTitle": "Información Nutricional",
+        "showDetailedNutrients": "Mostrar todos los nutrientes",
+        "hideDetailedNutrients": "Ocultar nutrientes detallados"
+      }
+    }
+  },
+  "profile": {
+    "confirmDeleteTitle": "¿Eliminar cuenta?",
+    "confirmDeleteMessage": "Esta acción eliminará tu cuenta y todos tus datos de forma permanente. ¿Estás seguro?",
+    "confirmDeleteButton": "Sí, eliminar cuenta",
+    "goalUpdated": "Objetivo actualizado correctamente",
+    "activityUpdated": "Nivel de actividad actualizado",
+    "dietUpdated": "Tipo de dieta actualizado",
+    "cuisinesUpdated": "Cocinas preferidas actualizadas",
+    "intolerancesUpdated": "Intolerancias actualizadas",
+    "personalDataUpdated": "Datos personales actualizados",
+    "passwordUpdated": "Contraseña actualizada correctamente",
+    "notSpecifiedA": "No especificada",
+    "notSpecifiedO": "No especificado",
+    "edit": {
+      "goal": {
+        "title": "Actualiza tu objetivo",
+        "paragraph": "Elige el nuevo objetivo que quieres alcanzar.\nEsto recalculará tus necesidades calóricas."
+      },
+      "activity": {
+        "title": "Actualiza tu nivel de actividad",
+        "paragraph": "Esto es clave para calcular mejor tus necesidades calóricas diarias"
+      },
+      "diet": {
+        "title": "Actualiza tu tipo de dieta",
+        "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
+      },
+      "cuisines": {
+        "title": "Actualiza tus cocinas preferidas",
+        "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
+      },
+      "intolerances": {
+        "title": "Actualiza tus intolerancias",
+        "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
+      },
+      "personalData": {
+        "title": "Actualiza tus datos personales",
+        "paragraph": "Tu peso, altura y otros datos son importantes para ajustar tu plan nutricional"
+      },
+      "changePassword": {
+        "title": "Cambiar contraseña",
+        "paragraph": "Para proteger tu cuenta, introduce tu contraseña actual antes de establecer una nueva",
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña"
+      }
+    },
+    "dailyCalories": "Calorías diarias",
+    "goal": "Objetivo",
+    "currentWeight": "Peso actual",
+    "weight": "Peso",
+    "height": "Altura",
+    "myProfile": "Mi Perfil",
+    "myPlan": "Mi Plan",
+    "account": "Cuenta",
+    "email": "Correo electrónico",
+    "personalData": "Datos personales",
+    "changePassword": "Cambiar contraseña",
+    "password": "Contraseña",
+    "dietType": "Tipo de dieta",
+    "diet": "Dieta",
+    "activityLevel": "Nivel de actividad",
+    "cuisines": "Cocinas preferidas",
+    "cuisinesTitle": "Cocinas",
+    "cuisinesCount": "{{count}} seleccionadas",
+    "cuisinesCount_one": "1 seleccionada",
+    "intolerances": "Intolerancias",
+    "intolerancesCount": "{{count}} seleccionadas",
+    "intolerancesCount_one": "1 seleccionada",
+    "notSpecified": "No especificado",
+    "logout": "Cerrar Sesión",
+    "logout_confirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccount_confirm_title": "Eliminar tu cuenta",
+    "deleteAccount_confirm_message": "Esta acción es irreversible. Se eliminarán permanentemente tu perfil, tus menús y todas tus preferencias. ¿Estás seguro de que quieres continuar?"
+  },
+  "recipes": {
+    "myRecipes": {
+      "title": "Mis Recetas",
+      "emptyState": "Aún no has creado ninguna receta. ¡Pulsa el botón '+' para añadir la primera!"
+    },
+    "create": { "title": "Crear Nueva Receta" },
+    "edit": { "title": "Editar Receta" },
+    "form": {
+      "title": "Título de la receta",
+      "description": "Descripción breve",
+      "ingredients": "Ingredientes",
+      "ingredientsPlaceholder": "Un ingrediente por línea (ej: 200g de pollo)",
+      "instructions": "Instrucciones",
+      "instructionsPlaceholder": "Un paso por línea...",
+      "saveButton": "Guardar Receta"
+    }
+  },
+  "myRecipes": {
+    "title": "Mis Recetas",
+    "subtitle": "Aquí puedes ver y gestionar todas las recetas que has creado.",
+    "cta": {
+      "createFirst": "Crear mi primera receta"
+    },
+    "noRecipes": {
+      "title": "Aún no tienes recetas",
+      "subtitle": "¡Anímate a crear la primera! Podrás añadirla a tus menús semanales cuando quieras."
+    },
+    "card": {
+      "noDescription": "Sin descripción",
+      "servings": "porciones"
+    },
+    "delete": {
+      "confirmTitle": "Eliminar Receta",
+      "confirmMessage": "¿Estás seguro de que quieres eliminar la receta \"{{title}}\"? Esta acción no se puede deshacer.",
+      "success": "Receta eliminada correctamente"
+    },
+    "form": {
+      "title": "Título de la receta",
+      "description": "Descripción (opcional)",
+      "prepTime": "Tiempo (min)",
+      "minutes": "en minutos",
+      "servings": "Porciones",
+      "ingredients": "Ingredientes",
+      "ingredientName": "Nombre",
+      "quantity": "Cant.",
+      "unit": "Unidad (g)",
+      "addIngredient": "Añadir ingrediente",
+      "steps": "Pasos de preparación",
+      "stepDescription": "Describe el paso {{number}}",
+      "addStep": "Añadir paso"
+    },
+    "create": {
+      "title": "Crear nueva receta",
+      "subtitle": "Rellena los detalles para guardar tu nueva receta personalizada.",
+      "success": "Receta guardada con éxito"
+    },
+    "edit": {
+      "title": "Editar receta",
+      "subtitle": "Modifica los detalles de tu receta."
+    }
+  },
+  "units": {
+    "minutesShort": "min",
+    "kcal": "kcal",
+    "servings": "porciones",
+    "serving": "porción"
+  },
+  "continue": "Continuar",
+  "back": "Atrás",
+  "save": "Guardar",
+  "accept": "Aceptar",
+  "saveRecipe": "Guardar Receta",
+  "cancel": "Cancelar",
+  "error": "Error",
+  "delete": "Eliminar",
+  "dividerText": "o si lo prefieres",
+  "male": "Hombre",
+  "female": "Mujer",
+  "retry": "Reintentar",
+  "backToMenu": "Volver al Menú",
+  "seeMore": "Ver más",
+  "seeLess": "Ver menos",
+  "nutrients": {
+    "calories": "Calorías",
+    "protein": "Proteínas",
+    "fat": "Grasas",
+    "saturatedfat": "Grasas Saturadas",
+    "carbohydrates": "Carbohidratos",
+    "netcarbohydrates": "Carbohidratos Netos",
+    "sugar": "Azúcares",
+    "cholesterol": "Colesterol",
+    "sodium": "Sodio",
+    "alcohol": "Alcohol",
+    "alcohol%": "Alcohol %",
+    "manganese": "Manganeso",
+    "phosphorus": "Fósforo",
+    "vitaminb1": "Vitamina B1 (Tiamina)",
+    "magnesium": "Magnesio",
+    "fiber": "Fibra",
+    "selenium": "Selenio",
+    "copper": "Cobre",
+    "iron": "Hierro",
+    "zinc": "Zinc",
+    "vitaminb6": "Vitamina B6",
+    "calcium": "Calcio",
+    "potassium": "Potasio",
+    "folate": "Folato (Vitamina B9)",
+    "vitaminb2": "Vitamina B2 (Riboflavina)",
+    "vitaminb3": "Vitamina B3 (Niacina)",
+    "vitamink": "Vitamina K",
+    "vitaminc": "Vitamina C",
+    "vitamine": "Vitamina E",
+    "vitaminb5": "Vitamina B5 (Ácido Pantoténico)",
+    "vitamina": "Vitamina A",
+    "vitaminb12": "Vitamina B12",
+    "vitamind": "Vitamina D",
+    "caffeine": "Cafeína"
+  }
+}
