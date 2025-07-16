@@ -1,9 +1,10 @@
 // React and Expo imports
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useState } from 'react';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
+import { nanoid } from 'nanoid/non-secure';
 
 // Components imports
 import PaddingView from '@/components/views/PaddingView';
@@ -12,83 +13,116 @@ import PrimaryButton from '@/components/buttons/PrimaryButton';
 import ViewForm from '@/components/views/ViewForm';
 import ViewInputs from '@/components/views/ViewInputs';
 import LabeledTextInput from '@/components/forms/LabeledTextInput';
-import ImagePickerComponent from '@/components/recipe/ImagePickerComponent'; // NUEVO
-import SectionHeader from '@/components/recipe/SectionHeader'; // NUEVO
+import ImagePickerComponent from '@/components/recipe/ImagePickerComponent';
+import SectionHeader from '@/components/recipe/SectionHeader'
+import ErrorText from '@/components/text/ErrorText';
+import IngredientInputList from '@/components/recipe/IngredientInputList';
+import StepInputList from '@/components/recipe/StepInputList';
 
 // Hooks imports
 import { useMyRecipes } from '@/hooks/useMyRecipes';
-import { useValidations } from '@/hooks/useValidations'; // Asumo que tienes este hook
-import { useFormValidation } from '@/hooks/useFormValidation'; // Asumo que tienes este hook
+import { useValidations } from '@/hooks/useValidations';
+import { useFormValidation } from '@/hooks/useFormValidation';
 
 // Styles imports
 import { Colors } from '@/constants/Colors';
-import IngredientInputList from '@/components/recipe/IngredientInputList';
-import StepInputList from '@/components/recipe/StepInputList';
-import { RecipeInputIngredient, RecipeInputStep } from '@/models/recipeInput';
+
+// Models imports
+import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
 
 
 const CreateRecipeScreen = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { createRecipe, loading } = useMyRecipes();
+  const { createRecipe } = useMyRecipes();
   const validations = useValidations();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    summary: '',
+    readyMin: '',
+    servings: '', 
+    imageUri: null as string | null,
+    ingredients: [{id: nanoid(), name: '', amount: '', unit: '' }] as FormInputIngredient[],
+    steps: [{ id: nanoid(), description: '' }] as FormInputStep[],
+  });
 
-  // Estados para el formulario de la receta
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [prepTime, setPrepTime] = useState('');
-  const [servings, setServings] = useState('');
-  const [ingredients, setIngredients] = useState<RecipeInputIngredient[]>([{ name: '', quantity: '', unit: '' }]);
-  const [steps, setSteps] = useState<RecipeInputStep[]>([{ description: '' }]);
-  
-  // MEJORA: Hook de validación
+  const handleInputChange = (field: keyof typeof formData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const { errors, validateForm } = useFormValidation({
     title: validations.required,
-    prepTime: validations.positiveNumber,
-    servings: validations.positiveNumber,
+    readyMin: validations.requiredPositiveNumber,
+    servings: validations.requiredPositiveNumber,
+    ingredients: validations.ingredientsList,
   });
   
   const handleSaveRecipe = async () => {
-    // MEJORA: Validamos el formulario antes de enviar
-    const isValid = validateForm({ title, prepTime, servings });
+   const isValid = validateForm(formData);
     if (!isValid) {
-      Toast.show({ type: 'error', text1: 'Revisa los campos', text2: 'Algunos campos tienen errores o están vacíos.', position: 'bottom' });
+      Toast.show({ type: 'error', text1: 'Revisa el formulario', text2: 'Algunos campos tienen errores.'});
       return;
     }
 
-    // MEJORA: Transformamos los datos para la API
-    const recipeData = {
-      title,
-      description,
-      image_url: imageUri, // Opcional
-      prep_time_min: parseInt(prepTime, 10) || undefined,
-      servings: parseInt(servings, 10) || undefined,
-      ingredients: ingredients
-        .filter(i => i.name && i.quantity) // Ignoramos ingredientes vacíos
-        .map(i => ({ ...i, quantity: parseFloat(i.quantity.replace(',', '.')) })),
-      steps: steps.filter(s => s.description).map(s => s.description),
-    };
+    // 1. Lógica de subida de imagen (a futuro)
+    // setLoading(true); // Activar el loading ANTES de cualquier operación async
+    // let finalImageUrl = null;
+    // try {
+    //   if (formData.imageUri) {
+    //     // Esta función la crearías tú. Sube la imagen a tu servicio (S3, Firebase...)
+    //     // y devuelve la URL pública.
+    //     finalImageUrl = await uploadImage(formData.imageUri);
+    //   }
+    // } catch (uploadError) {
+    //   setLoading(false);
+    //   Toast.show({ type: 'error', text1: 'Error al subir la imagen' });
+    //   return;
+    // }
 
-    const { success, error } = await createRecipe(recipeData as any); // "as any" para que coincida con la firma del hook que creamos
+    setLoading(true);
+    const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
+    const validSteps = formData.steps.filter(s => s.description.trim());
+    const recipeData: RecipeCreationData = {
+      title: formData.title.trim(),
+      summary: formData.summary.trim() || undefined,
+      ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
+      servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
+      ingredients: validIngredients.map(ing => ({
+        name: ing.name.trim(),
+        amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
+        unit: ing.unit ? ing.unit.trim() : undefined,
+      })),
+      image_url: formData.imageUri || null,
+      analyzed_instructions: validSteps.map((s, index) => ({
+        number: index + 1,
+        step: s.description.trim(),
+        ingredients: [],
+        equipment: [],
+      }))
+    };
+    const { success, error } = await createRecipe(recipeData);
 
     if (success) {
-      Toast.show({ type: 'success', text1: t('myRecipes.create.success'), position: 'bottom' });
+      Toast.show({ type: 'success', text1: t('myRecipes.create.success')});
       router.back();
     } else {
-      Toast.show({ type: 'error', text1: t('error'), text2: error, position: 'bottom' });
+      setLoading(false);
+      Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? ""});
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: Colors.colors.neutral[100] }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
-          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingTop: 16, paddingBottom: 150 }}
+            keyboardShouldPersistTaps="handled"
+          >
             <PaddingView>
               <ViewForm>
                 <TitleParagraph
@@ -97,19 +131,21 @@ const CreateRecipeScreen = () => {
                 />
                 
                 <ViewInputs>
-                  {/* NUEVO: Componente para seleccionar imagen */}
-                  <ImagePickerComponent imageUri={imageUri} onImagePicked={setImageUri} />
-                  
+                  <ImagePickerComponent 
+                    imageUri={formData.imageUri} 
+                    onImagePicked={(uri) => handleInputChange('imageUri', uri)} 
+                  />
+
                   <LabeledTextInput
                     label={t('myRecipes.form.title')}
-                    value={title}
-                    onChangeText={setTitle}
+                     value={formData.title}
+                    onChangeText={(text) => handleInputChange('title', text)}
                     errorMessage={errors.title}
                   />
                   <LabeledTextInput
                     label={t('myRecipes.form.description')}
-                    value={description}
-                    onChangeText={setDescription}
+                    value={formData.summary}
+                    onChangeText={(text) => handleInputChange('summary', text)}
                     multiline
                     numberOfLines={4}
                     textAlignVertical="top"
@@ -119,27 +155,35 @@ const CreateRecipeScreen = () => {
                         <LabeledTextInput
                             label={t('myRecipes.form.prepTime')}
                             keyboardType="numeric"
-                            value={prepTime}
-                            onChangeText={setPrepTime}
+                            value={formData.readyMin}
+                            onChangeText={(text) => handleInputChange('readyMin', text)}
                             placeholder={t('myRecipes.form.minutes')}
-                            errorMessage={errors.prepTime}
+                            errorMessage={errors.readyMin}
                         />
                      </View>
                      <View style={{flex: 1}}>
                         <LabeledTextInput
                             label={t('myRecipes.form.servings')}
                             keyboardType="numeric"
-                            value={servings}
-                            onChangeText={setServings}
+                            value={formData.servings}
+                            onChangeText={(text) => handleInputChange('servings', text)}
                             errorMessage={errors.servings}
                         />
                      </View>
                   </View>
-                  <SectionHeader title={t('myRecipes.form.ingredients')} iconName="basket-outline" />
-                  <IngredientInputList ingredients={ingredients} setIngredients={setIngredients} />
+                  <SectionHeader title={t('myRecipes.form.ingredients')} iconName="format-list-bulleted" />
+                  {errors.ingredients && <ErrorText text={errors.ingredients} />}
+                  <IngredientInputList 
+                    ingredients={formData.ingredients} 
+                    setIngredients={(ings) => handleInputChange('ingredients', ings)}
+                  />
 
-                  <SectionHeader title={t('myRecipes.form.steps')} iconName="footsteps-outline" />
-                  <StepInputList steps={steps} setSteps={setSteps} />
+                  <SectionHeader title={t('myRecipes.form.steps')} iconName="chef-hat" />
+                  {errors.steps && <ErrorText text={errors.steps} />}
+                  <StepInputList 
+                    steps={formData.steps} 
+                    setSteps={(steps) => handleInputChange('steps', steps)}
+                  /> 
 
                 </ViewInputs>
               </ViewForm>
@@ -157,24 +201,16 @@ const CreateRecipeScreen = () => {
             </PaddingView>
           </View>
         </View>
-      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 150, // Ajustamos el padding para el botón
-    paddingTop: 16,
-    backgroundColor: Colors.colors.neutral[100],
-  },
   fixedButtonContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     backgroundColor: Colors.colors.neutral[100],
-    paddingBottom: 24, // Damos más espacio abajo
-    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: Colors.colors.gray[200],
   },

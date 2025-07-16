@@ -204,23 +204,33 @@
     }
   },
   "errorsBackend": {
-    "invalidCredentials": "Usuario o contraseña incorrectos",
-    "userNotVerified": "Usuario no verificado. Por favor, verifica tu email",
-    "emailAlreadyRegistered": "El email ya está registrado",
     "userNotFound": "Usuario no encontrado",
-    "userAlreadyVerified": "El usuario ya está verificado",
-    "invalidEmail": "Email no válido",
-    "emailSendError": "Error al enviar el email. Inténtalo de nuevo",
-    "invalidRefreshToken": "Token de refresco inválido o expirado",
-    "invalidToken": "Token inválido",
-    "verifyEmailBeforeReset": "Debes verificar tu email antes de restablecer la contraseña",
-    "invalidResetCode": "Código de restablecimiento incorrecto o expirado",
-    "invalidCode": "Código de verificación incorrecto o expirado",
     "usernameExists": "El nombre de usuario ya existe",
-    "dietTypeNotFound": "Tipo de dieta no encontrado",
+    "emailAlreadyRegistered": "Este email ya está registrado",
+    "emailAlreadyVerified": "Este email ya está verificado",
+    "invalidEmail": "El email no es válido",
+    "emailSendError":  "Error al enviar el email. Inténtalo de nuevo",
+    "userNotVerified": "Usuario no verificado. Por favor, verifica tu email",
+    "invalidCredentials": "Usuario o contraseña incorrectos",
+    "invalidToken": "Token inválido",
+    "invalidRefreshToken": "Token de refresco inválido o expirado",
+    "invalidVerificationCode": "El código de verificación es inválido o ha caducado.",
+    "invalidResetCode": "Código de restablecimiento incorrecto o expirado",
+
+    "recipeNotFound": "Receta no encontrada",
+    "recipeLinkedToMealPlan": "Esta receta está incluida en tu menú semanal",
+    "duplicatedIngredient": "Hay un ingrediente duplicado en la receta",
+    "cannotDeleteImportedRecipe": "No puedes eliminar esta receta",
+    "mealItemNotFound": "No se encontró la comida en el menú",
+    "mealPlanGenerationFailed": "No se pudo generar el menú semanal. Inténtalo de nuevo más tarde",
+    "userPreferencesNotFound": "Preferencias del usuario no encontradas",
+
     "cuisineRegionsNotFound": "Tipos de cocina no encontrados",
+    "intolerancesNotFound": "No se encontraron las intolerancias seleccionadas.",
+    "dietTypeNotFound": "Tipo de dieta no encontrado",
+    "genericError": "Ha ocurrido un error. Por favor, inténtalo de nuevo más tarde",
     "incorrectCurrentPassword": "La contraseña actual es incorrecta",
-    "genericError": "Ocurrió un error inesperado",
+    "internalServerError": "Ha ocurrido un error interno. Por favor, inténtalo de nuevo",
     "networkError": "Problema de conexión. Verifica tu internet",
     "timeoutError": "La solicitud está tardando demasiado",
     "serverError": "Error del servidor. Inténtalo más tarde"
@@ -265,7 +275,9 @@
       "weightInvalid": "Introduce un peso válido",
       "heightRequired": "La altura es obligatoria.",
       "heightInvalid": "Introduce una altura válida en cm",
-      "genderRequired": "Selecciona un sexo."
+      "genderRequired": "Selecciona un sexo.",
+      "ingredientMissingAmount": "El ingrediente \"{{name}}\" necesita una cantidad",
+      "ingredientMissingName": "Has añadido una cantidad sin especificar el ingrediente"
     }
   },
   "index": {
@@ -426,41 +438,43 @@
   },
   "myRecipes": {
     "title": "Mis Recetas",
-    "subtitle": "Aquí puedes ver y gestionar todas las recetas que has creado.",
+    "subtitle": "Crea, edita y gestiona tus recetas personales",
     "cta": {
-      "createFirst": "Crear mi primera receta"
+      "createFirst": "Crea tu primera receta"
     },
     "noRecipes": {
       "title": "Aún no tienes recetas",
-      "subtitle": "¡Anímate a crear la primera! Podrás añadirla a tus menús semanales cuando quieras."
+      "subtitle": "¡Anímate a crear la primera! Podrás añadirla a tu menú semanal cuando quieras"
     },
     "card": {
       "noDescription": "Sin descripción",
-      "servings": "porciones"
+      "servings": "Raciones"
     },
     "delete": {
-      "confirmTitle": "Eliminar Receta",
-      "confirmMessage": "¿Estás seguro de que quieres eliminar la receta \"{{title}}\"? Esta acción no se puede deshacer.",
+      "confirmTitle": "Eliminar receta",
+      "confirmMessage": "¿Seguro que quieres eliminar '{{title}}'?",
+      "forceTitle": "Receta en uso",
+      "forceMessage": "Esta receta está incluida en tu menú semanal. ¿Quieres eliminarla de todos modos?",
       "success": "Receta eliminada correctamente"
     },
     "form": {
       "title": "Título de la receta",
-      "description": "Descripción (opcional)",
+      "description": "Descripción breve (opcional)",
       "prepTime": "Tiempo (min)",
       "minutes": "en minutos",
-      "servings": "Porciones",
+      "servings": "Raciones",
       "ingredients": "Ingredientes",
       "ingredientName": "Nombre",
-      "quantity": "Cant.",
-      "unit": "Unidad (g)",
+      "amount": "Cantidad",
+      "unit": "Unidad",
       "addIngredient": "Añadir ingrediente",
       "steps": "Pasos de preparación",
       "stepDescription": "Describe el paso {{number}}",
       "addStep": "Añadir paso"
     },
     "create": {
-      "title": "Crear nueva receta",
-      "subtitle": "Rellena los detalles para guardar tu nueva receta personalizada.",
+      "title": "Nueva receta",
+      "subtitle": "Rellena los detalles para guardar tu nueva receta personalizada",
       "success": "Receta guardada con éxito"
     },
     "edit": {
@@ -471,8 +485,8 @@
   "units": {
     "minutesShort": "min",
     "kcal": "kcal",
-    "servings": "porciones",
-    "serving": "porción"
+    "servings": "raciones",
+    "serving": "ración"
   },
   "continue": "Continuar",
   "back": "Atrás",
@@ -482,6 +496,7 @@
   "cancel": "Cancelar",
   "error": "Error",
   "delete": "Eliminar",
+  "deleteAnyway": "Eliminar de todas formas",
   "dividerText": "o si lo prefieres",
   "male": "Hombre",
   "female": "Mujer",

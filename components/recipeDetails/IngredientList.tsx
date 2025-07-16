@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
   ingredientName: {
     ...globalStyles.mediumBodyMedium,
     color: Colors.colors.gray[500],
+    textTransform: 'capitalize',
     lineHeight: 18,
   },
   ingredientQuantity: {

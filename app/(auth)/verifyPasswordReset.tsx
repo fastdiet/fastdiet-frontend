@@ -31,7 +31,7 @@ export default function VerifyPasswordResetScreen() {
     const { success, error } = await verifyPasswordResetCode(code);
     
     if(!success){
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }
@@ -45,21 +45,9 @@ export default function VerifyPasswordResetScreen() {
 
     const { success, error } = await sendPasswordResetCode(emailReset);
     if (success) {
-      Toast.show({
-        type: "success",
-        text1: "Código reenviado",
-        text2: "Se ha enviado un nuevo código a tu correo.",
-        position: "bottom",
-        bottomOffset: 80,
-      });
+      Toast.show({type: "success", text1: "Código reenviado", text2: "Se ha enviado un nuevo código a tu correo.",});
     } else {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error,
-        position: "bottom",
-        bottomOffset: 80,
-      });
+      Toast.show({type: "error", text1: "Error", text2: error?.message ?? "",});
     }
     setResendLoading(false);
   };

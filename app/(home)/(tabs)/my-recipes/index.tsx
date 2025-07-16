@@ -1,6 +1,6 @@
 // React and Expo imports
-import React from 'react';
-import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Components imports
 import PaddingView from '@/components/views/PaddingView';
 import TitleParagraph from '@/components/text/TitleParagraph';
-import PrimaryButton from '@/components/buttons/PrimaryButton'; // O un componente de botón flotante
+import PrimaryButton from '@/components/buttons/PrimaryButton';
 import MyRecipeCard from '@/components/recipe/MyRecipeCard';
 
 // Hooks imports
@@ -23,121 +23,143 @@ import globalStyles from '@/styles/global';
 const MyRecipesScreen = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { myRecipes, loading, deleteRecipe } = useMyRecipes(); // Hook para gestionar las recetas del usuario
+  const { myRecipes, loading } = useMyRecipes(); 
+  const insets = useSafeAreaInsets();
+  const TAB_BAR_HEIGHT = 68;
 
-  const handleAddNewRecipe = () => {
-    router.push('/(home)/(tabs)/my-recipes/create');
-  };
-  
-  const handleEditRecipe = (recipeId: string) => {
+  const handleAddNewRecipe = () => router.push('/(home)/(tabs)/my-recipes/create');
+  const handleEditRecipe = (recipeId: number) => {
     router.push({
       pathname: '/(home)/(tabs)/my-recipes/edit/[recipeId]',
-      params: { recipeId },
+      params: { recipeId: recipeId.toString() },
+    });
+  };
+  const navigateToRecipeDetail = (recipeId: number) => {
+    router.push({
+      pathname: '/(home)/(tabs)/my-recipes/detail/[recipeId]',
+      params: { recipeId: recipeId.toString() },
     });
   };
 
-  const handleDeleteRecipe = (recipeId: string) => {
-    // Aquí iría la lógica de confirmación (Alert) y luego la llamada a deleteRecipe
-    console.log("Eliminar receta", recipeId)
+  if (loading) {
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" color={Colors.colors.primary[200]} />
+        <Text style={styles.infoText}>{t("myRecipes.loading")}</Text>
+      </View>
+    );
   }
-
+  console.log("MyRecipesScreen - myRecipes:", myRecipes);
+  if (!myRecipes || myRecipes.length === 0) {
+    return (
+      <View style={styles.centeredContainer}>
+        <View style={styles.iconCircle}>
+          <Ionicons name="receipt-outline" size={50} color={Colors.colors.primary[200]} />
+        </View>
+        <Text style={styles.emptyStateTitle}>{t('myRecipes.noRecipes.title')}</Text>
+        <Text style={styles.emptyStateText}>{t('myRecipes.noRecipes.subtitle')}</Text>
+        <PrimaryButton 
+          title={t('myRecipes.cta.createFirst')}
+          onPress={handleAddNewRecipe}
+          style={{ marginTop: 24, paddingHorizontal: 32 }}
+          leftIcon={<Ionicons name="add" size={20} color={Colors.colors.neutral[100]} />}
+        />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <PaddingView>
-          <TitleParagraph
-            title={t('myRecipes.title')}
-            paragraph={t('myRecipes.subtitle')}
-            containerStyle={{ marginTop: 16, marginBottom: 24 }}
+      <FlatList
+        data={myRecipes}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <MyRecipeCard
+            recipe={item}
+            onPress={() => navigateToRecipeDetail(item.id)}
+            onEdit={() => handleEditRecipe(item.id)}
           />
-
-          {myRecipes.length > 0 ? (
-            <View style={styles.recipesList}>
-              {myRecipes.map((recipe) => (
-                <MyRecipeCard 
-                  key={recipe.id}
-                  recipe={recipe}
-                  onEdit={() => handleEditRecipe(recipe.id)}
-                  onDelete={() => handleDeleteRecipe(recipe.id)}
-                />
-              ))}
-            </View>
-          ) : (
-            <View style={styles.noRecipesContainer}>
-                <Ionicons name="receipt-outline" size={64} color={Colors.colors.gray[300]} />
-                <Text style={styles.noRecipesTitle}>{t('myRecipes.noRecipes.title')}</Text>
-                <Text style={styles.noRecipesText}>{t('myRecipes.noRecipes.subtitle')}</Text>
-                <PrimaryButton 
-                    title={t('myRecipes.cta.createFirst')}
-                    onPress={handleAddNewRecipe}
-                    style={{marginTop: 24}}
-                />
-            </View>
-          )}
-
-        </PaddingView>
-      </ScrollView>
-
-       {myRecipes.length > 0 && (
-         <View style={styles.fabContainer}>
-            <TouchableOpacity
-                onPress={handleAddNewRecipe}
-                style={styles.fab}
-            >
-                <Ionicons name="add" size={32} color={Colors.colors.neutral[100]} />
-            </TouchableOpacity>
-         </View>
-       )}
+        )}
+        ListHeaderComponent={
+          <PaddingView>
+            <TitleParagraph
+              title={t('myRecipes.title')}
+              paragraph={t('myRecipes.subtitle')}
+              containerStyle={{ marginTop: 16, marginBottom: 24 }}
+            />
+          </PaddingView>
+        }
+        contentContainerStyle={styles.listContentContainer}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+      />
+      
+      <TouchableOpacity onPress={handleAddNewRecipe} style={[styles.fab, {bottom: insets.bottom + TAB_BAR_HEIGHT + 20,}]}>
+          <Ionicons name="add" size={32} color={Colors.colors.neutral[100]} />
+      </TouchableOpacity>
+      
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.colors.gray[100],
   },
-  scrollContainer: {
-    flexGrow: 1,
-    paddingBottom: 100,
-  },
-  recipesList: {
-    gap: 16,
-  },
-  noRecipesContainer: {
+  centeredContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    marginTop: 48,
+    backgroundColor: Colors.colors.gray[100],
+    paddingHorizontal: 24,
   },
-  noRecipesTitle: {
-      ...globalStyles.largeBodyBold,
-      color: Colors.colors.gray[500],
-      textAlign: 'center',
-      marginTop: 16,
-  },
-  noRecipesText: {
-    ...globalStyles.mediumBodyRegular,
+  infoText: {
+    marginTop: 12,
+    ...globalStyles.largeBodySemiBold,
     color: Colors.colors.gray[400],
-    textAlign: 'center',
-    marginTop: 8,
   },
-  fabContainer: {
-    position: 'absolute',
-    bottom: 80, // Ajustar por encima de la barra de pestañas
-    right: 20,
-  },
-  fab: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  iconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.colors.neutral[100],
+    borderWidth: 2,
+    borderColor: Colors.colors.primary[500],
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 4,
+    marginBottom: 24,
+  },
+  emptyStateTitle: {
+    ...globalStyles.headlineSmall,
+    color: Colors.colors.gray[900],
+    textAlign: 'center',
+  },
+  emptyStateText: {
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[500],
+    textAlign: 'center',
+    marginTop: 8,
+    maxWidth: '95%',
+  },
+  listContentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 120,
+  },
+  fab: {
+    position: 'absolute',
+    right: 16, 
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.colors.primary[200],
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,  
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
+    zIndex: 10,
   },
 });
 

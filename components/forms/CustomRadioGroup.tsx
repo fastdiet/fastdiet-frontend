@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 16,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.2,
     borderColor: Colors.colors.gray[200],
     backgroundColor: Colors.colors.gray[100],
     flex: 1,
@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
   },
   radioLabel: {
     fontFamily: 'InterRegular',
-    color: Colors.colors.gray[400],
+    fontSize: 15,
+    color: Colors.colors.gray[700],
   },
   errorText: {
     color: Colors.colors.error[100],

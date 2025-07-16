@@ -1,6 +1,5 @@
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { HeaderBackButton } from "@react-navigation/elements";
 import { Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
 

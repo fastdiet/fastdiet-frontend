@@ -1,3 +1,4 @@
+import { FormInputIngredient, FormInputStep } from "@/models/recipeInput";
 import { useTranslation } from "react-i18next";
 import validate from "react-native-email-validator";
 
@@ -87,17 +88,35 @@ export const useValidations = () => {
       return null;
     },
 
-    positiveNumber: (value: string) => {
-      if (!value.trim()) return null;
-
+    requiredPositiveNumber: (value: string) => {
+      if (!value || !value.trim()) {
+        return t("errorsFrontend.validations.required");
+      }
+      
       const numeric = parseFloat(value.replace(',', '.'));
 
-      if (isNaN(numeric)) 
+      if (isNaN(numeric)) {
         return t("errorsFrontend.validations.numericInvalid");
+      }
       
-      if (numeric <= 0) 
+      if (numeric <= 0) {
         return t("errorsFrontend.validations.positiveNumberInvalid");
+      }
         
+      return null;
+    },
+    ingredientsList: (value: FormInputIngredient[]) => {
+      for (const ingredient of value) {
+        const hasName = ingredient.name.trim();
+        const isAmountNumeric = !isNaN(parseFloat(ingredient.amount.trim().replace(',', '.')));
+
+        if (hasName && !isAmountNumeric) {
+          return t("errorsFrontend.validations.ingredientMissingAmount", { name: ingredient.name });
+        }
+        if (!hasName && isAmountNumeric) {
+            return t("errorsFrontend.validations.ingredientMissingName");
+        }
+      }
       return null;
     },
 

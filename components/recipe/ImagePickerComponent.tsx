@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-
 import { Colors } from '@/constants/Colors';
-// Si tienes estilos globales:
-
+import globalStyles from "@/styles/global";
 
 interface Props {
   imageUri: string | null;
@@ -12,32 +10,45 @@ interface Props {
 }
 
 const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
-  const [cameraPermission, requestCameraPermission] = ImagePicker.useCameraPermissions();
   const [mediaPermission, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [cameraPermission, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
-  const openPicker = () => {
-    Alert.alert(
-      'Selecciona',
-      '¿De dónde quieres la foto?',
-      [
-        { text: 'Cámara', onPress: pickFromCamera },
-        { text: 'Galería', onPress: pickFromLibrary },
-        { text: 'Cancelar', style: 'cancel' },
-      ]
-    );
+  const handlePickImage = async () => {
+    if (imageUri) {
+      Alert.alert(
+        'Cambiar imagen',
+        '¿Qué quieres hacer?',
+        [
+          { text: 'Tomar foto', onPress: takePhoto },
+          { text: 'Elegir de galería', onPress: pickFromGallery },
+          { text: 'Eliminar foto', onPress: () => onImagePicked(null), style: 'destructive' },
+          { text: 'Cancelar', style: 'cancel' },
+        ]
+      );
+    } else {
+      Alert.alert(
+        'Seleccionar imagen',
+        '',
+        [
+          { text: 'Tomar foto', onPress: takePhoto },
+          { text: 'Elegir de galería', onPress: pickFromGallery },
+          { text: 'Cancelar', style: 'cancel' },
+        ]
+      );
+    }
   };
 
-  const pickFromCamera = async () => {
-    const permission = await requestCameraPermission();
+  const pickFromGallery = async () => {
+    const permission = await requestMediaPermission();
     if (!permission.granted) {
-      alert('Necesitas permiso para usar la cámara.');
+      alert('Necesitas dar permisos para acceder a tus fotos.');
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
       allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
+      quality: 0.7,
     });
 
     if (!result.canceled) {
@@ -45,18 +56,16 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
     }
   };
 
-  const pickFromLibrary = async () => {
-    const permission = await requestMediaPermission();
+  const takePhoto = async () => {
+    const permission = await requestCameraPermission();
     if (!permission.granted) {
-      alert('Necesitas permiso para acceder a la galería.');
+      alert('Necesitas dar permisos para usar la cámara.');
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.5,
+      quality: 0.7,
     });
 
     if (!result.canceled) {
@@ -65,13 +74,13 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
   };
 
   return (
-    <TouchableOpacity onPress={openPicker} style={styles.container}>
+    <TouchableOpacity onPress={handlePickImage} style={styles.container}>
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.image} />
       ) : (
         <View style={styles.placeholder}>
           <Ionicons name="camera-outline" size={40} color={Colors.colors.gray[300]} />
-          <Text style={styles.placeholderText}>Añadir foto</Text>
+          <Text style={styles.placeholderText}>Añadir foto de portada</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -80,18 +89,19 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
+    height: 220,
     width: '100%',
     backgroundColor: Colors.colors.gray[200],
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'cover',
   },
   placeholder: {
     alignItems: 'center',

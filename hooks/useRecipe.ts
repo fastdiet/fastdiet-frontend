@@ -33,7 +33,7 @@ export const useRecipe = (recipeId?: string | number): UseRecipeResult => {
     } catch (err) {
       const recipeError = handleApiError(err);
       console.error(`Error fetching recipe ${recipeId}:`, recipeError);
-      setError(recipeError);
+      setError(recipeError.message);
       setRecipe(null);
     } finally {
       setLoading(false);

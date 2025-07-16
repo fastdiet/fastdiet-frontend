@@ -15,11 +15,14 @@ import { UserPreferences } from "@/models/user_preferences";
 import { GoogleSignin, isErrorWithCode, statusCodes } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 
-
+export interface ApiError {
+  code: string | null;
+  message: string;
+}
 
 export type ApiResponse<T = never> = {
   success: boolean;
-  error: string;
+  error: ApiError | null;
   data?: T; 
 };
 
@@ -113,19 +116,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         router.replace("/menu/");
       }
 
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       if (isErrorWithCode(error)) {
+        let apiError: ApiError = {
+          code: error.code ?? null,
+          message: ""
+        };
         switch (error.code) {
           case statusCodes.SIGN_IN_CANCELLED:
-            return { success: false, error: "Sign in was cancelled by user" };
+            apiError.message = "Sign in was cancelled by user";
+            break;
           case statusCodes.IN_PROGRESS:
-            return { success: false, error: "Sign in already in progress" };
+            apiError.message = "Sign in already in progress";
+            break;
           case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            return { success: false, error: "Play services not available" };
+            apiError.message = "Play services not available";
+            break;
           default:
-            return { success: false, error: error.message || "Unknown Google Sign-In error" };
+            apiError.message = error.message || "Unknown Google Sign-In error";
+            break;
         }
+        return { success: false, error: apiError };
       }
       return { success: false, error: handleApiError(error) };
     }
@@ -146,7 +158,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       await GoogleSignin.signOut();
       setUserPreferences(authResponse.preferences);
       setUser(authResponse.user);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -161,7 +173,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       });
       await saveUser(userData);
       setUser(userData);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -170,6 +182,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const clearData = async () => {
 
     if (user?.auth_method === 'google') {
+      console.log("user");
       try {
         await GoogleSignin.signOut();
       } catch (e) {
@@ -231,7 +244,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           await saveUserPreferences(updatedPrefsForStorage);
         }
 
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -248,7 +261,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       };
       setUserPreferences(newPreferences);
       await saveUserPreferences(newPreferences);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -264,7 +277,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       };
       setUserPreferences(newPreferences);
       await saveUserPreferences(newPreferences);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -281,7 +294,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       
       setUserPreferences(newPreferences);
       await saveUserPreferences(newPreferences);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -300,7 +313,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       
       setUserPreferences(newPreferences);
       await saveUserPreferences(newPreferences);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -319,7 +332,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       
       setUserPreferences(newPreferences);
       await saveUserPreferences(newPreferences);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -330,7 +343,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const sendVerificationCode = async (email: string) => {
     try {
       await api.post("/send-verification-code", { email });
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -350,7 +363,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       ]);
     
       setUser(authResponse.user);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -361,7 +374,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await api.post("/send-reset-code", { email });
       setEmailReset(email);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -371,7 +384,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await api.post("/verify-reset-code", { email: emailReset, code });
       setResetCode(code);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -388,7 +401,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       });
       setEmailReset("");
       setResetCode("");
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
@@ -401,7 +414,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         new_password: newPassword,
       });
 
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }

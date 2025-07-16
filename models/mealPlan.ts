@@ -6,6 +6,7 @@ export interface RecipeShort {
   image_url?: string | null;
   ready_min?: number | null;
   calories?: number | null;
+  servings?: number | null;
 }
 
 export interface IngredientInfo {

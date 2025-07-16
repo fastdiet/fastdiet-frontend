@@ -44,7 +44,7 @@ export default function SelectGoalScreen() {
     
     const { success, error } = await selectGoal(goal);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

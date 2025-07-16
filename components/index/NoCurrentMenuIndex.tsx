@@ -84,7 +84,7 @@ const NoCurrentMenuIndex = () => {
     setErrorMessage("");
     const {success, error} = await generateMenu();
     if(!success){
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setIsGenerating(false);
       return;
     }

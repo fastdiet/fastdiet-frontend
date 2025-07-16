@@ -1,121 +1,228 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { RecipeDetail } from '@/models/mealPlan'; // Usamos tu modelo existente
-import { Colors } from '@/constants/Colors';
-import globalStyles from '@/styles/global';
+import { useState } from 'react';
+import { View, Text, Image, StyleSheet, ActivityIndicator, Pressable, TouchableOpacity, Alert } from "react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
-import { useMyRecipes } from '@/hooks/useMyRecipes';
 import Toast from 'react-native-toast-message';
 
-interface MyRecipeCardProps {
-  recipe: RecipeDetail;
-  onEdit: (id: number) => void;
+
+import { useMyRecipes } from '@/hooks/useMyRecipes';
+import { Colors } from "@/constants/Colors";
+import globalStyles from "@/styles/global";
+import { RecipeShort } from '@/models/mealPlan';
+
+interface RecipeCardProps {
+  recipe: RecipeShort;
+  onPress: () => void;
+  onEdit: () => void;
 }
 
-const MyRecipeCard = ({ recipe, onEdit }: MyRecipeCardProps) => {
-    const { t } = useTranslation();
-    const { deleteRecipe } = useMyRecipes();
+const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
+  const { t } = useTranslation();
+  const [imageLoading, setImageLoading] = useState(true);
+  const { deleteRecipe } = useMyRecipes();
 
-    const handleDelete = () => {
-        Alert.alert(
-            t('myRecipes.delete.confirmTitle'),
-            t('myRecipes.delete.confirmMessage', { title: recipe.title }),
-            [
-              { text: t('cancel'), style: 'cancel' },
-              {
-                text: t('delete'),
-                style: 'destructive',
-                onPress: async () => {
-                  const { success, error } = await deleteRecipe(recipe.id);
-                  if (success) {
-                    Toast.show({ type: 'success', position: 'bottom', text1: t('myRecipes.delete.success') });
-                  } else {
-                    Toast.show({ type: 'error', position: 'bottom', text1: t('error'), text2: error });
-                  }
-                },
-              },
-            ]
-          );
-    };
+  const handleDelete = () => {
+    Alert.alert(
+        t('myRecipes.delete.confirmTitle'),
+        t('myRecipes.delete.confirmMessage', { title: recipe.title }),
+        [
+        { text: t('cancel'), style: 'cancel' },
+        {
+            text: t('delete'),
+            style: 'destructive',
+            onPress: async () => {
+            const { success, error } = await deleteRecipe(recipe.id, false);
 
+            if (success) {
+                Toast.show({ type: 'success', text1: t('myRecipes.delete.success') });
+            } else if (error?.code === "RECIPE_LINKED_TO_MEAL_PLAN") {
+                Alert.alert(
+                t('myRecipes.delete.forceTitle'),
+                t('myRecipes.delete.forceMessage', { title: recipe.title }),
+                [
+                    { text: t('cancel'), style: 'cancel' },
+                    {
+                      text: t('deleteAnyway'),
+                      style: 'destructive',
+                      onPress: async () => {
+                        const { success: forceSuccess, error: forceError } = await deleteRecipe(recipe.id, true);
+                        if (forceSuccess) {
+                          Toast.show({ type: 'success', text1: t('myRecipes.delete.success') });
+                        } else {
+                          Toast.show({ type: 'error', text1: t('error'), text2: forceError?.message });
+                        }
+                      },
+                    },
+                ]
+                );
+            } else {
+                Toast.show({ type: 'error', text1: t('error'), text2: error?.message });
+            }
+            },
+        },
+        ]
+    );
+  };
 
   return (
-    <View style={styles.card}>
-       <Image
-                source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/loginFastdiet.png')}
-                style={styles.image}
-            />
-            <View style={styles.content}>
-                <Text style={styles.title}>{recipe.title}</Text>
-                <Text style={styles.description} numberOfLines={2}>
-                    {recipe.summary || t('myRecipes.card.noDescription')}
-                </Text>
+    <Pressable
+      style={({ pressed }) => [ styles.card, { transform: [{ scale: pressed ? 0.98 : 1 }] , opacity: pressed ? 0.9 : 1,} ]}
+      onPress={onPress}
+    >
+      <View style={styles.imageContainer}>
+        {imageLoading && (
+          <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[200]} />
+        )}
+        <Image
+          source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/loginFastdiet.png')} // Use a placeholder
+          style={styles.image}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
+        
+        <LinearGradient
+          colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']}
+          locations={[0, 0.5, 1]}
+          style={styles.gradient}
+        />
+        
+            <View style={styles.topOverlay}>
+                
+                <View style={styles.actionButtonsGroup}>
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={(e) => { e.stopPropagation(); onEdit(); }}
+                        hitSlop={10}
+                    >
+                        <MaterialCommunityIcons name="pencil" size={22} color={Colors.colors.neutral[100]} />
+                    </TouchableOpacity>
+                    
+                    <View style={styles.separator} />
+                    
+                    <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={(e) => { e.stopPropagation(); handleDelete(); }}
+                        hitSlop={10}
+                    >
+                        <MaterialCommunityIcons name="trash-can-outline" size={22} color={Colors.colors.neutral[100]}/>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.actions}>
-                <TouchableOpacity onPress={() => onEdit(recipe.id)} style={styles.actionButton}>
-                    <Ionicons name="pencil" size={22} color={Colors.colors.primary[200]} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleDelete} style={[styles.actionButton, { marginTop: 12 }]}>
-                    <Ionicons name="trash-outline" size={22} color={Colors.colors.error[100]} />
-                </TouchableOpacity>
+
+        <View style={styles.bottomInfoOverlay}>
+          {recipe.ready_min && (
+            <View style={styles.infoPill}>
+              <Ionicons name="time-outline" size={14} color={Colors.colors.neutral[100]} />
+              <Text style={styles.infoText}>{recipe.ready_min} min</Text>
             </View>
+          )}
+          {recipe.servings && (
+            <View style={styles.infoPill}>
+              <Ionicons name="people-outline" size={14} color={Colors.colors.neutral[100]} />
+              <Text style={styles.infoText}>{recipe.servings}</Text>
+            </View>
+          )}
         </View>
-    );
+      </View>
+    
+      <View style={styles.titleContainer}>
+            <View style={styles.titleTextWrapper}>
+            <Text style={styles.recipeTitle} numberOfLines={2} ellipsizeMode="tail">{recipe.title}</Text>
+            </View>
+            <MaterialCommunityIcons
+            name="chevron-right"
+            size={28}
+            color={Colors.colors.primary[200]}
+            />
+        </View>
+    </Pressable>
+  );
 };
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    backgroundColor: Colors.colors.neutral[100],
     borderRadius: 16,
-    padding: 12,
+    backgroundColor: Colors.colors.neutral[100],
+    overflow: 'hidden',
     shadowColor: Colors.colors.neutral[500],
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 8,
   },
-  image: {
-    width: 90,
-    height: 90,
-    borderRadius: 12,
+  imageContainer: {
+    width: '100%',
+    height: 200,
     backgroundColor: Colors.colors.gray[200],
   },
-  content: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
+  image: { width: '100%', height: '100%' },
+  gradient: { ...StyleSheet.absoluteFillObject },
+  topOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
   },
-  title: {
-    ...globalStyles.mediumBodyBold,
-    color: Colors.colors.gray[500],
+  bottomInfoOverlay: {
+    position: 'absolute',
+    bottom: 12,
+    left: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  description: {
-    ...globalStyles.smallBodyRegular,
-    color: Colors.colors.gray[400],
-    marginTop: 4,
+  actionButtonsGroup: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 16,
+    borderTopLeftRadius: 16,
+    padding: 8,
   },
-  infoRow: {
-      flexDirection: 'row',
-      marginTop: 8,
-      gap: 16,
+   actionButton: {
+    padding: 6,
   },
-  infoItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+  separator: {
+    height: 1,
+    width: '70%',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginVertical: 4,
+  },
+  infoPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    borderRadius: 20,
   },
   infoText: {
-      ...globalStyles.smallBodySemiBold,
-      color: Colors.colors.gray[500],
-      marginLeft: 4,
+    ...globalStyles.smallBodySemiBold,
+    color: Colors.colors.neutral[100],
+    marginLeft: 4,
   },
-  actions: {
-    justifyContent: 'center',
-    paddingLeft: 8,
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: Colors.colors.neutral[100],
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  actionButton: {
-    padding: 4,
+  titleTextWrapper: {
+    flex: 1,
+    marginRight: 8,
+  },
+  recipeTitle: {
+    ...globalStyles.largeBodySemiBold,
+    color: Colors.colors.gray[500],
+    lineHeight: 24,
   },
 });
 

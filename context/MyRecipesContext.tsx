@@ -2,88 +2,113 @@ import React, { createContext, useState, useEffect, ReactNode, useCallback } fro
 import api from "@/utils/api";
 import { handleApiError } from "@/utils/errorHandler";
 import { useAuth } from "@/hooks/useAuth";
-import { RecipeDetail } from "@/models/mealPlan";
+import { RecipeDetail, RecipeShort } from "@/models/mealPlan";
 import { getMyRecipes, saveMyRecipes } from "@/utils/asyncStorage"; 
 import { ApiResponse } from "@/context/AuthContext";
 
-
-type RecipeInputData = Omit<RecipeDetail, 'id' | 'ingredients' | 'analyzed_instructions'> & {
-    ingredients: { name: string; quantity: number; unit: string }[];
-    steps: string[];
-};
+import { RecipeCreationData } from "@/models/recipeInput"; // Asegúrate de que este modelo exista y sea correcto
 
 
 interface MyRecipesContextType {
-  myRecipes: RecipeDetail[];
+  myRecipes: RecipeShort[];
   loading: boolean;
-  createRecipe: (recipeData: RecipeInputData) => Promise<ApiResponse>;
-  deleteRecipe: (recipeId: number) => Promise<ApiResponse>;
+  fetchRecipes: () => Promise<void>;
+  createRecipe: (recipeData: RecipeCreationData) => Promise<ApiResponse>;
+  deleteRecipe: (recipeId: number, force: boolean) => Promise<ApiResponse>;
+  //updateRecipe: (recipeId: number, updatedData: Partial<UserRecipe>) => Promise<ApiResponse>;
 }
 
 export const MyRecipesContext = createContext<MyRecipesContextType | undefined>(undefined);
 
 export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [myRecipes, setMyRecipes] = useState<RecipeDetail[]>([]);
+  const [myRecipes, setMyRecipes] = useState<RecipeShort[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  const fetchMyRecipes = useCallback(async () => {
+  const fetchRecipes = async () => {
+    if (!user) {
+      setMyRecipes([]);
+      return;
+    }
+
     setLoading(true);
     try {
-      const storedRecipes = await getMyRecipes();
-      if (storedRecipes) {
-        setMyRecipes(storedRecipes);
-      }
-      // Petición a la API para refrescar los datos
-      const { data } = await api.get('/recipes/me'); // Endpoint de ejemplo para tus recetas
-      setMyRecipes(data);
-      await saveMyRecipes(data);
-
-    } catch (err) {
-      console.error("Failed to fetch my recipes:", handleApiError(err));
+      const { data } = await api.get("/recipes/my-recipes");
+      setMyRecipes(data.recipes);
+      await saveMyRecipes(data.recipes);
+    } catch (error) {
+      console.error("Error fetching recipes:", handleApiError(error));
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    if (user) {
-      fetchMyRecipes();
-    } else {
-      setMyRecipes([]);
-    }
-  }, [user, fetchMyRecipes]);
+    const loadInitialRecipes = async () => {
+      if (!user) {
+        setMyRecipes([]);
+        await saveMyRecipes([]);
+        setLoading(false);
+        return;
+      }
 
-  const createRecipe = async (recipeData: RecipeInputData): Promise<ApiResponse> => {
+      setLoading(true);
+
+      try {
+        const cached = await getMyRecipes();
+        if (cached) {
+          setMyRecipes(cached);
+          fetchRecipes();
+        } else {
+          await fetchRecipes();
+        }
+      } catch (error) {
+        console.error("Error loading recipes:", handleApiError(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInitialRecipes();
+  }, [user]);
+
+  const createRecipe = async (recipeData: RecipeCreationData): Promise<ApiResponse> => {
     try {
-      // Endpoint de ejemplo para crear una receta
+      console.log("Creating recipe with data:", recipeData);
       const { data: newRecipe } = await api.post("/recipes/me", recipeData);
       const updatedRecipes = [...myRecipes, newRecipe];
       setMyRecipes(updatedRecipes);
       await saveMyRecipes(updatedRecipes);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
   };
 
-  const deleteRecipe = async (recipeId: number): Promise<ApiResponse> => {
+  const deleteRecipe = async (recipeId: number, force = false): Promise<ApiResponse> => {
     try {
-      // Endpoint de ejemplo para borrar
-      await api.delete(`/recipes/me/${recipeId}`);
+      console.log("Deleting recipe with ID:", recipeId);
+      await api.delete(`/recipes/me/${recipeId}${force ? '?force=true' : ''}`);
       const updatedRecipes = myRecipes.filter(r => r.id !== recipeId);
       setMyRecipes(updatedRecipes);
       await saveMyRecipes(updatedRecipes);
-      return { success: true, error: "" };
+      return { success: true, error: null };
     } catch (error) {
       return { success: false, error: handleApiError(error) };
     }
   };
 
-  const value = { myRecipes, loading, createRecipe, deleteRecipe };
 
   return (
-    <MyRecipesContext.Provider value={value}>
+    <MyRecipesContext.Provider
+      value={{
+        myRecipes,
+        loading,
+        fetchRecipes,
+        createRecipe,
+        deleteRecipe,
+      }}
+    >
       {children}
     </MyRecipesContext.Provider>
   );

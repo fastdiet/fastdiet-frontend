@@ -43,7 +43,7 @@ export default function SelectActivityScreen() {
     
     const { success, error } = await selectActivity(activityLevel);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

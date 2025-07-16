@@ -61,9 +61,9 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
           onPress: async () => {
             const { success, error } = await deleteMeal(dayIndex, slot);
             if (success) {
-              Toast.show({ type: 'success', position: 'bottom', bottomOffset: 60 , text1: t('index.menu.deleteMeal.success') });
+              Toast.show({ type: 'success', text1: t('index.menu.deleteMeal.success') });
             } else {
-              Toast.show({ type: 'error', position: 'bottom', bottomOffset: 60, text1: t('error'), text2: error }, );
+              Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? "" }, );
             }
           },
         },

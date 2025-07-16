@@ -55,7 +55,7 @@ const LoginForm = () => {
     const { success, error } = await login(userid, password);
 
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false); 
       return;
     }

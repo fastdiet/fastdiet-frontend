@@ -1,6 +1,6 @@
 // React & React Native Imports
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent, ViewStyle, TextStyle, ActivityIndicator, View } from 'react-native';
 
 // Style Imports
 import globalStyles from '@/styles/global';
@@ -13,6 +13,8 @@ interface ButtonProps {
   textStyle?: TextStyle;
   disabled?: boolean;
   loading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode
 }
 
 const PrimaryButton: React.FC<ButtonProps> = ({
@@ -22,6 +24,8 @@ const PrimaryButton: React.FC<ButtonProps> = ({
   textStyle = {},
   disabled = false,
   loading = false,
+  leftIcon,
+  rightIcon,
 }) => {
   const isDisabled = disabled || loading;
   return (
@@ -34,16 +38,20 @@ const PrimaryButton: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator size="small" color={Colors.colors.neutral[100]} />
       ) : (
-        <Text
-          style={[
-            globalStyles.largeBodySemiBold,
-            styles.text,
-            textStyle,
-            isDisabled && styles.disabledText,
-          ]}
-        >
-          {title}
-        </Text>
+        <View style={styles.contentContainer}>
+          {leftIcon && <View style={styles.iconWrapper}>{leftIcon}</View>}
+          <Text
+            style={[
+              globalStyles.largeBodySemiBold,
+              styles.text,
+              textStyle,
+              isDisabled && styles.disabledText,
+            ]}
+          >
+            {title}
+          </Text>
+          {rightIcon && <View style={styles.iconWrapper}>{rightIcon}</View>}
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -51,13 +59,22 @@ const PrimaryButton: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 24,
+    paddingVertical: 14,
     backgroundColor: Colors.colors.primary[100], 
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 16,
+    borderRadius: 14,
     marginBottom: 16,
+    minHeight: 50,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconWrapper: {
+    marginHorizontal: 8,
   },
   disabledButton: {
     backgroundColor: Colors.colors.gray[200],

@@ -52,13 +52,7 @@ export default function BasicInfoScreen() {
     height: validations.height,
   });
   useEffect(() => {
-    Toast.show({
-      type: "success",
-      text1: "Email verificado",
-      text2: "Completa tu perfil",
-      position: "bottom",
-      bottomOffset: 80,
-    });
+    Toast.show({ type: "success", text1: "Email verificado", text2: "Completa tu perfil",});
   }, []);
 
   const handleSaveProfile = async () => {
@@ -77,7 +71,7 @@ export default function BasicInfoScreen() {
     );
 
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }
@@ -89,13 +83,12 @@ export default function BasicInfoScreen() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }}
             keyboardShouldPersistTaps="handled"
           >
             <View style={{ height: 16 }} />
@@ -170,7 +163,6 @@ export default function BasicInfoScreen() {
             </PaddingView>
           </View>
         </View>
-      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }

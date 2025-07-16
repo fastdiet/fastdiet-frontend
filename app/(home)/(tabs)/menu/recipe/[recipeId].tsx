@@ -13,6 +13,7 @@ import InstructionList from '@/components/recipeDetails/InstructionList';
 import EquipmentGrid from '@/components/recipeDetails/EquipmentGrid';
 import IngredientList from '@/components/recipeDetails/IngredientList';
 import PaddingView from '@/components/views/PaddingView';
+import PrimaryButton from '@/components/buttons/PrimaryButton';
 
 // Hooks imports
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,7 @@ import { useRecipe } from '@/hooks/useRecipe';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+
 
 const getSlotName = (slotIndex: number, t: (key: string) => string): string => {
   const slotKeyMap: { [key: number]: string } = {
@@ -48,7 +50,7 @@ const RecipeDetailScreen = () => {
       }
     }
     navigation.setOptions({ title: headerTitle });
-  }, [params.day, params.slot, navigation, t]);
+  }, [params.day, params.slot, navigation, t, recipe]);
 
   const calories = useMemo(() => recipe?.calories ? Math.round(recipe.calories) : null, [recipe?.calories]);
   const totalTime = useMemo(() => {
@@ -61,22 +63,20 @@ const RecipeDetailScreen = () => {
   if (loading) {
     return (
       <View style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color={Colors.colors.primary[200]} />
-        <Text style={styles.loadingText}>{t("index.menu.recipe.loading")}</Text>
+        <ActivityIndicator size="large" color={Colors.colors.primary[100]} />
+        <Text style={[globalStyles.mediumBodySemiBold, styles.messageText]}>{t("index.menu.recipe.loading")}</Text>
       </View>
     );
   }
 
   if (error || !recipe) {
     return (
-      <View style={[styles.centeredContainer, styles.errorContainer]}>
+      <View style={styles.centeredContainer}>
         <Stack.Screen options={{ title: t("index.menu.recipe.notFoundTitle") }} />
         <MaterialCommunityIcons name="alert-circle-outline" size={56} color={Colors.colors.error[100]} />
         <Text style={styles.errorTitle}>{t("index.menu.recipe.notFound")}</Text>
         <Text style={styles.errorMessage}>{error || t("index.menu.recipe.couldNotLoad")}</Text>
-        <TouchableOpacity onPress={() => refetch()} style={styles.retryButton}>
-          <Text style={styles.retryButtonText}>{t("retry")}</Text>
-        </TouchableOpacity>
+        <PrimaryButton title={t("retry")} onPress={() => refetch()} style={{ marginTop: 24, paddingHorizontal: 32 }}/>
       </View>
     );
   }
@@ -125,39 +125,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.colors.neutral[100],
+    paddingHorizontal: 24
   },
-  loadingText: {
-    marginTop: 12,
-    ...globalStyles.mediumBodyRegular,
-    color: Colors.colors.gray[400],
-  },
-  errorContainer: {
-    padding: 24,
+  messageText: {
+    marginTop: 10,
+    color: "#333",
   },
   errorTitle: {
     marginTop: 16,
     textAlign: 'center',
-    ...globalStyles.largeBodyBold,
-    color: Colors.colors.gray[500],
+    ...globalStyles.headlineSmall,
+    color: Colors.colors.gray[900],
   },
   errorMessage: {
-    marginVertical: 12,
+    marginVertical: 8,
     textAlign: 'center',
-    ...globalStyles.mediumBodyRegular,
-    color: Colors.colors.gray[400],
-    lineHeight: 20,
-  },
-  retryButton: {
-    marginTop: 16,
-    backgroundColor: Colors.colors.primary[100],
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    ...globalStyles.mediumBodySemiBold,
-    color: Colors.colors.neutral[100],
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[500],
+    lineHeight: 22,
   },
   scrollContentContainer: {
     paddingBottom: 80,

@@ -10,7 +10,7 @@ import { useFonts } from "expo-font";
 
 
 import Toast from "react-native-toast-message";
-import { toastConfig } from '@/components/CustomToast';
+import { AppToast } from '@/components/CustomToast';
 
 // Navigation Imports
 import { Slot, } from "expo-router";
@@ -64,7 +64,7 @@ export default function RootLayout() {
     <SafeAreaView style={{ flex: 1 }}>
       <AuthProvider>
           <Slot />
-          <Toast config={toastConfig} />
+          <AppToast />
           <StatusBar style="auto" />
       </AuthProvider>
     </SafeAreaView>
