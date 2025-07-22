@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, Pressable, TouchableOpacity, Alert } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
@@ -10,6 +9,7 @@ import { useMyRecipes } from '@/hooks/useMyRecipes';
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
 import { RecipeShort } from '@/models/mealPlan';
+import { ChevronRight, Clock, Pencil, Trash2, Users } from 'lucide-react-native';
 
 interface RecipeCardProps {
   recipe: RecipeShort;
@@ -75,14 +75,14 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
           <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[200]} />
         )}
         <Image
-          source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/loginFastdiet.png')} // Use a placeholder
+          source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/recipe-placeholder.jpg')}
           style={styles.image}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}
         />
         
         <LinearGradient
-          colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']}
+          colors={['rgba(0,0,0,0.0)', 'transparent', 'rgba(0,0,0,0.0)']}
           locations={[0, 0.5, 1]}
           style={styles.gradient}
         />
@@ -95,7 +95,7 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
                         onPress={(e) => { e.stopPropagation(); onEdit(); }}
                         hitSlop={10}
                     >
-                        <MaterialCommunityIcons name="pencil" size={22} color={Colors.colors.neutral[100]} />
+                      <Pencil size={22} color={Colors.colors.neutral[100]} />
                     </TouchableOpacity>
                     
                     <View style={styles.separator} />
@@ -105,7 +105,7 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
                         onPress={(e) => { e.stopPropagation(); handleDelete(); }}
                         hitSlop={10}
                     >
-                        <MaterialCommunityIcons name="trash-can-outline" size={22} color={Colors.colors.neutral[100]}/>
+                      <Trash2 size={22} color={Colors.colors.neutral[100]} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -113,13 +113,13 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
         <View style={styles.bottomInfoOverlay}>
           {recipe.ready_min && (
             <View style={styles.infoPill}>
-              <Ionicons name="time-outline" size={14} color={Colors.colors.neutral[100]} />
+              <Clock size={14} color={Colors.colors.neutral[100]} />
               <Text style={styles.infoText}>{recipe.ready_min} min</Text>
             </View>
           )}
           {recipe.servings && (
             <View style={styles.infoPill}>
-              <Ionicons name="people-outline" size={14} color={Colors.colors.neutral[100]} />
+              <Users size={14} color={Colors.colors.neutral[100]} />
               <Text style={styles.infoText}>{recipe.servings}</Text>
             </View>
           )}
@@ -130,11 +130,7 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
             <View style={styles.titleTextWrapper}>
             <Text style={styles.recipeTitle} numberOfLines={2} ellipsizeMode="tail">{recipe.title}</Text>
             </View>
-            <MaterialCommunityIcons
-            name="chevron-right"
-            size={28}
-            color={Colors.colors.primary[200]}
-            />
+            <ChevronRight size={26} color={Colors.colors.primary[200]} />
         </View>
     </Pressable>
   );

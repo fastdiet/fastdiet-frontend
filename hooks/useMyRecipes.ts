@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MyRecipesContext } from '@/context/MyRecipesContext'; // Crearemos este archivo ahora
+import { MyRecipesContext } from '@/context/MyRecipesContext';
 
 export const useMyRecipes = () => {
   const context = useContext(MyRecipesContext);

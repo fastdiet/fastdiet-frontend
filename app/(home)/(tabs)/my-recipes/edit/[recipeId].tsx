@@ -1,7 +1,7 @@
 // React and Expo imports
-import { useState } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Text } from 'react-native';
+import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { nanoid } from 'nanoid/non-secure';
@@ -21,32 +21,67 @@ import StepInputList from '@/components/myRecipes/StepInputList';
 
 // Hooks imports
 import { useMyRecipes } from '@/hooks/useMyRecipes';
+import { useRecipe } from '@/hooks/useRecipe'; // ¡NUEVO! Para cargar la receta existente.
 import { useValidations } from '@/hooks/useValidations';
 import { useFormValidation } from '@/hooks/useFormValidation';
 
 // Styles imports
 import { Colors } from '@/constants/Colors';
+import globalStyles from '@/styles/global';
 
 // Models imports
 import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
-import { ChefHat, List } from 'lucide-react-native';
+import { AlertCircle, ChefHat, List } from 'lucide-react-native';
+import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
 
 
-const CreateRecipeScreen = () => {
+const EditRecipeScreen = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { createRecipe } = useMyRecipes();
+  const { recipeId } = useLocalSearchParams();
+  const id = Number(recipeId);
+  const { recipe, loading, error, refetch } = useRecipe(id);
+  const { updateRecipe } = useMyRecipes();
   const validations = useValidations();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+   const [formData, setFormData] = useState({
     title: '',
     summary: '',
     readyMin: '',
     servings: '', 
     imageUri: null as string | null,
-    ingredients: [{id: nanoid(), name: '', amount: '', unit: '' }] as FormInputIngredient[],
-    steps: [{ id: nanoid(), description: '' }] as FormInputStep[],
+    ingredients: [] as FormInputIngredient[],
+    steps: [] as FormInputStep[],
   });
+
+  useEffect(() => {
+    if (recipe) {
+      const mappedIngredients = recipe.ingredients?.map(ing => ({
+        id: nanoid(),
+        name: ing.ingredient.name,
+        amount: ing.amount.toString(),
+        unit: ing.unit || '',
+      })) ?? [];
+      
+      const mappedSteps = recipe.analyzed_instructions?.[0]?.steps.map(step => ({
+        id: nanoid(),
+        description: step.step,
+      })) ?? [];
+
+      setFormData({
+        title: recipe.title,
+        summary: recipe.summary || '',
+        readyMin: recipe.ready_min?.toString() || '',
+        servings: recipe.servings?.toString() || '',
+        imageUri: recipe.image_url || null,
+        ingredients: mappedIngredients.length > 0 ? mappedIngredients : [{ id: nanoid(), name: '', amount: '', unit: '' }],
+        steps: mappedSteps.length > 0 ? mappedSteps : [{ id: nanoid(), description: '' }],
+      });
+    }
+  }, [recipe]);
+
 
   const handleInputChange = (field: keyof typeof formData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -59,30 +94,19 @@ const CreateRecipeScreen = () => {
     ingredients: validations.ingredientsList,
   });
   
-  const handleSaveRecipe = async () => {
-   const isValid = validateForm(formData);
+  const handleUpdateRecipe = async () => {
+    if (!recipeId) return;
+
+    const isValid = validateForm(formData);
     if (!isValid) {
       Toast.show({ type: 'error', text1: 'Revisa el formulario', text2: 'Algunos campos tienen errores.'});
       return;
     }
 
-    // 1. Lógica de subida de imagen (a futuro)
-    // setLoading(true); // Activar el loading ANTES de cualquier operación async
-    // let finalImageUrl = null;
-    // try {
-    //   if (formData.imageUri) {
-    //     // y devuelve la URL pública.
-    //     finalImageUrl = await uploadImage(formData.imageUri);
-    //   }
-    // } catch (uploadError) {
-    //   setLoading(false);
-    //   Toast.show({ type: 'error', text1: 'Error al subir la imagen' });
-    //   return;
-    // }
-
-    setLoading(true);
+    setIsUpdating(true);
     const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
     const validSteps = formData.steps.filter(s => s.description.trim());
+
     const recipeData: RecipeCreationData = {
       title: formData.title.trim(),
       summary: formData.summary.trim() || undefined,
@@ -94,23 +118,42 @@ const CreateRecipeScreen = () => {
         unit: ing.unit ? ing.unit.trim() : undefined,
       })),
       image_url: formData.imageUri || null,
-      analyzed_instructions: validSteps.map((s, index) => ({
+      analyzed_instructions: validSteps.length > 0 ? validSteps.map((s, index) => ({
         number: index + 1,
         step: s.description.trim(),
         ingredients: [],
         equipment: [],
-      }))
+      })) : undefined,
     };
-    const { success, error } = await createRecipe(recipeData);
+
+    const { success, error } = await updateRecipe(id, recipeData);
 
     if (success) {
-      Toast.show({ type: 'success', text1: t('myRecipes.create.success')});
+      Toast.show({ type: 'success', text1: t('myRecipes.edit.success')});
       router.back();
     } else {
-      setLoading(false);
+      setIsUpdating(false);
       Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? ""});
     }
   };
+
+   if (loading && !recipe) {
+    return <RecipePageStatus status="loading" />;
+  }
+
+  if (error || !recipe) {
+    return (
+      <RecipePageStatus 
+        status="error"
+        errorDetails={{
+          errorTitle: t("myRecipes.detail.notFound"),
+          errorMessage: error,
+          notFoundTitle: t("myRecipes.detail.notFoundTitle"),
+          onRetry: refetch
+        }}
+      />
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -126,8 +169,8 @@ const CreateRecipeScreen = () => {
             <PaddingView>
               <ViewForm>
                 <TitleParagraph
-                  title={t('myRecipes.create.title')}
-                  paragraph={t('myRecipes.create.subtitle')}
+                  title={t('myRecipes.edit.title')}
+                  paragraph={t('myRecipes.edit.subtitle')}
                 />
                 
                 <ViewInputs>
@@ -135,7 +178,6 @@ const CreateRecipeScreen = () => {
                     imageUri={formData.imageUri} 
                     onImagePicked={(uri) => handleInputChange('imageUri', uri)} 
                   />
-
                   <LabeledTextInput
                     label={t('myRecipes.form.title')}
                      value={formData.title}
@@ -193,10 +235,10 @@ const CreateRecipeScreen = () => {
           <View style={styles.fixedButtonContainer}>
             <PaddingView>
               <PrimaryButton
-                title={t('saveRecipe')}
+                title={t('updateRecipe')}
                 style={{ width: "100%" }}
-                onPress={handleSaveRecipe}
-                loading={loading}
+                onPress={handleUpdateRecipe}
+                loading={isUpdating}
               />
             </PaddingView>
           </View>
@@ -218,7 +260,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     width: '100%',
-  }
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    backgroundColor: Colors.colors.gray[100],
+  },
+  messageText: {
+    marginTop: 10,
+    color: "#333",
+  },
+   errorTitle: {
+    marginTop: 16,
+    textAlign: 'center',
+    ...globalStyles.headlineSmall,
+    color: Colors.colors.gray[900],
+  },
+  errorMessage: {
+    marginVertical: 8,
+    textAlign: 'center',
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[500],
+    lineHeight: 22,
+  },
 });
 
-export default CreateRecipeScreen;
+export default EditRecipeScreen;

@@ -8,9 +8,8 @@ import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
 
 // Icon Imports
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import { BookOpen, Home, UserCircle2 } from "lucide-react-native";
 
 export default function TabLayout() {
   return (
@@ -33,9 +32,11 @@ export default function TabLayout() {
           options={{
             title:"Menú",
             tabBarIcon: ({ focused }) => (
-              <FontAwesome name="home" size={35}  strokeWidth={1}  color={
-                  focused ? Colors.colors.primary[200] : Colors.colors.gray[300]
-                } />
+              <Home 
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
             ),
           }}
         />
@@ -46,16 +47,16 @@ export default function TabLayout() {
 
             const routeName = getFocusedRouteNameFromRoute(route) ?? 'index';
 
-            const screensToHideTabBar = ['create'];
+            const screensToHideTabBar = ['create', 'edit/[recipeId]'];
             
             return {
               title: "Mis recetas",
               tabBarIcon: ({ focused }) => (
-               <Ionicons
-                    name={focused ? "book" : "book-outline"}
-                    size={28}
-                    color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
-                />
+               <BookOpen
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
               ),
               tabBarStyle: {
                 display: screensToHideTabBar.includes(routeName) ? 'none' : 'flex',
@@ -80,8 +81,11 @@ export default function TabLayout() {
             return {
               title: "Perfil",
               tabBarIcon: ({ focused }) => (
-                <FontAwesome name="user" size={35} strokeWidth={1} 
-                color={ focused ? Colors.colors.primary[200] : Colors.colors.gray[300] } />
+                <UserCircle2
+                  size={28}
+                  color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                  strokeWidth={focused ? 2 : 1.7}
+                />
               ),
               tabBarStyle: {
                 display: screensToHideTabBar.includes(routeName) ? 'none' : 'flex',

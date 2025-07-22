@@ -13,17 +13,18 @@ export default function HomeLayout() {
   if (!user) return <Redirect href="/login"/>
 
   return (
-    <MenuProvider>
     <MyRecipesProvider>
-      <Stack
-        screenOptions={{
-        contentStyle: { backgroundColor: Colors.colors.neutral[100] },
-        animation: "slide_from_right",
-      }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <MenuProvider>
+        <Stack
+          screenOptions={{
+          contentStyle: { backgroundColor: Colors.colors.neutral[100] },
+          animation: "slide_from_right",
+        }}
+        >
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </MenuProvider>
     </MyRecipesProvider>
-    </MenuProvider>
+    
   );
 }

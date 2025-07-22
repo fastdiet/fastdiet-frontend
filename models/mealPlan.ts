@@ -75,6 +75,7 @@ export interface RecipeDetail {
 }
 
 export interface SlotMeal{
+  meal_item_id: number;
   slot: number;
   recipe: RecipeShort | null;
 }

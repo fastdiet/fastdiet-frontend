@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { useTranslation } from 'react-i18next';
-import StyledTextInput from '../forms/StyledTextInput';
+import StyledTextInput from '@/components/forms/StyledTextInput';
 import { FormInputStep } from '@/models/recipeInput';
 import { nanoid } from 'nanoid/non-secure';
+import { PlusCircle, Trash2 } from 'lucide-react-native';
 
 
 interface StepInputListProps {
@@ -48,12 +48,12 @@ const StepInputList = ({ steps, setSteps }: StepInputListProps) => {
             />
           </View>
           <TouchableOpacity onPress={() => handleRemoveStep(step.id)} style={styles.deleteButton}>
-            <Ionicons name="trash-outline" size={24} color={Colors.colors.gray[400]} />
+            <Trash2 size={24}  strokeWidth={1.5} color={Colors.colors.gray[400]} />
           </TouchableOpacity>
         </View>
       ))}
       <TouchableOpacity style={styles.addButton} onPress={handleAddStep}>
-        <Ionicons name="add-circle-outline" size={24} color={Colors.colors.primary[100]} />
+        <PlusCircle size={22} strokeWidth={1.8} color={Colors.colors.primary[100]} />
         <Text style={styles.addButtonText}>{t('myRecipes.form.addStep')}</Text>
       </TouchableOpacity>
     </View>

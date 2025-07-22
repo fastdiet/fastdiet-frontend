@@ -17,6 +17,9 @@ import { RecipeShort, SlotMeal } from "@/models/mealPlan";
 
 // Hooks imports
 import { useMenu } from "@/hooks/useMenu";
+import { useState } from "react";
+import ChangeRecipeModal from "./ChangeRecipeModal";
+import { fetchRecipeSuggestions } from "@/services/recipeSuggestions";
 
 
 
@@ -25,10 +28,16 @@ interface DayMenuScreenProps {
   dayIndex: number;
 }
 
-const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
+const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayData, dayIndex }) => {
   const { t } = useTranslation();
-  const { deleteMeal } = useMenu();
+  const { changeMealRecipe, deleteMeal } = useMenu();
   const router = useRouter();
+
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [activeChangeSlot, setActiveChangeSlot] = useState<SlotMeal | null>(null);
+
+  const [suggestions, setSuggestions] = useState<RecipeShort[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState<boolean>(false);
 
   const mealsConfig = [
     { key: "breakfast", slot: 0, label: t("constants.meals.breakfast"), noMealText: t("index.menu.day.noBreakfastPlanned") },
@@ -45,10 +54,44 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
     }
   };
 
-  const changeRecipe = (recipe: RecipeShort, slot: number) => {
-    // TODO: Implement logic to swap the recipe in the meal plan
-    console.log("Change recipe " + recipe.id)
+  const handleChangeRecipeRequest = async (slotData: SlotMeal) => {
+    if (!slotData.recipe || !slotData.meal_item_id) {
+      Toast.show({ type: 'error', text1: t("errors.generic") });
+      return;
+    }
+
+    setIsLoadingSuggestions(true);
+    setActiveChangeSlot(slotData);
+    setModalVisible(true);
+
+    const { success, error, data } = await fetchRecipeSuggestions(slotData.meal_item_id);
+
+    if (success && data) {
+      setSuggestions(data);
+    } else {
+      Toast.show({ type: 'error', text1: error?.message || t("errors.generic") });
+      setSuggestions([]);
+    }
+    
+    setIsLoadingSuggestions(false);
   };
+
+  const handleRecipeSelection = async (newRecipe: RecipeShort) => {
+    if (activeChangeSlot) {
+      await changeMealRecipe(dayIndex, activeChangeSlot.slot, newRecipe);
+    }
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+   
+    setTimeout(() => {
+      setActiveChangeSlot(null);
+      setSuggestions([]);
+    }, 300);
+  };
+
   const deleteRecipe = (recipe: RecipeShort, slot: number) => {
     Alert.alert(
       t('index.menu.deleteMeal.confirmTitle'),
@@ -78,9 +121,10 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
         <PaddingView>
           <View style={styles.mealCardsContainer}>
             {mealsConfig.map((meal) => {
-              const recipe = dayData?.find(r => r.slot === meal.slot)?.recipe || null;
+              const slotData = dayData?.find(r => r.slot === meal.slot) || null;
+              const recipe = slotData?.recipe || null;
 
-              if (recipe) {
+              if (recipe && slotData) {
                 return (
                   <MealCard
                     key={meal.key}
@@ -88,7 +132,7 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
                     mealTypeDisplay={meal.label}
                     recipe={recipe}
                     onPress={() => navigateToRecipeDetail(recipe, meal.slot)}
-                    onChange={() => changeRecipe(recipe, meal.slot)}
+                    onChange={() => handleChangeRecipeRequest(slotData)}
                     onDelete={() => deleteRecipe(recipe, meal.slot)}
                   />
                 );
@@ -103,6 +147,14 @@ const DayMenuScreen = ({ dayData, dayIndex }: DayMenuScreenProps) => {
           </View>
         </PaddingView>
       </ScrollView>
+      <ChangeRecipeModal
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        recipeToChange={activeChangeSlot?.recipe || null}
+        onRecipeSelected={handleRecipeSelection}
+        suggestions={suggestions}
+        isLoading={isLoadingSuggestions}
+      />
     </View>
   );
 };
@@ -118,20 +170,36 @@ const styles = StyleSheet.create({
   mealCardsContainer: {
     gap: 20,
   },
+  // noMealCard: {
+  //   borderRadius: 16,
+  //   backgroundColor: Colors.colors.gray[200],
+  //   padding: 20,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   minHeight: 100,
+  //   borderWidth: 1,
+  //   borderColor: Colors.colors.gray[200],
+  //   borderStyle: 'dashed',
+  // },
+  // noMealText: {
+  //   ...globalStyles.mediumBodySemiBold,
+  //   color: Colors.colors.gray[500],
+  // },
   noMealCard: {
     borderRadius: 16,
-    backgroundColor: Colors.colors.gray[200],
+    backgroundColor: Colors.colors.neutral[100], 
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 100,
-    borderWidth: 1,
+    minHeight: 120,
+    borderWidth: 1.5,
     borderColor: Colors.colors.gray[200],
     borderStyle: 'dashed',
   },
   noMealText: {
-    ...globalStyles.mediumBodySemiBold,
-    color: Colors.colors.gray[500],
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[400],
+    textAlign: 'center',
   },
 });
 

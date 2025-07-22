@@ -3,13 +3,12 @@ import { View, StyleSheet, Text, TouchableOpacity, FlatList, ActivityIndicator }
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
 
 // Components imports
 import PaddingView from '@/components/views/PaddingView';
 import TitleParagraph from '@/components/text/TitleParagraph';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
-import MyRecipeCard from '@/components/recipe/MyRecipeCard';
+import MyRecipeCard from '@/components/myRecipes/MyRecipeCard';
 
 // Hooks imports
 import { useMyRecipes } from '@/hooks/useMyRecipes';
@@ -17,6 +16,7 @@ import { useMyRecipes } from '@/hooks/useMyRecipes';
 // Styles imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { BookOpen, Plus } from 'lucide-react-native';
 
 
 
@@ -34,10 +34,13 @@ const MyRecipesScreen = () => {
       params: { recipeId: recipeId.toString() },
     });
   };
-  const navigateToRecipeDetail = (recipeId: number) => {
+  const navigateToRecipeDetail = (recipeId : number) => {
     router.push({
       pathname: '/(home)/(tabs)/my-recipes/detail/[recipeId]',
-      params: { recipeId: recipeId.toString() },
+      params: { 
+        recipeId: recipeId.toString() ,
+      },
+      
     });
   };
 
@@ -54,7 +57,7 @@ const MyRecipesScreen = () => {
     return (
       <View style={styles.centeredContainer}>
         <View style={styles.iconCircle}>
-          <Ionicons name="receipt-outline" size={50} color={Colors.colors.primary[200]} />
+          <BookOpen size={50} color={Colors.colors.primary[200]} strokeWidth={1.5} />
         </View>
         <Text style={styles.emptyStateTitle}>{t('myRecipes.noRecipes.title')}</Text>
         <Text style={styles.emptyStateText}>{t('myRecipes.noRecipes.subtitle')}</Text>
@@ -62,7 +65,7 @@ const MyRecipesScreen = () => {
           title={t('myRecipes.cta.createFirst')}
           onPress={handleAddNewRecipe}
           style={{ marginTop: 24, paddingHorizontal: 32 }}
-          leftIcon={<Ionicons name="add" size={20} color={Colors.colors.neutral[100]} />}
+          leftIcon={<Plus size={20} strokeWidth={2.5} color={Colors.colors.neutral[100]} />}
         />
       </View>
     );
@@ -93,7 +96,7 @@ const MyRecipesScreen = () => {
       />
       
       <TouchableOpacity onPress={handleAddNewRecipe} style={[styles.fab, {bottom: insets.bottom + TAB_BAR_HEIGHT + 20,}]}>
-          <Ionicons name="add" size={32} color={Colors.colors.neutral[100]} />
+           <Plus size={32} color={Colors.colors.neutral[100]} />
       </TouchableOpacity>
       
     </View>
@@ -123,8 +126,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     backgroundColor: Colors.colors.neutral[100],
-    borderWidth: 2,
-    borderColor: Colors.colors.primary[500],
+    borderWidth: 1,
+    borderColor: Colors.colors.primary[200],
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,

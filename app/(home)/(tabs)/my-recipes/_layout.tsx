@@ -24,6 +24,23 @@ export default function MyRecipesLayout() {
           }
         }} 
       />
+      <Stack.Screen 
+        name="detail/[recipeId]" 
+        options={{ 
+          headerBackTitle: 'Atrás',
+        }} 
+      />
+      <Stack.Screen 
+        name="edit/[recipeId]" 
+        options={{ 
+          headerTitle: 'Editar receta',
+          headerBackTitle: 'Atrás',
+          headerTitleStyle: {
+            ...globalStyles.title,
+            fontSize: 20,
+          }
+        }} 
+      />
     </Stack>
   );
 }

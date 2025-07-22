@@ -2,6 +2,24 @@ import { FormInputIngredient, FormInputStep } from "@/models/recipeInput";
 import { useTranslation } from "react-i18next";
 import validate from "react-native-email-validator";
 
+
+const hasDuplicateIngredients = (ingredients: FormInputIngredient[]) => {
+  const names = ingredients
+    .map(i => i.name.trim().toLowerCase())
+    .filter(name => name);
+
+  const nameSet = new Set();
+
+  for (const name of names) {
+    if (nameSet.has(name)) {
+      return name;
+    }
+    nameSet.add(name);
+  }
+
+  return null;
+};
+
 export const useValidations = () => {
   const { t } = useTranslation();
   return {
@@ -87,7 +105,13 @@ export const useValidations = () => {
         return t("errorsFrontend.validations.required");
       return null;
     },
-
+    titleRecipe: (value: string) => {
+      if (!value || !value.trim()) 
+        return t("errorsFrontend.validations.required");
+      if (value.length > 60)
+        return t("errorsFrontend.validations.recipeTitleLength");
+      return null;
+    },
     requiredPositiveNumber: (value: string) => {
       if (!value || !value.trim()) {
         return t("errorsFrontend.validations.required");
@@ -109,6 +133,8 @@ export const useValidations = () => {
       for (const ingredient of value) {
         const hasName = ingredient.name.trim();
         const isAmountNumeric = !isNaN(parseFloat(ingredient.amount.trim().replace(',', '.')));
+        const unit = ingredient.unit ? ingredient.unit.trim() : "";
+        
 
         if (hasName && !isAmountNumeric) {
           return t("errorsFrontend.validations.ingredientMissingAmount", { name: ingredient.name });
@@ -116,7 +142,15 @@ export const useValidations = () => {
         if (!hasName && isAmountNumeric) {
             return t("errorsFrontend.validations.ingredientMissingName");
         }
+        if (unit && !isNaN(parseFloat(unit))) {
+          return t("errorsFrontend.validations.ingredientInvalidUnit", { name: ingredient.name });
+        }
       }
+      const duplicated = hasDuplicateIngredients(value);
+      if (duplicated) {
+        return t("errorsFrontend.validations.ingredientDuplicated", { name: duplicated });
+      }
+      
       return null;
     },
 

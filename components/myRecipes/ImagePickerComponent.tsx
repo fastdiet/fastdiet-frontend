@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '@/constants/Colors';
 import globalStyles from "@/styles/global";
+import { Camera } from 'lucide-react-native';
 
 interface Props {
   imageUri: string | null;
@@ -79,7 +79,7 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
         <Image source={{ uri: imageUri }} style={styles.image} />
       ) : (
         <View style={styles.placeholder}>
-          <Ionicons name="camera-outline" size={40} color={Colors.colors.gray[300]} />
+          <Camera size={40} strokeWidth={1.75} color={Colors.colors.gray[400]} />
           <Text style={styles.placeholderText}>Añadir foto de portada</Text>
         </View>
       )}

@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
-import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import { AlertCircle, CheckCircle } from 'lucide-react-native';
 
 interface CustomToastProps {
   text1?: string;
@@ -13,7 +13,7 @@ interface CustomToastProps {
 
 const SuccessToast = ({ text1, text2 }: CustomToastProps) => (
   <View style={[styles.base, styles.successBase]}>
-    <Ionicons name="checkmark-circle-outline" size={24} color={Colors.colors.success[100]} style={styles.icon} />
+   <CheckCircle size={24} color={Colors.colors.success[100]} style={styles.icon} />
     <View style={styles.textContainer}>
       {text1 && <Text style={styles.text1}>{text1}</Text>}
       {text2 && <Text style={styles.text2}>{text2}</Text>}
@@ -23,7 +23,7 @@ const SuccessToast = ({ text1, text2 }: CustomToastProps) => (
 
 const ErrorToastCustom = ({ text1, text2 }: CustomToastProps) => (
   <View style={[styles.base, styles.errorBase]}>
-    <Ionicons name="alert-circle-outline" size={24} color={Colors.colors.error[100]} style={styles.icon} />
+    <AlertCircle size={24} color={Colors.colors.error[100]} style={styles.icon} />
     <View style={styles.textContainer}>
       {text1 && <Text style={styles.text1}>{text1}</Text>}
       {text2 && <Text style={styles.text2}>{text2}</Text>}

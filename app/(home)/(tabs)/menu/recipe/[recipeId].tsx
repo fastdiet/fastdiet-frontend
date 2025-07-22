@@ -1,8 +1,7 @@
 // React and Expo imports
-import { useMemo, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, Stack, useNavigation } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Components imports
 import RecipeHeader from '@/components/recipeDetails/RecipeHeader';
@@ -21,7 +20,7 @@ import { useRecipe } from '@/hooks/useRecipe';
 
 // Style imports
 import { Colors } from '@/constants/Colors';
-import globalStyles from '@/styles/global';
+import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
 
 
 const getSlotName = (slotIndex: number, t: (key: string) => string): string => {
@@ -37,8 +36,8 @@ const RecipeDetailScreen = () => {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ recipeId: string; day?: string; slot?: string }>();
   const navigation = useNavigation();
-
-  const { recipe, loading, error, refetch } = useRecipe(params.recipeId);
+  const recipeIdNumber = Number(params.recipeId);
+  const { recipe, loading, error, refetch } = useRecipe(recipeIdNumber);
 
   useEffect(() => {
     let headerTitle = t("recipe.detailTitleFallback");
@@ -52,32 +51,26 @@ const RecipeDetailScreen = () => {
     navigation.setOptions({ title: headerTitle });
   }, [params.day, params.slot, navigation, t, recipe]);
 
-  const calories = useMemo(() => recipe?.calories ? Math.round(recipe.calories) : null, [recipe?.calories]);
-  const totalTime = useMemo(() => {
-    if (!recipe) return 0;
-    const prepTime = recipe.preparation_min || 0;
-    const cookTime = recipe.cooking_min || 0;
-    return recipe.ready_min || prepTime + cookTime;
-  }, [recipe]);
+  const totalTime = recipe
+    ? recipe.ready_min || (recipe.preparation_min ?? 0) + (recipe.cooking_min ?? 0)
+    : 0;
+  const calories = recipe?.calories ? Math.round(recipe.calories) : null;
 
-  if (loading) {
-    return (
-      <View style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color={Colors.colors.primary[100]} />
-        <Text style={[globalStyles.mediumBodySemiBold, styles.messageText]}>{t("index.menu.recipe.loading")}</Text>
-      </View>
-    );
+  if (loading && !recipe) {
+    return <RecipePageStatus status="loading" />;
   }
 
   if (error || !recipe) {
     return (
-      <View style={styles.centeredContainer}>
-        <Stack.Screen options={{ title: t("index.menu.recipe.notFoundTitle") }} />
-        <MaterialCommunityIcons name="alert-circle-outline" size={56} color={Colors.colors.error[100]} />
-        <Text style={styles.errorTitle}>{t("index.menu.recipe.notFound")}</Text>
-        <Text style={styles.errorMessage}>{error || t("index.menu.recipe.couldNotLoad")}</Text>
-        <PrimaryButton title={t("retry")} onPress={() => refetch()} style={{ marginTop: 24, paddingHorizontal: 32 }}/>
-      </View>
+      <RecipePageStatus 
+        status="error"
+        errorDetails={{
+          errorTitle: t("myRecipes.detail.notFound"),
+          errorMessage: error,
+          notFoundTitle: t("myRecipes.detail.notFoundTitle"),
+          onRetry: refetch
+        }}
+      />
     );
   }
 
@@ -103,6 +96,7 @@ const RecipeDetailScreen = () => {
           dishTypes={recipe.dish_types}
           diets={recipe.diets}
         />
+        
         <IngredientList ingredients={recipe.ingredients} />
         
         <InstructionList instructions={recipe.analyzed_instructions} />
@@ -121,31 +115,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.colors.neutral[100],
   },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24
-  },
-  messageText: {
-    marginTop: 10,
-    color: "#333",
-  },
-  errorTitle: {
-    marginTop: 16,
-    textAlign: 'center',
-    ...globalStyles.headlineSmall,
-    color: Colors.colors.gray[900],
-  },
-  errorMessage: {
-    marginVertical: 8,
-    textAlign: 'center',
-    ...globalStyles.largeBody,
-    color: Colors.colors.gray[500],
-    lineHeight: 22,
-  },
   scrollContentContainer: {
-    paddingBottom: 80,
+    paddingBottom: 100,
   },
 });
 

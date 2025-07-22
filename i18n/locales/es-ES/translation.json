@@ -268,6 +268,7 @@
 
       "nameRequired": "El nombre es obligatorio.",
       "nameLength": "El nombre debe tener entre 3 y 50 caracteres.",
+      "recipeTitleLength" : "El título de la receta no puede tener más de 60 caracteres",
 
       "ageRequired": "La edad es obligatoria.",
       "ageInvalid": "Introduce una edad válida",
@@ -277,7 +278,9 @@
       "heightInvalid": "Introduce una altura válida en cm",
       "genderRequired": "Selecciona un sexo.",
       "ingredientMissingAmount": "El ingrediente \"{{name}}\" necesita una cantidad",
-      "ingredientMissingName": "Has añadido una cantidad sin especificar el ingrediente"
+      "ingredientMissingName": "Has añadido una cantidad sin especificar el ingrediente",
+      "ingredientInvalidUnit": "La unidad del ingrediente \"{{name}}\" no puede ser un número",
+      "ingredientDuplicated": "El ingrediente \"{{name}}\" está duplicado"
     }
   },
   "index": {
@@ -322,6 +325,13 @@
         "confirmTitle": "Eliminar comida",
         "confirmMessage": "¿Estás seguro de que quieres eliminar esta comida del menú?",
         "success": "Comida eliminada correctamente"
+      },
+      "changeMeal":{
+        "title": "Cambiar comida",
+        "suggestions": "Sugerencias",
+        "myRecipes": "Mis Recetas",
+        "loading": "Cargando sugerencias...",
+        "noSuggestions": "No hay sugerencias disponibles"
       },
       "error": {
         "invalidDayTitle": "Día no válido",
@@ -424,6 +434,14 @@
       "title": "Mis Recetas",
       "emptyState": "Aún no has creado ninguna receta. ¡Pulsa el botón '+' para añadir la primera!"
     },
+    "units": {
+      "metric": "Métrico",
+      "imperial": "Imperial"
+    },
+    "detailLoading": "Cargando receta...",
+    "notDetailed": "¡Dale vida a tu receta! Añade los detalles que faltan.",
+    "noIngredientsMessage": "No hay ingredientes disponibles",
+    "noInstructionsMessage": "No hay instrucciones disponibles",
     "create": { "title": "Crear Nueva Receta" },
     "edit": { "title": "Editar Receta" },
     "form": {
@@ -479,7 +497,12 @@
     },
     "edit": {
       "title": "Editar receta",
-      "subtitle": "Modifica los detalles de tu receta."
+      "subtitle": "Modifica los detalles de tu receta",
+      "success": "Receta actualizada con éxito"
+    },
+    "detail": {
+      "notFoundTitle": "Receta No Encontrada",
+      "notFound": "¡Vaya! No hemos podido encontrar la receta"
     }
   },
   "units": {
@@ -493,6 +516,8 @@
   "save": "Guardar",
   "accept": "Aceptar",
   "saveRecipe": "Guardar Receta",
+  "completeRecipe": "Completar Receta",
+  "updateRecipe": "Actualizar Receta",
   "cancel": "Cancelar",
   "error": "Error",
   "delete": "Eliminar",

@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { FormInputIngredient } from '@/models/recipeInput';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
-import LabeledTextInput from '../forms/LabeledTextInput';
+import LabeledTextInput from '@/components/forms/LabeledTextInput';
 import { useTranslation } from 'react-i18next';
 import { nanoid } from 'nanoid/non-secure';
+import { PlusCircle, Trash2 } from 'lucide-react-native';
 
 interface Props {
   ingredients: FormInputIngredient[];
@@ -60,12 +60,12 @@ const IngredientInputList = ({ ingredients, setIngredients }: Props) => {
             />
           </View>
           <TouchableOpacity onPress={() => handleRemoveIngredient(ing.id)} style={styles.deleteButton}>
-            <Ionicons name="trash-outline" size={24} color={Colors.colors.gray[400]} />
+            <Trash2 size={24}  strokeWidth={1.5} color={Colors.colors.gray[400]} />
           </TouchableOpacity>
         </View>
       ))}
       <TouchableOpacity style={styles.addButton} onPress={handleAddIngredient}>
-        <Ionicons name="add-circle-outline" size={24} color={Colors.colors.primary[100]} />
+        <PlusCircle size={22} strokeWidth={1.8} color={Colors.colors.primary[100]} />
         <Text style={styles.addButtonText}>{t('myRecipes.form.addIngredient')}</Text>
       </TouchableOpacity>
     </View>

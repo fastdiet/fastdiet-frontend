@@ -1,17 +1,17 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import globalStyles from '@/styles/global';
 import { Colors } from '@/constants/Colors';
+import { LucideIcon } from 'lucide-react-native';
 
 interface Props {
   title: string;
-  iconName?: keyof typeof MaterialCommunityIcons.glyphMap;
+  iconComponent?: LucideIcon
 }
 
-const SectionHeader = ({ title, iconName }: Props) => {
+const SectionHeader = ({ title, iconComponent: Icon }: Props) => {
   return (
     <View style={styles.container}>
-      {iconName && <MaterialCommunityIcons name={iconName} size={22} color={Colors.colors.primary[100]} />}
+      {Icon && <Icon size={22} color={Colors.colors.primary[100]} />}
       <Text style={styles.title}>{title}</Text>
     </View>
   );

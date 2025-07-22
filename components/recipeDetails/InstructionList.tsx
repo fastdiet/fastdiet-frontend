@@ -12,20 +12,28 @@ import Section from '@/components/ui/Section';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { ChefHat, FileText } from 'lucide-react-native';
 
 interface InstructionListProps {
-  instructions?: AnalyzedInstruction[] | null;
+  instructions?: AnalyzedInstruction[] | null | undefined;
 }
 
 const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructions }) => {
   const { t } = useTranslation();
 
   if (!instructions || instructions.length === 0) {
-    return null;
+    return (
+      <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
+        <View style={styles.emptyContainer}>
+          <FileText size={21} color={Colors.colors.gray[400]} />
+          <Text style={styles.emptyText}>{t('recipes.noInstructionsMessage')}</Text>
+        </View>
+      </Section>
+    );
   }
 
   return (
-    <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconName="chef-hat">
+    <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
       {instructions.map((group, groupIndex) => (
         <View key={`instruction-group-${groupIndex}`}>
           {group.name && <Text style={styles.instructionGroupName}>{group.name}</Text>}
@@ -66,6 +74,22 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[500],
     flex: 1,
     lineHeight: 22,
+  },
+  emptyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.colors.gray[100],
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.colors.gray[200],
+  },
+  emptyText: {
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[700],
+    marginLeft: 8,
+    flex: 1,
   },
 });
 
