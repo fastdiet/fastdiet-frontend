@@ -1,4 +1,4 @@
-import { MealPlan } from "@/models/mealPlan";
+import { MealPlan, RecipeDetail, RecipeShort } from "@/models/mealPlan";
 import { UserPreferences } from "@/models/user_preferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -35,3 +35,20 @@ export const getMenu = async () => {
     throw new Error(error);
   }
 }
+
+export const saveMyRecipes = async (recipes: RecipeShort[] | null) => {
+  try {
+    await AsyncStorage.setItem("myRecipes", JSON.stringify(recipes));
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const getMyRecipes = async (): Promise<RecipeShort[]> => {
+  try {
+    const cachedRecipes = await AsyncStorage.getItem("myRecipes");
+    return cachedRecipes ? JSON.parse(cachedRecipes) : [];
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};

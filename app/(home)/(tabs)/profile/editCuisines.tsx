@@ -56,14 +56,10 @@ export default function EditCuisinesScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.cuisinesUpdated'),
-        position: 'bottom'
-      });
+      Toast.show({type: 'success', text1: t('profile.cuisinesUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

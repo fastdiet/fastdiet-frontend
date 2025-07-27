@@ -8,7 +8,7 @@ import { RecipeShort } from "@/models/mealPlan";
 // Style Imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ChevronRight } from 'lucide-react-native';
 
 
 
@@ -53,8 +53,8 @@ const DayCard: React.FC<DayCardProps> = ({ dayName, dayNumber, isToday, recipes,
           <View style={styles.mealImagesContainer}>
             {recipes.slice(0, 3).map((recipe, index) => (
               <Image
-                key={recipe.id}
-                source={{ uri: recipe.image_url ?? undefined }}
+                key={index}
+                source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/recipe-placeholder.jpg')}
                 style={[styles.mealImage, { zIndex: 3 - index, marginLeft: index > 0 ? -15 : 0 }]}
               />
             ))}
@@ -65,8 +65,8 @@ const DayCard: React.FC<DayCardProps> = ({ dayName, dayNumber, isToday, recipes,
           </Text>
         )}
       </View>
-
-      <MaterialCommunityIcons name="chevron-right" size={28} color={isHighlighted ? Colors.colors.primary[100] : Colors.colors.gray[300]} />
+      <ChevronRight size={26} color={isHighlighted ? Colors.colors.primary[100] : Colors.colors.gray[300]} />
+      
     </TouchableOpacity>
   );
 };

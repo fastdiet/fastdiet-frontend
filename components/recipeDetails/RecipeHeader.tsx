@@ -5,9 +5,6 @@ import { View, Text, Image, StyleSheet, ActivityIndicator } from 'react-native';
 // Utils imports
 import { getShortSummary } from '@/utils/clean';
 
-// Components imports
-import PaddingView from '@/components/views/PaddingView';
-
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
@@ -24,23 +21,22 @@ const RecipeHeader: React.FC<RecipeHeaderProps> = React.memo(({ imageUrl, title,
 
   return (
     <>
-      {imageUrl && (
-        <View style={styles.imageContainer}>
-          {imageLoading && <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[100]} />}
-          <Image
-            source={{ uri: imageUrl }}
-            style={styles.recipeImage}
-            onLoadStart={() => setImageLoading(true)}
-            onLoadEnd={() => setImageLoading(false)}
-          />
-        </View>
-      )}
-      <PaddingView>
-        <Text style={styles.title}>{title}</Text>
+      <View style={styles.imageContainer}>
+        {imageLoading && <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[100]} />}
+        <Image
+          source={imageUrl ? { uri: imageUrl } : require('@/assets/images/recipe-placeholder.jpg')}
+          style={styles.recipeImage}
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+        />
+      </View>
+      
+      <View style={{paddingHorizontal: 16 }}>
+        <Text style={[styles.title, { marginBottom: cleanedSummary ? 12 : 0 }]}>{title}</Text>
         {cleanedSummary && (
           <Text style={styles.summaryText}>{cleanedSummary}</Text>
         )}
-      </PaddingView>
+      </View>
     </>
   );
 });
@@ -59,7 +55,6 @@ const styles = StyleSheet.create({
     ...globalStyles.title,
     color: Colors.colors.gray[500],
     marginTop: 24,
-    marginBottom: 12,
   },
   summaryText: {
     ...globalStyles.mediumBodyRegular,

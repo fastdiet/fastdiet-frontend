@@ -55,14 +55,10 @@ export default function EditIntolerancesScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.intolerancesUpdated'),
-        position: 'bottom'
-      });
+      Toast.show({type: 'success', text1: t('profile.intolerancesUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

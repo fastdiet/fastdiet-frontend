@@ -1,7 +1,6 @@
 // React & React Native Imports
 import React, { useContext, useState } from "react";
 import { TouchableOpacity, Text, StyleSheet, View, Alert } from "react-native";
-import { GoogleSignin, isErrorWithCode, isSuccessResponse, statusCodes } from "@react-native-google-signin/google-signin";
 
 // Style Imports
 import globalStyles from "@/styles/global";

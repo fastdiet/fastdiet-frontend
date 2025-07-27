@@ -9,3 +9,16 @@ export const getShortSummary = (htmlString?: string, sentenceLimit = 2): string 
   
   return sentences.slice(0, sentenceLimit).join(' ').trim();
 };
+
+
+export const formatAmount = (amount: number) => {
+  if (amount < 1) {
+    return parseFloat(amount.toFixed(2)).toString();
+  }
+
+  if (amount < 10) {
+    return parseFloat(amount.toFixed(1)).toString();
+  }
+
+  return Math.round(amount).toString();
+};

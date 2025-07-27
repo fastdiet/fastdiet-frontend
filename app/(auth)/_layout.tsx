@@ -1,4 +1,4 @@
-import { Redirect, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/hooks/useAuth";
 

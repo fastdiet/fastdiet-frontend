@@ -45,7 +45,7 @@ export default function SendPasswordResetCodeScreen() {
     const { success, error } = await sendPasswordResetCode(emailInput,);
 
     if(!success){
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

@@ -49,7 +49,7 @@ export default function SelectDietScreen() {
     
     const { success, error } = await selectDiet(selectedDietId);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

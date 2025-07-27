@@ -1,18 +1,19 @@
 /// React & React Native Imports
-import React, { useMemo, useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
+import { useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, View, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 
 // Component Imports
 import PrimaryButton from "@/components/buttons/PrimaryButton";
-import StyledTextInput from "@/components/forms/StyledTextInput";
 import ErrorText from "@/components/text/ErrorText";
 import TitleParagraph from "@/components/text/TitleParagraph";
 import PaddingView from "@/components/views/PaddingView";
 import CustomRadioGroup from "@/components/forms/CustomRadioGroup";
 import ViewInputs from "@/components/views/ViewInputs";
 import ViewForm from "@/components/views/ViewForm";
+import LabeledTextInput from "@/components/forms/LabeledTextInput";
+import FormLabel from "@/components/forms/FormLabel";
 
 // Hook Imports
 import { useAuth } from "@/hooks/useAuth";
@@ -21,10 +22,7 @@ import { useValidations } from "@/hooks/useValidations";
 import { useTranslation } from "react-i18next";
 
 // Style Imports
-import globalStyles from "@/styles/global";
 import { Colors } from "@/constants/Colors";
-import LabeledTextInput from "@/components/forms/LabeledTextInput";
-import FormLabel from "@/components/forms/FormLabel";
 import { getGenderOptions } from "@/constants/genders";
 
 export default function EditPersonalDataScreen() {
@@ -72,27 +70,22 @@ export default function EditPersonalDataScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.personalDataUpdated'),
-        position: 'bottom',
-      });
+      Toast.show({type: 'success', text1: t('profile.personalDataUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }}
             keyboardShouldPersistTaps="handled"
           >
             <View style={{ height: 16 }} />
@@ -121,11 +114,11 @@ export default function EditPersonalDataScreen() {
                   <View style={{ width: '100%'}}>
                     <FormLabel text={t("auth.completeRegister.basic.gender")} />
                     <CustomRadioGroup
-                        radioButtons={genderOptions}
-                        layout="row"
-                        onPress={setSelectedGender}
-                        selectedId={selectedGender}
-                        errorMessage={errors.gender}
+                      options={genderOptions}
+                      layout="row"
+                      onValueChange={setSelectedGender}
+                      selectedValue={selectedGender}
+                      errorMessage={errors.gender}
                     />
                   </View>
                   <LabeledTextInput
@@ -165,7 +158,6 @@ export default function EditPersonalDataScreen() {
             </PaddingView>
           </View>
         </View>
-      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }

@@ -2,7 +2,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 /// Models imports
 import { NutrientDetail } from '@/models/mealPlan';
@@ -13,53 +12,113 @@ import Section from '@/components/ui/Section';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { BarChart3, Beef, ChevronDown, ChevronUp, Droplets, HelpCircle, Wheat } from 'lucide-react-native';
+import { formatAmount } from '@/utils/clean';
 
 interface NutritionInfoProps {
   nutrients?: NutrientDetail[];
   calories?: number | null;
 }
 
+const getMacroVisuals = (nutrientName: string) => {
+  const name = nutrientName.toLowerCase();
+  if (name.includes('protein')) {
+    return { Icon: Beef, color: Colors.colors.protein[100] };
+  }
+  if (name.includes('carbohydrates')) {
+    return { Icon: Wheat, color: Colors.colors.accent[100] };
+  }
+  if (name.includes('fat')) {
+    return { Icon: Droplets, color: Colors.colors.error[100] };
+  }
+  return { Icon: HelpCircle, color: Colors.colors.gray[300] };
+};
+
+
+
+const MacroNutrient: React.FC<{ nutrient: NutrientDetail }> = ({ nutrient }) => {
+  const { t } = useTranslation();
+  const { Icon, color } = getMacroVisuals(nutrient.name);
+  const label = t(`nutrients.${nutrient.name.toLowerCase().replace(/\s/g, '')}`, nutrient.name);
+  const value = `${formatAmount(nutrient.amount)}${nutrient.unit}`;
+  
+  return (
+    <View style={styles.macroCard}>
+      <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
+       <Icon size={28} color={color} />
+      </View>
+      <Text style={styles.macroValue}>{value}</Text>
+      <Text style={styles.macroLabel}>{label}</Text>
+    </View>
+  );
+};
+
+
+
 const NutritionInfo: React.FC<NutritionInfoProps> = React.memo(({ nutrients, calories }) => {
   const { t } = useTranslation();
   const [showAllNutrients, setShowAllNutrients] = useState(false);
 
-  const { primary, secondary } = useMemo(() => {
-    if (!nutrients) return { primary: [], secondary: [] };
-    const primaryNutrients = nutrients.filter(n => n.is_primary && n.name.toLowerCase() !== 'calories');
-    const secondaryNutrients = nutrients.filter(n => !n.is_primary);
-    return { primary: primaryNutrients, secondary: secondaryNutrients };
+  const { topTier, midTier, secondary } = useMemo(() => {
+    if (!nutrients) return { topTier: [], midTier: [], secondary: [] };
+    const topTierNames = ['protein', 'carbohydrates', 'fat'];
+    const topTier: NutrientDetail[] = [];
+    const midTier: NutrientDetail[] = [];
+    const secondaryTier: NutrientDetail[] = [];
+
+    nutrients.forEach(n => {
+      const nameLower = n.name.toLowerCase();
+      if (nameLower === 'calories') return;
+      if (topTierNames.includes(nameLower)) {
+        topTier.push(n);
+      } else if (n.is_primary) {
+        midTier.push(n);
+      } else {
+        secondaryTier.push(n);
+      }
+    });
+
+    return { topTier, midTier, secondary: secondaryTier };
   }, [nutrients]);
 
   if (!nutrients || nutrients.length === 0) {
     return null;
   }
 
-  const formatAmount = (amount: number, unit: string) => {
-    if (unit === 'mg' || unit === 'µg' || amount < 10) {
-      return amount.toFixed(1);
-    }
-    return Math.round(amount);
-  };
-
   return (
-    <Section title={t("index.menu.recipe.nutritionalInfoSectionTitle")} iconName="chart-bar" defaultOpen={false}>
+    <Section 
+      title={t("index.menu.recipe.nutritionalInfoSectionTitle")}
+      iconComponent={BarChart3} 
+      defaultOpen={false}
+      contentStyle={{ paddingBottom: 0 }}
+    >
       {calories !== null && (
         <View style={styles.nutritionRowFeatured}>
-          <Text style={styles.nutritionLabelFeatured}>{t('nutrients.calories', 'Calorías')}:</Text>
+          <Text style={styles.nutritionLabelFeatured}>{t('nutrients.calories')}:</Text>
           <Text style={styles.nutritionValueFeatured}>{calories}{t('units.kcal')}</Text>
         </View>
       )}
 
-      {primary.map((nutrient) => (
-        <View key={`nutrient-primary-${nutrient.name}`} style={styles.nutritionRow}>
-          <Text style={styles.nutritionLabel} numberOfLines={1}>
-            {t(`nutrients.${nutrient.name.toLowerCase().replace(/\s/g, '')}`, nutrient.name)}:
+      <View style={styles.macrosContainer}>
+        {topTier.map((nutrient) => (
+          <MacroNutrient
+            key={`nutrient-top-${nutrient.name}`}
+            nutrient={nutrient}
+          />
+        ))}
+      </View>
+
+      {midTier.map((nutrient) => (
+        <View key={`nutrient-mid-${nutrient.name}`} style={styles.nutritionRow}>
+          <Text style={styles.nutritionLabel}>
+            {t(`nutrients.${nutrient.name.toLowerCase().replace(/\s/g, '')}`, nutrient.name)}
           </Text>
           <Text style={styles.nutritionValue}>
-            {formatAmount(nutrient.amount, nutrient.unit)}{nutrient.unit}
+            {formatAmount(nutrient.amount)}{nutrient.unit}
           </Text>
         </View>
       ))}
+      
 
       {secondary.length > 0 && (
         <TouchableOpacity
@@ -70,11 +129,11 @@ const NutritionInfo: React.FC<NutritionInfoProps> = React.memo(({ nutrients, cal
           <Text style={styles.showAllNutrientsText}>
             {showAllNutrients ? t('index.menu.recipe.hideDetailedNutrients') : t('index.menu.recipe.showDetailedNutrients')}
           </Text>
-          <MaterialCommunityIcons
-            name={showAllNutrients ? "chevron-up" : "chevron-down"}
-            size={22}
-            color={Colors.colors.primary[100]}
-          />
+          {showAllNutrients ? (
+            <ChevronUp size={22} color={Colors.colors.gray[300]} />
+          ) : (
+            <ChevronDown size={22} color={Colors.colors.gray[300]} />
+          )}
         </TouchableOpacity>
       )}
 
@@ -84,7 +143,7 @@ const NutritionInfo: React.FC<NutritionInfoProps> = React.memo(({ nutrients, cal
             {t(`nutrients.${nutrient.name.toLowerCase().replace(/\s/g, '')}`, nutrient.name)}:
           </Text>
           <Text style={styles.nutritionValueSecondary}>
-            {formatAmount(nutrient.amount, nutrient.unit)}{nutrient.unit}
+            {formatAmount(nutrient.amount)}{nutrient.unit}
           </Text>
         </View>
       ))}
@@ -100,9 +159,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: Colors.colors.primary[600],
     paddingHorizontal: 16,
-    borderRadius: 8,
     marginHorizontal: -16,
-    marginBottom: 12,
   },
   nutritionLabelFeatured: {
     ...globalStyles.mediumBodyBold,
@@ -112,13 +169,15 @@ const styles = StyleSheet.create({
     ...globalStyles.mediumBodyBold,
     color: Colors.colors.primary[100],
   },
+
+
   nutritionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.colors.gray[100],
+    borderTopWidth: 1,
+    borderTopColor: Colors.colors.gray[100],
   },
   nutritionLabel: {
     ...globalStyles.mediumBodyRegular,
@@ -131,11 +190,13 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[500],
     textAlign: 'right',
   },
+
+
   showAllNutrientsButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 10,
   },
   showAllNutrientsText: {
     ...globalStyles.smallBodySemiBold,
@@ -154,6 +215,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.colors.gray[500],
     textAlign: 'right',
+  },
+  macrosContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.colors.gray[100],
+  },
+  macroCard: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  iconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  macroValue: {
+    ...globalStyles.subtitle,
+    color: Colors.colors.gray[700],
+  },
+  macroLabel: {
+    ...globalStyles.mediumBodyRegular,
+    color: Colors.colors.gray[400],
+    marginTop: 4,
+    textTransform: 'capitalize',
   },
 });
 

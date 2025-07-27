@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface ValidationRules {
-  [key: string]: (value: string) => string | null;
+  [key: string]: (value: any) => string | null;
 }
 
 interface FormErrors {
@@ -11,7 +11,7 @@ interface FormErrors {
 export const useFormValidation = (validationRules: ValidationRules) => {
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateForm = (values: { [key: string]: string }) => {
+  const validateForm = (values: { [key: string]: any }) => {
     const newErrors: FormErrors = {};
     let isValid = true;
 

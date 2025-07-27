@@ -12,6 +12,7 @@ import Section from '@/components/ui/Section';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { Wrench } from 'lucide-react-native';
 
 
 
@@ -46,7 +47,7 @@ const EquipmentGrid: React.FC<EquipmentGridProps> = React.memo(({ instructions }
   }
 
   return (
-    <Section title={t("index.menu.recipe.equipmentSectionTitle")} iconName="tools" defaultOpen={false}>
+    <Section title={t("index.menu.recipe.equipmentSectionTitle")} iconComponent={Wrench} defaultOpen={false}>
       <View style={styles.equipmentGrid}>
         {equipmentList.map((item, index) => (
           <View key={`equip-${index}-${item}`} style={styles.equipmentItemChip}>

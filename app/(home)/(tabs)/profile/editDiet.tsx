@@ -52,14 +52,10 @@ export default function EditDietScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.dietUpdated'),
-        position: 'bottom'
-      });
+      Toast.show({type: 'success', text1: t('profile.dietUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

@@ -34,6 +34,7 @@ const StyledTextInput: React.FC<CustomTextInputProps> = ({
         style={inputStyles}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        placeholderTextColor={Colors.colors.gray[400]}
         editable={!disabled}
       />
       {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
@@ -48,12 +49,13 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: "InterRegular",
+    fontSize: 15,
     padding: 10,
     borderColor: Colors.colors.gray[200],
-    borderWidth: 1,
-    borderRadius: 16,
+    borderWidth: 1.2,
+    borderRadius: 14,
     backgroundColor: Colors.colors.gray[100],
-    color: Colors.colors.gray[400], 
+    color: Colors.colors.gray[700], 
     width: "100%",
     minHeight: 48,
   },

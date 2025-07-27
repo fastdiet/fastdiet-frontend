@@ -54,7 +54,7 @@ export default function SelectCuisineScreen() {
 
     const { success, error } = await selectCuisines(selectedCuisineIds);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }
