@@ -7,6 +7,7 @@ export interface RecipeShort {
   ready_min?: number | null;
   calories?: number | null;
   servings?: number | null;
+  dish_types?: string[];
 }
 
 export interface IngredientInfo {
@@ -68,7 +69,7 @@ export interface RecipeDetail {
   analyzed_instructions?: AnalyzedInstruction[] | null; 
   cuisines?: string[];
   dish_types?: string[];
-  diets?: string[];
+  diet_types?: string[];
   
   ingredients: RecipeIngredient[];
   nutrients: NutrientDetail[];

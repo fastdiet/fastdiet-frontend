@@ -129,6 +129,13 @@ export const useValidations = () => {
         
       return null;
     },
+    atLeastOneSelected: (value: string[] | undefined) => {
+      if (!value || value.length <= 0){
+        return t('errorsFrontend.validations.atLeastOneSelected');
+      }
+      return null;
+      
+    },
     ingredientsList: (value: FormInputIngredient[]) => {
       for (const ingredient of value) {
         const hasName = ingredient.name.trim();

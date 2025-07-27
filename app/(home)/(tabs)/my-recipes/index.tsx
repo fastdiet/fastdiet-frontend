@@ -17,6 +17,9 @@ import { useMyRecipes } from '@/hooks/useMyRecipes';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { BookOpen, Plus } from 'lucide-react-native';
+import { useMemo, useState } from 'react';
+import FilterTabs from '@/components/myRecipes/FilterTabs';
+import SearchInput from '@/components/forms/SearchInput';
 
 
 
@@ -26,6 +29,34 @@ const MyRecipesScreen = () => {
   const { myRecipes, loading } = useMyRecipes(); 
   const insets = useSafeAreaInsets();
   const TAB_BAR_HEIGHT = 68;
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedMealType, setSelectedMealType] = useState<'all' | 'breakfast' | 'lunch' | 'dinner'>('all');
+
+  const recipesMatchingMealType = useMemo(() => {
+    if (selectedMealType === 'all') {
+      return myRecipes;
+    }
+    return myRecipes.filter(recipe => 
+      recipe.dish_types?.map(type => type.toLowerCase()).includes(selectedMealType)
+    );
+  }, [myRecipes, selectedMealType]);
+
+   const filteredRecipes = useMemo(() => {
+    if (!searchQuery) {
+      return recipesMatchingMealType;
+    }
+    return recipesMatchingMealType.filter(recipe => 
+      recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [recipesMatchingMealType, searchQuery]);
+
+  const filterOptions = [
+    { label: t('all'), value: 'all' as const },
+    { label: t('constants.meals.breakfast'), value: 'breakfast' as const },
+    { label: t('constants.meals.lunch'), value: 'lunch' as const },
+    { label: t('constants.meals.dinner'), value: 'dinner' as const },
+  ];
 
   const handleAddNewRecipe = () => router.push('/(home)/(tabs)/my-recipes/create');
   const handleEditRecipe = (recipeId: number) => {
@@ -40,7 +71,6 @@ const MyRecipesScreen = () => {
       params: { 
         recipeId: recipeId.toString() ,
       },
-      
     });
   };
 
@@ -52,8 +82,10 @@ const MyRecipesScreen = () => {
       </View>
     );
   }
-  console.log("MyRecipesScreen - myRecipes:", myRecipes);
-  if (!myRecipes || myRecipes.length === 0) {
+
+
+  const renderEmptyState = () => {
+  if (myRecipes.length === 0) {
     return (
       <View style={styles.centeredContainer}>
         <View style={styles.iconCircle}>
@@ -70,10 +102,42 @@ const MyRecipesScreen = () => {
       </View>
     );
   }
+
+  if (recipesMatchingMealType.length === 0 && !searchQuery && selectedMealType !== 'all') {
+      const genderContext = selectedMealType === 'dinner' ? 'female' : 'male';
+      const mealTypeTranslation = t(`constants.meals.${selectedMealType}`);
+
+      return (
+        <View style={styles.centeredContainer}>
+          <View style={styles.iconCircle}>
+            <BookOpen size={50} color={Colors.colors.primary[200]} strokeWidth={1.5} />
+          </View>
+          <Text style={styles.emptyStateTitle}>
+            {t("myRecipes.emptyState.noDishType.title", { 
+              context: genderContext, 
+              mealType: mealTypeTranslation.toLowerCase() 
+            })}
+          </Text>
+          <Text style={styles.emptyStateText}>{t('myRecipes.emptyState.noDishType.subtitle')}</Text>
+        </View>
+      );
+    }
+  
+  return (
+    <View style={styles.centeredContainer}>
+      <View style={styles.iconCircle}>
+        <BookOpen size={50} color={Colors.colors.primary[200]} strokeWidth={1.5} />
+      </View>
+        <Text style={styles.emptyStateTitle}>{t('myRecipes.emptyState.noSearchResults.title')}</Text>
+        <Text style={styles.emptyStateText}>{t('myRecipes.emptyState.noSearchResults.subtitle')}</Text>
+    </View>
+  );
+};
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={myRecipes}
+        data={filteredRecipes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <MyRecipeCard
@@ -83,21 +147,41 @@ const MyRecipesScreen = () => {
           />
         )}
         ListHeaderComponent={
-          <PaddingView>
+          <>
+            <PaddingView>
             <TitleParagraph
               title={t('myRecipes.title')}
               paragraph={t('myRecipes.subtitle')}
-              containerStyle={{ marginTop: 16, marginBottom: 24 }}
+              containerStyle={{marginTop: 16, marginBottom: 24}}
             />
-          </PaddingView>
+            </PaddingView>
+            <FilterTabs 
+              options={filterOptions}
+              selectedValue={selectedMealType}
+              onSelect={setSelectedMealType}
+            />
+            <View style={styles.searchWrapper}> 
+            <SearchInput 
+              placeholder={t('myRecipes.searchPlaceholder')}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onClear={() => setSearchQuery('')}
+              variant="primary"
+            />
+            </View>
+          </>
         }
+        ListEmptyComponent={renderEmptyState}
         contentContainerStyle={styles.listContentContainer}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        keyboardShouldPersistTaps="handled"
       />
       
-      <TouchableOpacity onPress={handleAddNewRecipe} style={[styles.fab, {bottom: insets.bottom + TAB_BAR_HEIGHT + 20,}]}>
-           <Plus size={32} color={Colors.colors.neutral[100]} />
-      </TouchableOpacity>
+      {myRecipes.length > 0 && (
+        <TouchableOpacity onPress={handleAddNewRecipe} style={[styles.fab, {bottom: insets.bottom + TAB_BAR_HEIGHT + 20,}]}>
+          <Plus size={32} color={Colors.colors.neutral[100]} />
+        </TouchableOpacity>
+      )}
       
     </View>
   );
@@ -111,6 +195,7 @@ const styles = StyleSheet.create({
   },
   centeredContainer: {
     flex: 1,
+    paddingVertical: 50,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.colors.gray[100],
@@ -133,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   emptyStateTitle: {
-    ...globalStyles.headlineSmall,
+    ...globalStyles.titleMedium,
     color: Colors.colors.gray[900],
     textAlign: 'center',
   },
@@ -147,6 +232,10 @@ const styles = StyleSheet.create({
   listContentContainer: {
     paddingHorizontal: 16,
     paddingBottom: 120,
+  },
+  searchWrapper: {
+    marginBottom: 20,
+    marginVertical: 10,
   },
   fab: {
     position: 'absolute',

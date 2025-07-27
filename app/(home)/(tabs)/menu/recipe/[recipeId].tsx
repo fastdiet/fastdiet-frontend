@@ -1,7 +1,7 @@
 // React and Expo imports
-import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams, Stack, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 
 // Components imports
 import RecipeHeader from '@/components/recipeDetails/RecipeHeader';
@@ -12,7 +12,6 @@ import InstructionList from '@/components/recipeDetails/InstructionList';
 import EquipmentGrid from '@/components/recipeDetails/EquipmentGrid';
 import IngredientList from '@/components/recipeDetails/IngredientList';
 import PaddingView from '@/components/views/PaddingView';
-import PrimaryButton from '@/components/buttons/PrimaryButton';
 
 // Hooks imports
 import { useTranslation } from 'react-i18next';
@@ -94,7 +93,7 @@ const RecipeDetailScreen = () => {
         <TagsDisplay
           cuisines={recipe.cuisines}
           dishTypes={recipe.dish_types}
-          diets={recipe.diets}
+          diets={recipe.diet_types}
         />
         
         <IngredientList ingredients={recipe.ingredients} />

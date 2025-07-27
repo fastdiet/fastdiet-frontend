@@ -1,5 +1,5 @@
 // React and expo imports
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +21,32 @@ interface InstructionListProps {
 const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructions }) => {
   const { t } = useTranslation();
 
-  if (!instructions || instructions.length === 0) {
+   const flattenedSteps = useMemo(() => {
+    if (!instructions || instructions.length === 0) {
+      return [];
+    }
+
+    const allSteps: { type: 'group' | 'step'; content: string; number?: number }[] = [];
+    let stepCounter = 1;
+
+    instructions.forEach(group => {
+      if (group.name) {
+        allSteps.push({ type: 'group', content: group.name });
+      }
+      group.steps.forEach(step => {
+        allSteps.push({
+          type: 'step',
+          content: step.step,
+          number: stepCounter,
+        });
+        stepCounter++;
+      });
+    });
+
+    return allSteps;
+  }, [instructions]);
+
+  if (flattenedSteps.length === 0) {
     return (
       <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
         <View style={styles.emptyContainer}>
@@ -34,17 +59,17 @@ const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructio
 
   return (
     <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
-      {instructions.map((group, groupIndex) => (
-        <View key={`instruction-group-${groupIndex}`}>
-          {group.name && <Text style={styles.instructionGroupName}>{group.name}</Text>}
-          {group.steps.map((step) => (
-            <View key={`step-${groupIndex}-${step.number}`} style={styles.instructionItem}>
-              <Text style={styles.instructionNumber}>{step.number}.</Text>
-              <Text style={styles.instructionText}>{step.step}</Text>
-            </View>
-          ))}
-        </View>
-      ))}
+      {flattenedSteps.map((item, index) => {
+        if (item.type === 'group') {
+          return <Text key={`item-${index}`} style={styles.instructionGroupName}>{item.content}</Text>;
+        }
+         return (
+          <View key={`item-${index}`} style={styles.instructionItem}>
+            <Text style={styles.instructionNumber}>{item.number}.</Text>
+            <Text style={styles.instructionText}>{item.content}</Text>
+          </View>
+        );
+      })}
     </Section>
   );
 });

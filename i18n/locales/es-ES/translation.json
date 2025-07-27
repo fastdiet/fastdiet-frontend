@@ -242,6 +242,7 @@
     "selectGoal": "Selecciona un objetivo",
     "validations": {
       "required": "Este campo es obligatorio",
+      "atLeastOneSelected": "Debes seleccionar al menos una opción",
       "numericInvalid": "El valor debe ser un número válido",
       "positiveNumberInvalid": "El valor debe ser un número positivo",
       "emptyUserid": "Por favor, ingresa tu usuario o correo",
@@ -331,7 +332,11 @@
         "suggestions": "Sugerencias",
         "myRecipes": "Mis Recetas",
         "loading": "Cargando sugerencias...",
-        "noSuggestions": "No hay sugerencias disponibles"
+        "noSuggestions":{
+          "title": "No hay sugerencias disponibles",
+          "subtitle": "Parece que no hemos encontrado sugerencias adecuadas para ti en este momento"
+        },
+        "success": "Comida actualizada con éxito"
       },
       "error": {
         "invalidDayTitle": "Día no válido",
@@ -432,7 +437,8 @@
   "recipes": {
     "myRecipes": {
       "title": "Mis Recetas",
-      "emptyState": "Aún no has creado ninguna receta. ¡Pulsa el botón '+' para añadir la primera!"
+      "emptyState": "Aún no has creado ninguna receta. ¡Pulsa el botón '+' para añadir la primera!",
+      "mealType": "Tipo de Comida"
     },
     "units": {
       "metric": "Métrico",
@@ -457,13 +463,35 @@
   "myRecipes": {
     "title": "Mis Recetas",
     "subtitle": "Crea, edita y gestiona tus recetas personales",
+    "searchPlaceholder": "Buscar en mis recetas...",
+    "emptyState": {
+      "noRecipes": {
+        "title": "Tu recetario está vacío",
+        "subtitle": "Crea tu primera receta para guardarla aquí y usarla en tus menús",
+        "cta": "Crear mi primera receta"
+      },
+      "noDishType": {
+        "title_male": "No tienes ningún {{mealType, lowercase}} guardado",
+        "title_female": "No tienes ninguna {{mealType, lowercase}} guardada",
+        "subtitle": "Crea una nueva receta para poder añadirla a tu menú",
+        "cta_male": "Crear un nuevo {{mealType, lowercase}}",
+        "cta_female": "Crear una nueva {{mealType, lowercase}}"
+      },
+      "noSearchResults": {
+        "title": "No se encontraron resultados",
+        "subtitle": "Prueba a buscar con otras palabras clave"
+      }
+
+    },
+    "loading": "Cargando tus recetas...",
     "cta": {
-      "createFirst": "Crea tu primera receta"
+      "createFirst": "Crear mi primera receta"
     },
     "noRecipes": {
       "title": "Aún no tienes recetas",
       "subtitle": "¡Anímate a crear la primera! Podrás añadirla a tu menú semanal cuando quieras"
     },
+    
     "card": {
       "noDescription": "Sin descripción",
       "servings": "Raciones"
@@ -511,7 +539,9 @@
     "servings": "raciones",
     "serving": "ración"
   },
+  "all": "Todas",
   "continue": "Continuar",
+  "choose": "Elegir",
   "back": "Atrás",
   "save": "Guardar",
   "accept": "Aceptar",

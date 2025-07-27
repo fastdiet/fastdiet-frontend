@@ -1,6 +1,6 @@
 // React & React Native Imports
-import { useEffect, useMemo, useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, View, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 
@@ -41,7 +41,6 @@ export default function BasicInfoScreen() {
   const validations = useValidations();
 
   const genderOptions = getGenderOptions(t);
-
   
   const { errors, validateForm } = useFormValidation({
     name: validations.name,
@@ -51,6 +50,7 @@ export default function BasicInfoScreen() {
     weight: validations.weight,
     height: validations.height,
   });
+  //TODO TOAST
   useEffect(() => {
     Toast.show({ type: "success", text1: "Email verificado", text2: "Completa tu perfil",});
   }, []);
@@ -117,10 +117,10 @@ export default function BasicInfoScreen() {
                     errorMessage={errors.username}
                   />
                   <CustomRadioGroup
-                    radioButtons={genderOptions}
+                    options={genderOptions}
                     layout="row"
-                    onPress={setSelectedGender}
-                    selectedId={selectedGender}
+                    onValueChange={setSelectedGender}
+                    selectedValue={selectedGender}
                     errorMessage={errors.gender}
                   />
                   <StyledTextInput

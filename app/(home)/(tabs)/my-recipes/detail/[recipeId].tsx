@@ -1,5 +1,5 @@
 // React and Expo imports
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -15,14 +15,15 @@ import PrimaryButton from '@/components/buttons/PrimaryButton';
 
 // Hooks imports
 import { useRecipe } from '@/hooks/useRecipe';
+import { useMyRecipes } from '@/hooks/useMyRecipes';
 
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
-import { AlertCircle, Pencil, Trash2 } from 'lucide-react-native';
+import { Pencil, Trash2 } from 'lucide-react-native';
 import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
 import Toast from 'react-native-toast-message';
-import { useMyRecipes } from '@/hooks/useMyRecipes';
+
 
 
 
@@ -146,7 +147,7 @@ const MyRecipeDetailScreen = () => {
           <TagsDisplay
             cuisines={recipe.cuisines}
             dishTypes={recipe.dish_types}
-            diets={recipe.diets}
+            diets={recipe.diet_types}
           />
 
           <IngredientList ingredients={recipe.ingredients} />

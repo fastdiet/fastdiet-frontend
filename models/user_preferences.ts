@@ -20,5 +20,5 @@ export interface UserPreferences {
   low_fodmap?: boolean;
   cuisines?: Cuisine[];
   intolerances?: Intolerance[];
-  diet?: Diet;
+  diet_type?: Diet;
 }

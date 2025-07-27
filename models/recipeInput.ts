@@ -29,6 +29,7 @@ export interface RecipeCreationData {
   image_url?: string | null;
   ready_min?: number;
   servings?: number;
+  dish_types?: string[];
   ingredients: ApiInputIngredient[];
   analyzed_instructions?: ApiInstructionStep[];
 }

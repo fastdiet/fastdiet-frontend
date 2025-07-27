@@ -29,7 +29,9 @@ import { Colors } from '@/constants/Colors';
 
 // Models imports
 import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
-import { ChefHat, List } from 'lucide-react-native';
+import { ChefHat, List, Utensils } from 'lucide-react-native';
+import CustomRadioGroup from '@/components/forms/CustomRadioGroup';
+import { getDishTypesOptions } from '@/constants/dishTypes';
 
 
 const CreateRecipeScreen = () => {
@@ -38,15 +40,33 @@ const CreateRecipeScreen = () => {
   const { createRecipe } = useMyRecipes();
   const validations = useValidations();
   const [loading, setLoading] = useState(false);
+
+  const dishTypeOptions = getDishTypesOptions(t);
+
   const [formData, setFormData] = useState({
     title: '',
     summary: '',
     readyMin: '',
     servings: '', 
     imageUri: null as string | null,
+    dishTypes: [] as string[],
     ingredients: [{id: nanoid(), name: '', amount: '', unit: '' }] as FormInputIngredient[],
     steps: [{ id: nanoid(), description: '' }] as FormInputStep[],
   });
+
+  const handleDishTypeChange = (value: string) => {
+    setFormData(prev => {
+      const newDishTypes = [...prev.dishTypes];
+      const index = newDishTypes.indexOf(value);
+
+      if (index > -1) {
+        newDishTypes.splice(index, 1);
+      } else {
+        newDishTypes.push(value);
+      }
+      return { ...prev, dishTypes: newDishTypes };
+    });
+  };
 
   const handleInputChange = (field: keyof typeof formData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -56,6 +76,7 @@ const CreateRecipeScreen = () => {
     title: validations.titleRecipe,
     readyMin: validations.requiredPositiveNumber,
     servings: validations.requiredPositiveNumber,
+    dishTypes: validations.atLeastOneSelected,
     ingredients: validations.ingredientsList,
   });
   
@@ -88,6 +109,7 @@ const CreateRecipeScreen = () => {
       summary: formData.summary.trim() || undefined,
       ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
       servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
+      dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
       ingredients: validIngredients.map(ing => ({
         name: ing.name.trim(),
         amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
@@ -105,7 +127,7 @@ const CreateRecipeScreen = () => {
 
     if (success) {
       Toast.show({ type: 'success', text1: t('myRecipes.create.success')});
-      router.back();
+      router.replace('/my-recipes');
     } else {
       setLoading(false);
       Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? ""});
@@ -171,6 +193,16 @@ const CreateRecipeScreen = () => {
                         />
                      </View>
                   </View>
+                  <SectionHeader title={t('recipes.myRecipes.mealType')} iconComponent={Utensils} />
+                  <CustomRadioGroup
+                    options={dishTypeOptions}
+                    onValueChange={handleDishTypeChange}
+                    selectedValue={formData.dishTypes}
+                    mode="multiple"
+                    layout="row"
+                    errorMessage={errors.dishTypes}
+                  />
+                 
                   <SectionHeader title={t('myRecipes.form.ingredients')} iconComponent={List} />
                   {errors.ingredients && <ErrorText text={errors.ingredients} />}
                   <IngredientInputList 

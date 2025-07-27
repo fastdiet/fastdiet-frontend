@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, StyleSheet, useWindowDimensions, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { useLocalSearchParams, useNavigation} from 'expo-router'; 
+import { useLocalSearchParams, useNavigation } from 'expo-router'; 
 
 // Components imports
 import DayMenuScreen from '@/components/menu/DayMenuScreen';
@@ -18,7 +18,6 @@ import { daysOrder } from '@/constants/days';
 import globalStyles from '@/styles/global';
 import { Colors } from '@/constants/Colors';
 import { AlertCircle } from 'lucide-react-native';
-import { RecipeShort } from '@/models/mealPlan';
 
 
 const DayMenuPagerScreen = () => {
@@ -55,8 +54,7 @@ const DayMenuPagerScreen = () => {
   const renderScene = useMemo(() => SceneMap(
     daysOrder.reduce((acc, dayIdx) => {
       acc[`day_${dayIdx}`] = () => {
-        const dayData = menu?.days.find(day => day.day === dayIdx)?.meals || null;
-        return <DayMenuScreen dayData={dayData} dayIndex={dayIdx} />;
+        return <DayMenuScreen dayIndex={dayIdx} />;
       };
       return acc;
     }, {} as { [key: string]: React.ComponentType<any> })

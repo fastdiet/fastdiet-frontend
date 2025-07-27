@@ -7,9 +7,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LoadingScreen } from "@/components/LoadingScreen";
 
 import { useFonts } from "expo-font";
-
-
-import Toast from "react-native-toast-message";
 import { AppToast } from '@/components/CustomToast';
 
 // Navigation Imports
@@ -25,6 +22,8 @@ import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import {initI18n} from "@/i18n";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { UIManager, Platform } from 'react-native';
+
 
 // Avoid that the loading screen dissappears before
 SplashScreen.preventAutoHideAsync();
@@ -36,13 +35,18 @@ GoogleSignin.configure({
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMono: require("@/assets/fonts/SpaceMono-Regular.ttf"),
     InterRegular: require("@/assets/fonts/Inter_18pt-Regular.ttf"),
     InterSemiBold: require("@/assets/fonts/Inter_18pt-SemiBold.ttf"),
     InterBold: require("@/assets/fonts/Inter_18pt-Bold.ttf"),
     InterMedium: require("@/assets/fonts/Inter_18pt-Medium.ttf"),
   });
 
+  if (Platform.OS === 'android') {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
 
   const [i18nReady, setI18nReady] = useState(false);
   
@@ -63,9 +67,9 @@ export default function RootLayout() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <AuthProvider>
-          <Slot />
-          <AppToast />
-          <StatusBar style="auto" />
+        <Slot />
+        <AppToast />
+        <StatusBar style="auto" />
       </AuthProvider>
     </SafeAreaView>
   );

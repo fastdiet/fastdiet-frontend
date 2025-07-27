@@ -289,7 +289,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
       const newPreferences = {
         ...userPreferences,
-        diet: res.data.diet,
+        diet_type: res.data.diet_type,
       };
       
       setUserPreferences(newPreferences);

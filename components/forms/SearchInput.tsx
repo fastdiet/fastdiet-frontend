@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TextInputProps, Text, TouchableOpacity } from 'react-native';
-import { Search, Trash, XCircle } from 'lucide-react-native';
+import { Search, XCircle } from 'lucide-react-native';
 import { Colors } from '@/constants/Colors';
-import globalStyles from '@/styles/global';
 
 interface SearchInputProps extends TextInputProps {
   errorMessage?: string;
   disabled?: boolean;
-   onClear?: () => void;
+  onClear?: () => void;
+  variant?: 'primary' | 'secondary';
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({errorMessage, disabled = false, onClear, ...props}) => {
+const SearchInput: React.FC<SearchInputProps> = ({errorMessage, disabled = false, onClear, variant = 'primary', ...props}) => {
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
+  const variantStyle = variant === 'primary' ? styles.primaryInput : styles.secondaryInput;
+
   const inputStyles = [
-    styles.input,
+    styles.baseInput,
+    variantStyle,
     isFocused && !disabled && styles.focused,
     errorMessage && styles.error,
     disabled && styles.disabled,
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
   },
-  input: {
+  baseInput: {
     fontFamily: "InterRegular",
     fontSize: 15,
     paddingVertical: 10,
@@ -71,6 +74,14 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[700],
     width: "100%",
     minHeight: 48,
+  },
+   primaryInput: {
+    backgroundColor: Colors.colors.neutral[100],
+    borderColor: Colors.colors.gray[200],
+  },
+  secondaryInput: {
+    backgroundColor: Colors.colors.gray[100],
+    borderColor: Colors.colors.gray[200],
   },
   icon: {
     position: "absolute",

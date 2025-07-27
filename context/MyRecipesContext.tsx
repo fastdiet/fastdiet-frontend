@@ -101,6 +101,7 @@ export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children 
         ready_min: newRecipe.ready_min,
         calories: newRecipe.calories,
         servings: newRecipe.servings,
+        dish_types: newRecipe.dish_types
       };
 
       const updatedRecipes = [newShortRecipe, ...myRecipes];
@@ -124,6 +125,7 @@ export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children 
         ready_min: updatedRecipe.ready_min,
         calories: updatedRecipe.calories,
         servings: updatedRecipe.servings,
+        dish_types: updatedRecipe.dish_types
       };
       const updatedRecipes = myRecipes.map(recipe => recipe.id === recipeId ? updatedShortRecipe : recipe);
       
@@ -136,9 +138,6 @@ export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children 
       return { success: false, error: handleApiError(error) };
     }
   };
-
-
-  
 
   const deleteRecipe = async (recipeId: number, force = false): Promise<ApiResponse> => {
     try {

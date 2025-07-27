@@ -10,6 +10,7 @@ import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
 import { RecipeShort } from '@/models/mealPlan';
 import { ChevronRight, Clock, Pencil, Trash2, Users } from 'lucide-react-native';
+import { useMenu } from '@/hooks/useMenu';
 
 interface RecipeCardProps {
   recipe: RecipeShort;
@@ -20,6 +21,7 @@ interface RecipeCardProps {
 const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
   const { t } = useTranslation();
   const [imageLoading, setImageLoading] = useState(true);
+  const { removeRecipeFromPlan } = useMenu();
   const { deleteRecipe } = useMyRecipes();
 
   const handleDelete = () => {
@@ -48,6 +50,7 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
                       onPress: async () => {
                         const { success: forceSuccess, error: forceError } = await deleteRecipe(recipe.id, true);
                         if (forceSuccess) {
+                          removeRecipeFromPlan(recipe.id);
                           Toast.show({ type: 'success', text1: t('myRecipes.delete.success') });
                         } else {
                           Toast.show({ type: 'error', text1: t('error'), text2: forceError?.message });

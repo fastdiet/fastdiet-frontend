@@ -14,8 +14,6 @@ import globalStyles from '@/styles/global';
 import { AlertTriangle, Dumbbell, Goal, KeyRound, Leaf, LogOut, Mail, Trash2, UserCircle, UtensilsCrossed } from 'lucide-react-native';
 
 
-
-
 const SectionTitle = ({ title }: { title: string }) => <Text style={styles.sectionTitle}>{title}</Text>;
 
 export default function ProfileScreen() {
@@ -69,7 +67,7 @@ export default function ProfileScreen() {
       <View style={styles.content}>
         {/* Stats Section */}
         <View style={styles.statsContainer}>
-          <StatsCard label={t('profile.dailyCalories')} value={`${userPreferences.calories_goal || 0}`} />
+          <StatsCard label={t('profile.dailyCalories')} value={userPreferences.calories_goal !== undefined ? `${Math.round(userPreferences.calories_goal)}` : '-'} />
           <StatsCard label={t('profile.weight')} value={`${user.weight || '-'} kg`} />
           <StatsCard label={t('profile.height')} value={`${user.height || '-'} cm`} />
         </View>
@@ -80,10 +78,10 @@ export default function ProfileScreen() {
           <ProfileListItem 
             iconComponent={Leaf}
             label={t('profile.dietType')}
-            value={userPreferences.diet?.name ? t(`constants.diets.${userPreferences.diet.name}`) : t('profile.notSpecifiedA')}
+            value={userPreferences.diet_type?.name ? t(`constants.diets.${userPreferences.diet_type.name}`) : t('profile.notSpecifiedA')}
             onPress={() => router.push({
               pathname: '/profile/editDiet',
-              params: { currentDietId: userPreferences.diet?.id }
+              params: { currentDietId: userPreferences.diet_type?.id }
             })}
           />
           <ProfileListItem 
@@ -151,8 +149,6 @@ export default function ProfileScreen() {
             />
           )}
         </View>
-
-          
 
         {/* Account Section */}
         <SectionTitle title={t('profile.account')} />

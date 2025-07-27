@@ -216,9 +216,6 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[500],
     textAlign: 'right',
   },
-
-
-
   macrosContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',

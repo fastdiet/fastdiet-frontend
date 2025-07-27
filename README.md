@@ -7,3 +7,7 @@ FastDiet is a health-focused application that helps users create personalized we
 npx expo prebuild --clean
 npm run ios
 npm run android
+
+## Android setup
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$ANDROID_HOME/platform-tools:$PATH

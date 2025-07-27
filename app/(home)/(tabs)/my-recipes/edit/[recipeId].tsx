@@ -1,7 +1,7 @@
 // React and Expo imports
 import { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator, Text } from 'react-native';
-import { useRouter, useLocalSearchParams, Stack } from 'expo-router';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { nanoid } from 'nanoid/non-secure';
@@ -21,7 +21,7 @@ import StepInputList from '@/components/myRecipes/StepInputList';
 
 // Hooks imports
 import { useMyRecipes } from '@/hooks/useMyRecipes';
-import { useRecipe } from '@/hooks/useRecipe'; // ¡NUEVO! Para cargar la receta existente.
+import { useRecipe } from '@/hooks/useRecipe';
 import { useValidations } from '@/hooks/useValidations';
 import { useFormValidation } from '@/hooks/useFormValidation';
 
@@ -31,8 +31,10 @@ import globalStyles from '@/styles/global';
 
 // Models imports
 import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
-import { AlertCircle, ChefHat, List } from 'lucide-react-native';
+import { AlertCircle, ChefHat, List, Utensils } from 'lucide-react-native';
 import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
+import CustomRadioGroup from '@/components/forms/CustomRadioGroup';
+import { getDishTypesOptions } from '@/constants/dishTypes';
 
 
 const EditRecipeScreen = () => {
@@ -43,7 +45,7 @@ const EditRecipeScreen = () => {
   const { recipe, loading, error, refetch } = useRecipe(id);
   const { updateRecipe } = useMyRecipes();
   const validations = useValidations();
-  
+  const dishTypeOptions = getDishTypesOptions(t);
   const [isUpdating, setIsUpdating] = useState(false);
   
    const [formData, setFormData] = useState({
@@ -52,6 +54,7 @@ const EditRecipeScreen = () => {
     readyMin: '',
     servings: '', 
     imageUri: null as string | null,
+    dishTypes: [] as string[],
     ingredients: [] as FormInputIngredient[],
     steps: [] as FormInputStep[],
   });
@@ -76,6 +79,7 @@ const EditRecipeScreen = () => {
         readyMin: recipe.ready_min?.toString() || '',
         servings: recipe.servings?.toString() || '',
         imageUri: recipe.image_url || null,
+        dishTypes: recipe.dish_types || [],
         ingredients: mappedIngredients.length > 0 ? mappedIngredients : [{ id: nanoid(), name: '', amount: '', unit: '' }],
         steps: mappedSteps.length > 0 ? mappedSteps : [{ id: nanoid(), description: '' }],
       });
@@ -91,13 +95,29 @@ const EditRecipeScreen = () => {
     title: validations.titleRecipe,
     readyMin: validations.requiredPositiveNumber,
     servings: validations.requiredPositiveNumber,
+    dishTypes: validations.atLeastOneSelected,
     ingredients: validations.ingredientsList,
   });
+
+  const handleDishTypeChange = (value: string) => {
+    setFormData(prev => {
+      const newDishTypes = [...prev.dishTypes];
+      const index = newDishTypes.indexOf(value);
+
+      if (index > -1) {
+        newDishTypes.splice(index, 1);
+      } else {
+        newDishTypes.push(value);
+      }
+      return { ...prev, dishTypes: newDishTypes };
+    });
+  };
   
   const handleUpdateRecipe = async () => {
     if (!recipeId) return;
 
     const isValid = validateForm(formData);
+    //TODO TOAST
     if (!isValid) {
       Toast.show({ type: 'error', text1: 'Revisa el formulario', text2: 'Algunos campos tienen errores.'});
       return;
@@ -117,6 +137,7 @@ const EditRecipeScreen = () => {
         amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
         unit: ing.unit ? ing.unit.trim() : undefined,
       })),
+      dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
       image_url: formData.imageUri || null,
       analyzed_instructions: validSteps.length > 0 ? validSteps.map((s, index) => ({
         number: index + 1,
@@ -213,6 +234,15 @@ const EditRecipeScreen = () => {
                         />
                      </View>
                   </View>
+                  <SectionHeader title={t('recipes.myRecipes.mealType')} iconComponent={Utensils} />
+                  <CustomRadioGroup
+                    options={dishTypeOptions}
+                    onValueChange={handleDishTypeChange}
+                    selectedValue={formData.dishTypes}
+                    mode="multiple"
+                    layout="row"
+                    errorMessage={errors.dishTypes}
+                  />
                   <SectionHeader title={t('myRecipes.form.ingredients')} iconComponent={List} />
                   {errors.ingredients && <ErrorText text={errors.ingredients} />}
                   <IngredientInputList 

@@ -53,7 +53,7 @@ const DayCard: React.FC<DayCardProps> = ({ dayName, dayNumber, isToday, recipes,
           <View style={styles.mealImagesContainer}>
             {recipes.slice(0, 3).map((recipe, index) => (
               <Image
-                key={recipe.id}
+                key={index}
                 source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/recipe-placeholder.jpg')}
                 style={[styles.mealImage, { zIndex: 3 - index, marginLeft: index > 0 ? -15 : 0 }]}
               />

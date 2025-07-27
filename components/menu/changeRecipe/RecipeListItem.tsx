@@ -4,6 +4,7 @@ import { Clock, Flame, Users } from 'lucide-react-native';
 import { RecipeShort } from '@/models/mealPlan';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { useTranslation } from 'react-i18next';
 
 interface RecipeListItemProps {
   recipe: RecipeShort;
@@ -11,6 +12,7 @@ interface RecipeListItemProps {
 }
 
 const RecipeListItem: React.FC<RecipeListItemProps> = ({ recipe, onSelect }) => {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity
       style={styles.container}
@@ -46,7 +48,7 @@ const RecipeListItem: React.FC<RecipeListItemProps> = ({ recipe, onSelect }) => 
         
       </View>
       <View style={styles.selectButton}>
-        <Text style={styles.selectButtonText}>Elegir</Text>
+        <Text style={styles.selectButtonText}>{t("choose")}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -105,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeListItem;
+export default React.memo(RecipeListItem); 
