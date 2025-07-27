@@ -1,6 +1,6 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
 // Component Imports
@@ -44,7 +44,7 @@ export default function SelectGoalScreen() {
     
     const { success, error } = await selectGoal(goal);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

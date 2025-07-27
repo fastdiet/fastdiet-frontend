@@ -1,6 +1,6 @@
 // React & React Native Imports
-import { useEffect, useMemo, useState } from "react";
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, View, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 
@@ -41,7 +41,6 @@ export default function BasicInfoScreen() {
   const validations = useValidations();
 
   const genderOptions = getGenderOptions(t);
-
   
   const { errors, validateForm } = useFormValidation({
     name: validations.name,
@@ -51,14 +50,9 @@ export default function BasicInfoScreen() {
     weight: validations.weight,
     height: validations.height,
   });
+  //TODO TOAST
   useEffect(() => {
-    Toast.show({
-      type: "success",
-      text1: "Email verificado",
-      text2: "Completa tu perfil",
-      position: "bottom",
-      bottomOffset: 80,
-    });
+    Toast.show({ type: "success", text1: "Email verificado", text2: "Completa tu perfil",});
   }, []);
 
   const handleSaveProfile = async () => {
@@ -77,7 +71,7 @@ export default function BasicInfoScreen() {
     );
 
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }
@@ -89,13 +83,12 @@ export default function BasicInfoScreen() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }}
             keyboardShouldPersistTaps="handled"
           >
             <View style={{ height: 16 }} />
@@ -124,10 +117,10 @@ export default function BasicInfoScreen() {
                     errorMessage={errors.username}
                   />
                   <CustomRadioGroup
-                    radioButtons={genderOptions}
+                    options={genderOptions}
                     layout="row"
-                    onPress={setSelectedGender}
-                    selectedId={selectedGender}
+                    onValueChange={setSelectedGender}
+                    selectedValue={selectedGender}
                     errorMessage={errors.gender}
                   />
                   <StyledTextInput
@@ -170,7 +163,6 @@ export default function BasicInfoScreen() {
             </PaddingView>
           </View>
         </View>
-      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }

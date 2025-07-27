@@ -1,5 +1,5 @@
 // React and expo imports
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -12,31 +12,64 @@ import Section from '@/components/ui/Section';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { ChefHat, FileText } from 'lucide-react-native';
 
 interface InstructionListProps {
-  instructions?: AnalyzedInstruction[] | null;
+  instructions?: AnalyzedInstruction[] | null | undefined;
 }
 
 const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructions }) => {
   const { t } = useTranslation();
 
-  if (!instructions || instructions.length === 0) {
-    return null;
+   const flattenedSteps = useMemo(() => {
+    if (!instructions || instructions.length === 0) {
+      return [];
+    }
+
+    const allSteps: { type: 'group' | 'step'; content: string; number?: number }[] = [];
+    let stepCounter = 1;
+
+    instructions.forEach(group => {
+      if (group.name) {
+        allSteps.push({ type: 'group', content: group.name });
+      }
+      group.steps.forEach(step => {
+        allSteps.push({
+          type: 'step',
+          content: step.step,
+          number: stepCounter,
+        });
+        stepCounter++;
+      });
+    });
+
+    return allSteps;
+  }, [instructions]);
+
+  if (flattenedSteps.length === 0) {
+    return (
+      <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
+        <View style={styles.emptyContainer}>
+          <FileText size={21} color={Colors.colors.gray[400]} />
+          <Text style={styles.emptyText}>{t('recipes.noInstructionsMessage')}</Text>
+        </View>
+      </Section>
+    );
   }
 
   return (
-    <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconName="chef-hat">
-      {instructions.map((group, groupIndex) => (
-        <View key={`instruction-group-${groupIndex}`}>
-          {group.name && <Text style={styles.instructionGroupName}>{group.name}</Text>}
-          {group.steps.map((step) => (
-            <View key={`step-${groupIndex}-${step.number}`} style={styles.instructionItem}>
-              <Text style={styles.instructionNumber}>{step.number}.</Text>
-              <Text style={styles.instructionText}>{step.step}</Text>
-            </View>
-          ))}
-        </View>
-      ))}
+    <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
+      {flattenedSteps.map((item, index) => {
+        if (item.type === 'group') {
+          return <Text key={`item-${index}`} style={styles.instructionGroupName}>{item.content}</Text>;
+        }
+         return (
+          <View key={`item-${index}`} style={styles.instructionItem}>
+            <Text style={styles.instructionNumber}>{item.number}.</Text>
+            <Text style={styles.instructionText}>{item.content}</Text>
+          </View>
+        );
+      })}
     </Section>
   );
 });
@@ -66,6 +99,22 @@ const styles = StyleSheet.create({
     color: Colors.colors.gray[500],
     flex: 1,
     lineHeight: 22,
+  },
+  emptyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.colors.gray[100],
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.colors.gray[200],
+  },
+  emptyText: {
+    ...globalStyles.largeBody,
+    color: Colors.colors.gray[700],
+    marginLeft: 8,
+    flex: 1,
   },
 });
 

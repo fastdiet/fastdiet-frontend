@@ -2,11 +2,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 // Style imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { Clock, Flame, Timer, Users } from 'lucide-react-native';
 
 interface QuickInfoBarProps {
   totalTime?: number | null;
@@ -23,19 +23,19 @@ const QuickInfoBar: React.FC<QuickInfoBarProps> = React.memo(({ totalTime, calor
     <View style={styles.quickInfoBar}>
       {totalTime != null && totalTime >= 0 && (
         <View style={styles.quickInfoItem}>
-          <MaterialCommunityIcons name="clock-outline" size={20} color={Colors.colors.gray[400]} />
+          <Clock size={20} color={Colors.colors.gray[400]} />
           <Text style={styles.quickInfoText}>{totalTime} {t("units.minutesShort")}</Text>
         </View>
       )}
       {calories != null && calories > 0 && (
         <View style={styles.quickInfoItem}>
-          <MaterialCommunityIcons name="fire" size={20} color={Colors.colors.gray[400]} />
+          <Flame size={20} color={Colors.colors.gray[400]} />
           <Text style={styles.quickInfoText}>{calories} {t("units.kcal")}</Text>
         </View>
       )}
       {servings != null && servings > 0 && (
         <View style={styles.quickInfoItem}>
-          <MaterialCommunityIcons name="account-group-outline" size={20} color={Colors.colors.gray[400]} />
+          <Users size={20} color={Colors.colors.gray[400]} />
           <Text style={styles.quickInfoText}>
             {servings} {servings > 1 ? t("units.servings") : t("units.serving")}
           </Text>
@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     backgroundColor: Colors.colors.neutral[100],
     borderRadius: 12,
-    marginVertical: 24,
+    marginTop: 8,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: Colors.colors.gray[100],
     shadowColor: Colors.colors.neutral[500],

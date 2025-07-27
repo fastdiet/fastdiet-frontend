@@ -1,6 +1,5 @@
 // React and Expo imports
 import { View, Text, Image, StyleSheet, ActivityIndicator, TouchableOpacity, Pressable } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -10,14 +9,15 @@ import { RecipeShort } from "@/models/mealPlan";
 // Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
+import { Coffee, Sun, Moon, Apple, Trash2, ChevronRight, Flame, ArrowRightLeft, Clock, Users  } from "lucide-react-native";
 
 
 const getMealIcon = (mealKey: "breakfast" | "lunch" | "dinner") => {
   switch (mealKey) {
-    case "breakfast": return "coffee-outline";
-    case "lunch": return "food-croissant";
-    case "dinner": return "silverware-variant";
-    default: return "food-apple-outline";
+    case "breakfast": return Coffee;
+    case "lunch": return Sun;
+    case "dinner": return Moon;
+    default: return Apple;
   }
 };
 
@@ -32,21 +32,23 @@ interface MealCardProps {
 
 const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onChange }: MealCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
+  const Icon = getMealIcon(mealTypeKey);
 
   return (
     <Pressable
       style={({ pressed }) => [
-        styles.card,
         { transform: [{ scale: pressed ? 0.98 : 1 }], opacity: pressed ? 0.9 : 1, }
       ]}
       onPress={onPress}
     >
+      <View style={styles.shadowContainer}>
+      <View style={styles.card}>
       <View style={styles.imageContainer}>
         {imageLoading && (
           <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[200]} />
         )}
         <Image
-          source={{ uri: recipe.image_url ?? "" }}
+          source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/recipe-placeholder.jpg')}
           style={styles.image}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}
@@ -54,16 +56,21 @@ const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onC
         
         <View style={StyleSheet.absoluteFill}>
           <LinearGradient
-            colors={['rgba(0,0,0,0.4)', 'transparent', 'rgba(0,0,0,0.6)']}
-            locations={[0, 0.5, 1]}
+            colors={[
+              'rgba(0,0,0,0.6)',
+              'rgba(0,0,0,0.3)',
+              'transparent',
+              'rgba(0,0,0,0.3)',
+              'rgba(0,0,0,0.6)'
+            ]}
+            locations={[0, 0.2, 0.5, 0.8, 1]} 
             style={styles.gradient}
           />
 
           {/* Top section for the meal type pill and action buttons */}
           <View style={styles.topOverlay}>
             <View style={styles.mealTypePill}>
-              <MaterialCommunityIcons
-                name={getMealIcon(mealTypeKey)}
+              <Icon
                 size={16}
                 color={Colors.colors.neutral[100]}
                 style={{ marginRight: 6 }}
@@ -77,7 +84,7 @@ const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onC
                 onPress={(e) => { e.stopPropagation(); onChange(); }}
                 hitSlop={10}
               >
-                  <MaterialCommunityIcons name="swap-horizontal" size={22} color={Colors.colors.neutral[100]} />
+                <ArrowRightLeft size={22} color={Colors.colors.neutral[100]} />
               </TouchableOpacity>
               
               <View style={styles.separator} />
@@ -87,18 +94,39 @@ const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onC
                 onPress={(e) => { e.stopPropagation(); onDelete(); }}
                 hitSlop={10}
               >
-                <MaterialCommunityIcons name="trash-can-outline" size={22} color={Colors.colors.neutral[100]}/>
+                <Trash2 size={22} color={Colors.colors.neutral[100]} />
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Bottom section for calories info */}
-          {recipe.calories != null && (
-            <View style={styles.bottomOverlay}>
-              <MaterialCommunityIcons name="fire" size={16} color={Colors.colors.neutral[100]} />
-              <Text style={styles.caloriesText}> {Math.round(recipe.calories)} kcal</Text>
+          
+            <View style={styles.bottomInfoOverlay}>
+              {recipe.calories != null ? (
+                <View style={styles.caloriesContainer}>
+                  <Flame size={14} fill={Colors.colors.neutral[100]} color={Colors.colors.neutral[100]} />
+                  <Text style={styles.caloriesText}>{Math.round(recipe.calories)} kcal</Text>
+                </View>
+              )
+              : (
+                <>
+                  {recipe.ready_min && (
+                    <View style={styles.infoPill}>
+                      <Clock size={14} color={Colors.colors.neutral[100]} />
+                      <Text style={styles.infoText}>{recipe.ready_min} min</Text>
+                    </View>
+                  )}
+                  {recipe.servings && (
+                    <View style={styles.infoPill}>
+                      <Users size={14} color={Colors.colors.neutral[100]} />
+                      <Text style={styles.infoText}>{recipe.servings}</Text>
+                    </View>
+                  )}
+                </>
+              )
+            }
             </View>
-          )}
+          
         </View>
       </View>
 
@@ -107,12 +135,10 @@ const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onC
         <View style={styles.titleTextWrapper}>
           <Text style={styles.recipeTitle} numberOfLines={2} ellipsizeMode="tail">{recipe.title}</Text>
         </View>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={28}
-          color={Colors.colors.primary[200]}
-        />
+        <ChevronRight size={26} color={Colors.colors.primary[200]} />
       </View>
+      </View>
+    </View>
     </Pressable>
   );
 };
@@ -122,9 +148,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: Colors.colors.neutral[100],
     overflow: 'hidden',
-    shadowColor: Colors.colors.neutral[500],
+  },
+  shadowContainer: {
+    borderRadius: 16,
+    backgroundColor: Colors.colors.gray[100],
+    shadowColor: Colors.colors.gray[500],
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.22,
     shadowRadius: 16,
     elevation: 8,
   },
@@ -149,12 +179,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  bottomOverlay: {
+  bottomInfoOverlay: {
     position: 'absolute',
     bottom: 12,
     left: 12,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8
   },
   mealTypePill: {
     flexDirection: 'row',
@@ -190,8 +221,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     marginVertical: 4,
   },
+  caloriesContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   caloriesText: {
-    marginLeft: 6,
+    marginLeft: 4,
     ...globalStyles.smallBodySemiBold,
     color: Colors.colors.neutral[100],
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
@@ -215,6 +250,22 @@ const styles = StyleSheet.create({
     ...globalStyles.largeBodySemiBold,
     color: Colors.colors.gray[500],
     lineHeight: 24,
+  },
+  infoPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    borderRadius: 20,
+  },
+  infoText: {
+    ...globalStyles.smallBodySemiBold,
+    color: Colors.colors.neutral[100],
+    marginLeft: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
 });
 

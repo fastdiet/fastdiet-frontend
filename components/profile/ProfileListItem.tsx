@@ -1,22 +1,22 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { ChevronRight, LucideIcon } from 'lucide-react-native';
 
 interface ProfileListItemProps {
-  icon: keyof typeof Ionicons.glyphMap;
+  iconComponent?: LucideIcon;
   label: string;
   value?: string;
   onPress?: () => void;
   isDestructive?: boolean;
 }
 
-const ProfileListItem = ({ icon, label, value, onPress, isDestructive = false }: ProfileListItemProps) => {
+const ProfileListItem = ({ iconComponent: Icon, label, value, onPress, isDestructive = false }: ProfileListItemProps) => {
   const isActionable = !!onPress;
   const isSingleLine = !value;
 
   const primaryTextColor = isDestructive ? Colors.colors.error[100] : Colors.colors.gray[700];
-  const iconColor = isDestructive ? Colors.colors.error[100] : Colors.colors.gray[400];
+  const iconColor = isDestructive ? Colors.colors.error[100] : Colors.colors.gray[700];
 
   return (
     <TouchableOpacity 
@@ -24,8 +24,7 @@ const ProfileListItem = ({ icon, label, value, onPress, isDestructive = false }:
       onPress={onPress} 
       disabled={!isActionable}
     >
-      <Ionicons name={icon} size={24} color={iconColor} style={styles.icon} />
-      
+      {Icon && <Icon size={24} color={iconColor} strokeWidth={1.7} style={styles.icon} />}
       <View style={styles.textContainer}>
         {isSingleLine ? (
           <Text style={[styles.singleLineLabel, { color: primaryTextColor }]}>
@@ -44,7 +43,7 @@ const ProfileListItem = ({ icon, label, value, onPress, isDestructive = false }:
       </View>
       
       {isActionable && !isDestructive && (
-        <Ionicons name="chevron-forward-outline" size={20} color={Colors.colors.gray[300]} />
+        <ChevronRight size={22} color={Colors.colors.gray[300]} />
       )}
     </TouchableOpacity>
   );

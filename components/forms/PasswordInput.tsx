@@ -6,7 +6,7 @@ import { TextInput, TextInputProps, StyleSheet, View, Text, TouchableOpacity } f
 import { Colors } from "@/constants/Colors";
 
 // Icon Imports
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { Eye, EyeOff } from 'lucide-react-native';
 
 
 interface CustomTextInputProps extends TextInputProps {
@@ -41,6 +41,7 @@ const PasswordInput: React.FC<CustomTextInputProps> = ({
           {...props}
           style={inputStyles}
           editable={!disabled}
+          placeholderTextColor={Colors.colors.gray[400]}
           onFocus={handleFocus}
           onBlur={handleBlur}
           secureTextEntry={!isPasswordVisible}
@@ -50,9 +51,9 @@ const PasswordInput: React.FC<CustomTextInputProps> = ({
           onPress={togglePasswordVisibility}
         >
           {isPasswordVisible ? (
-            <FontAwesome6 name="eye" size={20} color={Colors.colors.gray[400]} />
+            <Eye size={22} color={Colors.colors.gray[400]} />
           ) : (
-            <FontAwesome6 name="eye-slash" size={20} color={Colors.colors.gray[400]} />
+            <EyeOff size={22} color={Colors.colors.gray[400]} />
           )}
         </TouchableOpacity>
       </View>
@@ -70,13 +71,14 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: "InterRegular",
+    fontSize: 15,
     padding: 10,
     paddingRight: 40,
     borderColor: Colors.colors.gray[200],
-    borderWidth: 1,
-    borderRadius: 16,
+    borderWidth: 1.2,
+    borderRadius: 14,
     backgroundColor: Colors.colors.gray[100],
-    color: Colors.colors.gray[400],
+    color: Colors.colors.gray[700],
     width: "100%",
     minHeight: 48,
   },

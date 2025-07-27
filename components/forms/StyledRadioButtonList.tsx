@@ -9,8 +9,8 @@ import globalStyles from "@/styles/global";
 import { Colors } from "@/constants/Colors";
 
 // Icon Imports
-import { Ionicons } from "@expo/vector-icons";
-import ViewInputs from "../views/ViewInputs";
+import ViewInputs from "@/components/views/ViewInputs";
+import { Check } from "lucide-react-native";
 
 interface RadioOption {
   label: string;
@@ -43,7 +43,7 @@ const StyledRadioButtonList: React.FC<RadioButtonProps> = ({
             onPress={() => onSelect(option.value)}
           >
             <View style={[styles.radioCircle, isSelected && styles.checkedCircle]}>
-              {isSelected && <Ionicons name="checkmark" size={16} color="white" />}
+              {isSelected && <Check size={16} color={Colors.colors.neutral[100]} />}
             </View>
             <View style={styles.textContainer}>
               <Text style={[

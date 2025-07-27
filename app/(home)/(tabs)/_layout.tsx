@@ -1,5 +1,6 @@
 // React & React Native Imports
 import { Tabs } from "expo-router";
+import { ViewStyle } from 'react-native'; 
 
 // Component Imports
 import { HapticTab } from "@/components/HapticTab";
@@ -8,33 +9,68 @@ import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
 
 // Icon Imports
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { getFocusedRouteNameFromRoute, Route } from "@react-navigation/native";
+import { BookOpen, Home, UserCircle2 } from "lucide-react-native";
+import { useKeyboardVisible } from "@/hooks/useKeyboardVisible";
 
 export default function TabLayout() {
+  const isKeyboardVisible = useKeyboardVisible();
+
+  const getTabBarStyle = (route: Partial<Route<string>>): ViewStyle => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'index';
+    
+    const screensToHideTabBar: string[] = [
+      'create', 'edit/[recipeId]',
+      'editGoal', 'editActivity', 'editDiet', 'editCuisines', 'editIntolerances', 'editPersonalData', 'changePassword'
+    ];
+    const shouldHideForRoute = screensToHideTabBar.includes(routeName);
+
+    if (shouldHideForRoute || isKeyboardVisible) {
+      return { display: 'none' };
+    }
+
+    return {
+      backgroundColor: Colors.colors.neutral[100],
+      borderTopWidth: 0,
+      position: 'absolute' as 'absolute',
+      height: 68,
+    };
+  }
+
   return (
     <>
       <Tabs
-        screenOptions={{
+         screenOptions={({ route }) => ({
           tabBarActiveTintColor: Colors.colors.primary[200],
           headerShown: false,
           tabBarButton: HapticTab,
-          tabBarStyle: {
-            backgroundColor: Colors.colors.neutral[100],
-            borderTopWidth: 0,
-            position: "absolute",
-            height: 68
-          },
-        }}
+          tabBarStyle: getTabBarStyle(route),
+        })}
       >
         <Tabs.Screen
           name="menu"
           options={{
             title:"Menú",
             tabBarIcon: ({ focused }) => (
-              <FontAwesome name="home" size={35}  strokeWidth={1}  color={
-                  focused ? Colors.colors.primary[200] : Colors.colors.gray[300]
-                } />
+              <Home 
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="my-recipes"
+          options={{
+            title: "Mis recetas",
+            tabBarIcon: ({ focused }) => (
+              <BookOpen
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
             ),
           }}
         />
@@ -42,26 +78,15 @@ export default function TabLayout() {
        
         <Tabs.Screen
           name="profile"
-          options={({ route }) => {
-
-            const routeName = getFocusedRouteNameFromRoute(route) ?? 'index';
-
-            const screensToHideTabBar = ['editGoal', 'editActivity', 'editDiet', 'editCuisines', 'editIntolerances', 'editPersonalData', 'changePassword'];
-            
-            return {
-              title: "Perfil",
-              tabBarIcon: ({ focused }) => (
-                <FontAwesome name="user" size={35} strokeWidth={1} 
-                color={ focused ? Colors.colors.primary[200] : Colors.colors.gray[300] } />
-              ),
-              tabBarStyle: {
-                display: screensToHideTabBar.includes(routeName) ? 'none' : 'flex',
-                backgroundColor: Colors.colors.neutral[100],
-                borderTopWidth: 0,
-                position: "absolute",
-                height: 68,
-              },
-            };
+          options={{
+            title: "Perfil",
+            tabBarIcon: ({ focused }) => (
+              <UserCircle2
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
+            ),
           }}
         />
       </Tabs>

@@ -10,44 +10,55 @@ interface RadioButtonOption {
 }
 
 interface CustomRadioGroupProps {
-  radioButtons: RadioButtonOption[];
+  options: RadioButtonOption[];
   layout?: 'row' | 'column';
-  onPress: (value: string) => void;
-  selectedId: string;
+  onValueChange: (value: string) => void;
+  selectedValue: string | string[]; 
+  mode?: 'single' | 'multiple';
   errorMessage?: string;
 }
 
 const CustomRadioGroup: React.FC<CustomRadioGroupProps> = ({ 
-  radioButtons, 
+  options, 
   layout = 'row', 
-  onPress, 
-  selectedId,
+  onValueChange, 
+  mode = 'single',
+  selectedValue,
   errorMessage
 }) => {
+
+  const isMultiple = mode === 'multiple';
+
   return (
     <View style={styles.container}>
-      <View style={[styles.radioGroup, { flexDirection: layout }]}>
-        {radioButtons.map((option, index) => (
-          <TouchableOpacity
-            key={option.id}
-            activeOpacity={0.8}
-            onPress={() => onPress(option.value)}
-            style={[
-              styles.radioOption,
-              index < radioButtons.length - 1 && styles.marginRight,
-              selectedId === option.value && styles.radioOptionSelected,
-              errorMessage && styles.radioOptionError
-            ]}
-          >
-            <View style={[
-              styles.radioCircle,
-              selectedId === option.value && styles.radioCircleSelected
-            ]}>
-              {selectedId === option.value && <View style={styles.radioDot} />}
-            </View>
-            <Text style={styles.radioLabel}>{option.label}</Text>
-          </TouchableOpacity>
-        ))}
+      <View style={[styles.groupContainer, { flexDirection: layout }]}>
+        {options.map((option, index) => {
+          const isSelected = isMultiple 
+            ? (selectedValue as string[]).includes(option.value)
+            : selectedValue === option.value;
+          return (
+            <TouchableOpacity
+              key={option.id}
+              activeOpacity={0.8}
+              onPress={() => onValueChange(option.value)}
+              style={[
+                styles.option,
+                isSelected && styles.optionSelected,
+                errorMessage && styles.optionError
+              ]}
+            >
+              <View style={[
+                styles.radioCircle,
+                isSelected && (styles.radioCircleSelected)
+              ]}>
+                {isSelected && (
+                  <View style={styles.radioDot} />
+                )}
+              </View>
+              <Text style={styles.label}>{option.label}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
       {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
     </View>
@@ -58,31 +69,29 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
-  radioGroup: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  groupContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     width: '100%',
     minHeight: 48,
+    gap: 10
   },
-  radioOption: {
+  option: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 16,
-    borderWidth: 1,
+    borderRadius: 14,
+    borderWidth: 1.2,
     borderColor: Colors.colors.gray[200],
     backgroundColor: Colors.colors.gray[100],
-    flex: 1,
     minHeight: 48,
   },
-  marginRight: {
-    marginRight: 10,
-  },
-  radioOptionSelected: {
+  optionSelected: {
     borderColor: Colors.colors.primary[400],
     backgroundColor: Colors.colors.neutral[100],
   },
-  radioOptionError: {
+  optionError: {
     borderColor: Colors.colors.error[100],
   },
   radioCircle: {
@@ -104,9 +113,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: Colors.colors.primary[400],
   },
-  radioLabel: {
+  label: {
     fontFamily: 'InterRegular',
-    color: Colors.colors.gray[400],
+    fontSize: 15,
+    color: Colors.colors.gray[700],
   },
   errorText: {
     color: Colors.colors.error[100],

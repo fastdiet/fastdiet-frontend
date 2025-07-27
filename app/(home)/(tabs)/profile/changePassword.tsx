@@ -54,7 +54,7 @@ export default function ChangePasswordScreen() {
       Toast.show({ type: 'success', text1: t('profile.passwordUpdated') });
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

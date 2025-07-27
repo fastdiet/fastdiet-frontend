@@ -50,15 +50,10 @@ export default function SelectGoalScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.goalUpdated'),
-        position: 'bottom',
-        bottomOffset: 120,
-      });
+      Toast.show({type: 'success', text1: t('profile.goalUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

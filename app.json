@@ -39,6 +39,13 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.1029285084877-up0oqd75c8jofll6he0vs10959v2r4ub"
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+           "photosPermission": "La app necesita acceder a tus fotos para que puedas añadir imágenes a tus recetas.",
+          "cameraPermission": "La app necesita acceder a la cámara para que puedas tomar fotos para tus recetas."
+        }
       ]
     ],
     "experiments": {
@@ -49,8 +56,8 @@
         "origin": false
       },
       "API_URL_WEB": "http://localhost:13000",
-      "API_URL_ANDROID": "http://x.x.x.x:13000",
-      "API_URL_IOS": "http://x.x.x.x:13000",
+      "API_URL_ANDROID": "http://192.168.1.111:13000",
+      "API_URL_IOS": "http://192.168.1.111:13000",
       "eas": {
         "projectId": "3380a3af-405d-47f2-ab7f-cce21a09e1d6"
       }

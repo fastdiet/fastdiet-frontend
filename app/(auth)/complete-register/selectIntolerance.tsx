@@ -44,7 +44,7 @@ export default function SelectIntoleranceScreen() {
     setLoading(true);
     const { success, error } = await selectIntolerances(selectedIntoleranceIds);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

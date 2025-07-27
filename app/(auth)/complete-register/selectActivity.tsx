@@ -1,6 +1,6 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "expo-router";
 
 // Component Imports
@@ -43,7 +43,7 @@ export default function SelectActivityScreen() {
     
     const { success, error } = await selectActivity(activityLevel);
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }

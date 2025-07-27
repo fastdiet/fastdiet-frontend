@@ -43,14 +43,10 @@ export default function EditActivityScreen() {
     setLoading(false);
 
     if (success) {
-      Toast.show({
-        type: 'success',
-        text1: t('profile.activityUpdated'), 
-        position: 'bottom'
-      });
+      Toast.show({ type: 'success', text1: t('profile.activityUpdated'),});
       router.back();
     } else {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
     }
   };
 

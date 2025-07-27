@@ -40,5 +40,8 @@ export const Colors = {
       170: "#FFFFFF70",
       500: "#000000",
     },
+    protein: {
+      100: "#5C6BC0",
+    },
   },
 };

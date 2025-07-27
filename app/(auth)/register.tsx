@@ -53,14 +53,14 @@ const RegisterScreen = () => {
     const { success, error } = await register(email, password);
 
     if (!success) {
-      setErrorMessage(error);
+      setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
     }
 
     const { success: successCC, error: errorCC } = await sendVerificationCode(email);
     if (!successCC) {
-      setErrorMessage(errorCC);
+      setErrorMessage(errorCC?.message ?? "");
       setLoading(false);
       return;
     }
@@ -93,7 +93,6 @@ const RegisterScreen = () => {
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <ViewInputs>
                 <StyledTextInput
-                  style={globalStyles.largeBodyMedium}
                   placeholder={t("auth.register.email")}
                   autoCapitalize="none"
                   value={email}
@@ -101,14 +100,12 @@ const RegisterScreen = () => {
                   errorMessage={errors.email}
                 />
                 <PasswordInput
-                  style={globalStyles.largeBodyMedium}
                   placeholder={t("auth.register.password")}
                   value={password}
                   onChangeText={setPassword}
                   errorMessage={errors.password}
                 />
                 <PasswordInput
-                  style={globalStyles.largeBodyMedium}
                   placeholder={t("auth.register.repeatPassword")}
                   value={passwordCheck}
                   onChangeText={setPasswordCheck}
