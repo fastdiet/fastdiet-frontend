@@ -14,8 +14,6 @@ import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { Wrench } from 'lucide-react-native';
 
-
-
 const getUniqueEquipment = (instructions: AnalyzedInstruction[]): string[] => {
 
   const equipmentSet = new Set<string>();
@@ -47,11 +45,11 @@ const EquipmentGrid: React.FC<EquipmentGridProps> = React.memo(({ instructions }
   }
 
   return (
-    <Section title={t("index.menu.recipe.equipmentSectionTitle")} iconComponent={Wrench} defaultOpen={false}>
+    <Section title={t("index.menu.recipe.equipmentSectionTitle")} icon={Wrench} defaultOpen={false}>
       <View style={styles.equipmentGrid}>
         {equipmentList.map((item, index) => (
           <View key={`equip-${index}-${item}`} style={styles.equipmentItemChip}>
-            <Text style={styles.equipmentTextChip}>{item}</Text>
+            <Text style={styles.equipmentTextChip}>{t(`constants.equipment.${item}`)}</Text>
           </View>
         ))}
       </View>
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
   equipmentTextChip: {
     ...globalStyles.smallBodySemiBold,
     color: Colors.colors.gray[500],
-    textTransform: 'capitalize',
+    //textTransform: 'capitalize',
     lineHeight: 20
   },
 });

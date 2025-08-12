@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import globalStyles from '@/styles/global';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -82,14 +83,22 @@ const NoCurrentMenuIndex = () => {
     console.log("Generar menu");
     setIsGenerating(true);
     setErrorMessage("");
-    const {success, error} = await generateMenu();
-    if(!success){
-      setErrorMessage(error?.message ?? "");
+    const response = await generateMenu();
+    if(response.success && response.data){
+      if(response.data.status === "PARTIAL_SUCCESS"){
+        Toast.show({
+          type: 'info',
+          text1: t('index.noMenu.menuGenerated'),
+          text2: t('index.noMenu.partialMenuGenerated'),
+          visibilityTime: 10000,
+        });
+      } else if (response.data.status === 'FULL_SUCCESS') {
+        Toast.show({type: 'success', text1: t('index.noMenu.menuGeneratedSuccessfuly'),});
+      }
+    } else {
+      setErrorMessage(response.error?.message ?? t('errorsBackend.genericError'));
       setIsGenerating(false);
-      return;
     }
-
-    setIsGenerating(false);
   };
 
   return (
@@ -99,7 +108,6 @@ const NoCurrentMenuIndex = () => {
             contentContainerStyle={{ flexGrow: 1}}
         >
             <PaddingView>
-                    {errorMessage ? <ErrorText text={errorMessage} /> : null}
                     <TitleParagraph
                       title={t('index.noMenu.welcome', { name: user?.name})}
                       paragraph={t('index.noMenu.subtitle')}
@@ -129,6 +137,9 @@ const NoCurrentMenuIndex = () => {
                     description={t('index.noMenu.feature3.description')}
                     />
                 </View>
+                <View style={{ marginBottom: 24 }}>
+                {errorMessage ? <ErrorText text={errorMessage}/> : null}
+                </View>
                 <View style={styles.actionsContainer}>
                     <PrimaryButton 
                     title={t('index.noMenu.generateMenu')}
@@ -138,7 +149,7 @@ const NoCurrentMenuIndex = () => {
                     
                     <SecondaryButton 
                     title={t('index.noMenu.checkPreferences')}
-                    onPress={() => console.log("Revisar o ajustar tus preferencias")}
+                    onPress={() => router.push('/complete-register/basicInfo?edit=true')}
                     icon="sliders"
                     />
                 </View>
@@ -166,13 +177,15 @@ const NoCurrentMenuIndex = () => {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: Colors.colors.neutral[100] 
+    backgroundColor: Colors.colors.gray[100] 
   },
   
   featuresCard: { 
     marginTop: 32,
     marginVertical: 24,
-    
+    backgroundColor: Colors.colors.neutral[100], 
+    borderRadius: 14,
+    padding: 16,
   },
   featureContainer: { 
     flexDirection: 'row', 
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
     marginRight: 12
   },
   actionsContainer: { 
-    marginTop: 8, 
+    //marginTop: 8, 
     marginBottom: 24
   },
   primaryButton: { 

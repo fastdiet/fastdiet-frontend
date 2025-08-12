@@ -10,6 +10,7 @@ import ConfirmationCodeForm from "@/components/forms/ConfirmationCodeForm";
 import { useFormValidation } from "@/hooks/useFormValidation";
 import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 
 export default function VerifyEmailScreen() {
@@ -17,7 +18,7 @@ export default function VerifyEmailScreen() {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { t } = useTranslation();
   const { user, verifyEmail, sendVerificationCode } = useAuth();
   const validations = useValidations();
   const { errors, validateForm } = useFormValidation({
@@ -36,7 +37,10 @@ export default function VerifyEmailScreen() {
       setErrorMessage(error?.message ?? "");
       setLoading(false);
       return;
-    } 
+    }
+    Toast.show({type: "success", text1: t("auth.verifyCode.emailVerified"),
+      text2: t("auth.verifyCode.completeProfile"),});
+    setLoading(false);
     router.replace("/complete-register/basicInfo");
   };
 
@@ -46,7 +50,8 @@ export default function VerifyEmailScreen() {
 
     const { success, error } = await sendVerificationCode(user!.email!);
     if (success) {
-      Toast.show({type: "success", text1: "Código enviado", text2: "Se ha enviado un nuevo código de verificación a tu correo.",});
+      Toast.show({type: "success", text1: t("auth.verifyCode.codeSent"),
+        text2: t("auth.verifyCode.codeSentDescription")});
     } else {
       Toast.show({type: "error", text1: "Error", text2: error?.message ?? "",});
     }

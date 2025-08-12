@@ -33,22 +33,22 @@ const getSlotName = (slotIndex: number, t: (key: string) => string): string => {
 
 const RecipeDetailScreen = () => {
   const { t } = useTranslation();
-  const params = useLocalSearchParams<{ recipeId: string; day?: string; slot?: string }>();
+  const params = useLocalSearchParams<{ recipeId: string; day?: string; slot?: string, mealType?: string }>();
   const navigation = useNavigation();
   const recipeIdNumber = Number(params.recipeId);
   const { recipe, loading, error, refetch } = useRecipe(recipeIdNumber);
 
   useEffect(() => {
     let headerTitle = t("recipe.detailTitleFallback");
-    if (params.day && params.slot) {
+    if (params.day && params.mealType) {
       const dayIdx = parseInt(params.day, 10);
-      const slotIdx = parseInt(params.slot, 10);
-      if (!isNaN(dayIdx) && !isNaN(slotIdx)) {
-        headerTitle = `${getSlotName(slotIdx, t)} - ${t(`constants.daysShort.${dayIdx}`)}`;
+      const mealType = params.mealType;
+      if (!isNaN(dayIdx) && mealType) {
+        headerTitle = `${t(`constants.meals.${mealType}`)} - ${t(`constants.daysShort.${dayIdx}`)}`;
       }
     }
     navigation.setOptions({ title: headerTitle });
-  }, [params.day, params.slot, navigation, t, recipe]);
+  }, [params.day, params.mealType, navigation, t, recipe]);
 
   const totalTime = recipe
     ? recipe.ready_min || (recipe.preparation_min ?? 0) + (recipe.cooking_min ?? 0)

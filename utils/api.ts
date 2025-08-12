@@ -2,10 +2,11 @@ import axios from "axios";
 import { getAccessToken } from "./secureTokens";
 import { refreshAccessToken } from "@/services/refresh";
 import { getBackendUrl } from "@/utils/getBackendUrl";
+import i18n from "@/i18n";
 
 const api = axios.create({
   baseURL: getBackendUrl(),
-  timeout: 10000
+  timeout: 20000
 });
 
 api.interceptors.request.use(
@@ -19,6 +20,11 @@ api.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+    }
+
+    const currentLanguage = i18n.language;
+    if (currentLanguage) {
+      config.headers["Accept-Language"] = currentLanguage;
     }
 
     if (config.data instanceof URLSearchParams) {

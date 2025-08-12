@@ -88,7 +88,7 @@ const NutritionInfo: React.FC<NutritionInfoProps> = React.memo(({ nutrients, cal
   return (
     <Section 
       title={t("index.menu.recipe.nutritionalInfoSectionTitle")}
-      iconComponent={BarChart3} 
+      icon={BarChart3} 
       defaultOpen={false}
       contentStyle={{ paddingBottom: 0 }}
     >

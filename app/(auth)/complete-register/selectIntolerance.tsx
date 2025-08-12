@@ -1,7 +1,7 @@
 // React & React Native Imports
 import { Text, TouchableOpacity, View, StyleSheet} from "react-native";
-import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -21,6 +21,7 @@ import globalStyles from "@/styles/global";
 
 //Constants imports
 import { getIntoleranceOptions } from "@/constants/intolerances";
+import Intolerance from "@/models/intolerance";
 
 
 export default function SelectIntoleranceScreen() {
@@ -29,8 +30,16 @@ export default function SelectIntoleranceScreen() {
   const [selectedIntoleranceIds, setSelectedIntoleranceIds] = useState<number[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const intoleranceOptions = getIntoleranceOptions(t);
-  const { selectIntolerances } = useAuth();
+  const { selectIntolerances, userPreferences } = useAuth();
   const router = useRouter();
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+
+  useEffect(() => {
+    if (isEditMode && userPreferences?.intolerances && userPreferences.intolerances.length > 0) {
+      setSelectedIntoleranceIds(userPreferences.intolerances.map((intolerance: Intolerance) => intolerance.id));
+    }
+  }, [isEditMode, userPreferences]); 
 
   const toggleIntolerance = (id: number) => {
     setSelectedIntoleranceIds((prev) =>
@@ -49,7 +58,13 @@ export default function SelectIntoleranceScreen() {
       return;
     }
 
+    setLoading(false);
+
+    
     router.replace("/menu/");
+    
+
+    
   };
 
   return (

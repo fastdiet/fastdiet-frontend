@@ -18,7 +18,6 @@ import { useAuth } from "@/hooks/useAuth";
 
 // Style imports
 import { Colors } from "@/constants/Colors";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { getActivityOptions } from "@/constants/activity_levels";
 
 export default function EditActivityScreen() {

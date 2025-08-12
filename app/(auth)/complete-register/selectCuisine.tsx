@@ -1,7 +1,7 @@
 // React & React Native Imports
 import { FlatList, Text, TouchableOpacity, View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -31,9 +31,17 @@ export default function SelectCuisineScreen() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const cuisineOptions = getCuisineOptions(t);
-  const { selectCuisines } = useAuth();
+  const { selectCuisines, userPreferences } = useAuth();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+
+  useEffect(() => {
+    if (isEditMode && userPreferences?.cuisines && userPreferences.cuisines.length > 0) {
+      setSelectedCuisineIds(userPreferences.cuisines.map((cuisine: Cuisine) => cuisine.id));
+    }
+  }, [isEditMode, userPreferences]); 
 
   const toggleCuisine = (id: number) => {
     setSelectedCuisineIds((prev) =>
@@ -59,7 +67,14 @@ export default function SelectCuisineScreen() {
       return;
     }
 
-    router.push("/complete-register/selectIntolerance");
+    setLoading(false);
+
+    const nextRoute = "/complete-register/selectIntolerance";
+    if (isEditMode) {
+      router.push(`${nextRoute}?edit=true`);
+    } else {
+      router.push(nextRoute);
+    }
   };
 
   const renderCuisineItem = ({ item }: { item: Cuisine }) => (

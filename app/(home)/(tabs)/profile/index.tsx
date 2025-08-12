@@ -36,8 +36,8 @@ export default function ProfileScreen() {
         { 
           text: t('accept'), style: 'destructive', 
           onPress: async () => {
-            await logout();
             router.replace('/login');
+            await logout();
           }
         },
       ]
@@ -78,7 +78,7 @@ export default function ProfileScreen() {
           <ProfileListItem 
             iconComponent={Leaf}
             label={t('profile.dietType')}
-            value={userPreferences.diet_type?.name ? t(`constants.diets.${userPreferences.diet_type.name}`) : t('profile.notSpecifiedA')}
+            value={userPreferences.diet_type?.id ? t(`constants.diets.${userPreferences.diet_type.id}`) : t('profile.notSpecifiedA')}
             onPress={() => router.push({
               pathname: '/profile/editDiet',
               params: { currentDietId: userPreferences.diet_type?.id }

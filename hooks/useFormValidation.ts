@@ -15,11 +15,13 @@ export const useFormValidation = (validationRules: ValidationRules) => {
     const newErrors: FormErrors = {};
     let isValid = true;
 
-    for (const field in validationRules) {
-      const error = validationRules[field](values[field]);
-      if (error) {
-        newErrors[field] = error;
-        isValid = false;
+    for (const field in values) {
+      if (validationRules[field]) {
+        const error = validationRules[field](values[field]);
+        if (error) {
+          newErrors[field] = error;
+          isValid = false;
+        }
       }
     }
 

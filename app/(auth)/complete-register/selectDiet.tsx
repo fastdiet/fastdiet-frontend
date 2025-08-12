@@ -1,7 +1,7 @@
 // React & React Native Imports
 import { FlatList, Text, TouchableOpacity, View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -32,9 +32,17 @@ export default function SelectDietScreen() {
   const [errorMessage, setErrorMessage] = useState("");
   
   const dietOptions = getDietOptions(t);
-  const { selectDiet } = useAuth();
+  const { selectDiet, userPreferences } = useAuth();
   const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+
+  useEffect(() => {
+    if (isEditMode && userPreferences?.diet_type) {
+      setSelectedDietId(userPreferences.diet_type?.id || null);
+    }
+  }, [isEditMode, userPreferences]); 
 
 
   const handleSaveDiet = async () => {
@@ -53,8 +61,14 @@ export default function SelectDietScreen() {
       setLoading(false);
       return;
     }
+    setLoading(false);
 
-    router.push("/complete-register/selectCuisine"); 
+    const nextRoute = "/complete-register/selectCuisine";
+    if (isEditMode) {
+      router.push(`${nextRoute}?edit=true`);
+    } else {
+      router.push(nextRoute);
+    }
   };
 
   const renderDietItem = ({ item }: {item: Diet}) => (

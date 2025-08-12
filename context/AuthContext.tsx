@@ -23,7 +23,7 @@ export interface ApiError {
 export type ApiResponse<T = never> = {
   success: boolean;
   error: ApiError | null;
-  data?: T; 
+  data?: any; 
 };
 
 interface AuthContextType {
@@ -38,6 +38,7 @@ interface AuthContextType {
   handleGoogleLogin: () => Promise<ApiResponse>;
   register: (email: string, password: string) => Promise<ApiResponse>;
   completeBasicInfo: (username: string, name: string, gender: string, age: number, weight: number, height: number) => Promise<ApiResponse>;
+  updateUserMetrics: (gender: string, age: number, weight: number, height: number) => Promise<ApiResponse>;
   selectActivity: (activityLevel: string) => Promise<ApiResponse>;
   selectGoal: (goal: string) => Promise<ApiResponse>;
   selectDiet: (diet_type_id: number) => Promise<ApiResponse>;
@@ -230,13 +231,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       
       setUser(res.data.user);
       if (res.data.calories_goal) {
-          setUserPreferences(prev => {
-              if (!prev) return prev;
-              return {
-                  ...prev,
-                  calories_goal: res.data.calories_goal,
-              };
-          });
+        setUserPreferences(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                calories_goal: res.data.calories_goal,
+            };
+        });
       }
       await saveUser(res.data.user);
       if (res.data.calories_goal) {
@@ -249,6 +250,40 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       return { success: false, error: handleApiError(error) };
     }
   };
+
+  const updateUserMetrics = async (
+    gender: string,
+    age: number,
+    weight: number,
+    height: number
+  ) => {
+    try {
+      const updatedUser = { gender, age, weight, height };
+      const res = await api.patch(`/users/`, updatedUser);
+      
+      setUser(res.data.user);
+      if (res.data.calories_goal) {
+        setUserPreferences(prev => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                calories_goal: res.data.calories_goal,
+            };
+        });
+      }
+      await saveUser(res.data.user);
+      if (res.data.calories_goal) {
+        const updatedPrefsForStorage = { ...userPreferences, calories_goal: res.data.calories_goal };
+        await saveUserPreferences(updatedPrefsForStorage);
+      }
+
+      return { success: true, error: null };
+    } catch (error) {
+      return { success: false, error: handleApiError(error) };
+    }
+  };
+
+
 
   const selectActivity = async (activity: string) => {
     try {
@@ -430,6 +465,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     handleGoogleLogin,
     register,
     completeBasicInfo,
+    updateUserMetrics,
     selectActivity,
     selectGoal,
     selectDiet,

@@ -22,6 +22,7 @@ const backendErrorMap: Record<string, string> = {
   CANNOT_DELETE_IMPORTED_RECIPE: "errorsBackend.cannotDeleteImportedRecipe",
   MEAL_ITEM_NOT_FOUND: "errorsBackend.mealItemNotFound",
   MEAL_PLAN_GENERATION_FAILED: "errorsBackend.mealPlanGenerationFailed",
+  PREFERENCES_TOO_STRICT: "errorsBackend.preferencesTooStrict",
   USER_PREFERENCES_NOT_FOUND: "errorsBackend.userPreferencesNotFound",
 
   CUISINE_REGIONS_NOT_FOUND: "errorsBackend.cuisineRegionsNotFound",

@@ -1,7 +1,7 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -26,10 +26,18 @@ export default function SelectGoalScreen() {
   const { t } = useTranslation();
   const [goal, setGoal] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { selectGoal } = useAuth();
+  const { selectGoal, userPreferences } = useAuth();
   const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
   const goalOptions = getGoalOptions(t);
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+
+  useEffect(() => {
+    if (isEditMode && userPreferences?.goal) {
+      setGoal(userPreferences.goal || "");
+    }
+  }, [isEditMode, userPreferences]); 
   
 
   const handleContinue = async () => {
@@ -49,8 +57,14 @@ export default function SelectGoalScreen() {
       return;
     }
 
-    router.push("/complete-register/selectDiet");
     setLoading(false);
+
+    const nextRoute = "/complete-register/selectDiet";
+    if (isEditMode) {
+      router.push(`${nextRoute}?edit=true`);
+    } else {
+      router.push(nextRoute);
+    }
   };
 
   return (

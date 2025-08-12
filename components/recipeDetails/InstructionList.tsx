@@ -48,7 +48,7 @@ const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructio
 
   if (flattenedSteps.length === 0) {
     return (
-      <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
+      <Section title={t("index.menu.recipe.instructionsSectionTitle")} icon={ChefHat}>
         <View style={styles.emptyContainer}>
           <FileText size={21} color={Colors.colors.gray[400]} />
           <Text style={styles.emptyText}>{t('recipes.noInstructionsMessage')}</Text>
@@ -58,7 +58,7 @@ const InstructionList: React.FC<InstructionListProps> = React.memo(({ instructio
   }
 
   return (
-    <Section title={t("index.menu.recipe.instructionsSectionTitle")} iconComponent={ChefHat}>
+    <Section title={t("index.menu.recipe.instructionsSectionTitle")} icon={ChefHat}>
       {flattenedSteps.map((item, index) => {
         if (item.type === 'group') {
           return <Text key={`item-${index}`} style={styles.instructionGroupName}>{item.content}</Text>;

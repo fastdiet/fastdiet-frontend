@@ -59,7 +59,9 @@
     "react-native-svg": "15.11.2",
     "react-native-tab-view": "^4.1.0",
     "react-native-toast-message": "^2.3.0",
-    "react-native-web": "^0.20.0"
+    "react-native-web": "^0.20.0",
+    "expo-print": "~14.1.4",
+    "expo-sharing": "~13.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

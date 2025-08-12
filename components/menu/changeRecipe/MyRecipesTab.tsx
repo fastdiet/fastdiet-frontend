@@ -24,7 +24,7 @@ import { Search } from 'lucide-react-native';
 interface MyRecipesTabProps {
   onRecipeSelect: (recipe: RecipeShort) => void;
   onCloseModal: () => void;
-  filterByDishType?: "breakfast" | "lunch" | "dinner";
+  filterByDishType?: string;
 }
 
 const MyRecipesTab: React.FC<MyRecipesTabProps> = ({ onRecipeSelect, onCloseModal, filterByDishType }) => {
@@ -32,9 +32,9 @@ const MyRecipesTab: React.FC<MyRecipesTabProps> = ({ onRecipeSelect, onCloseModa
   const [searchQuery, setSearchQuery] = useState('');
   const { t } = useTranslation();
   const router = useRouter();
-
+  const myRecipesMealTypes = ["breakfast", "lunch", "dinner"];
   const recipesMatchingDishType = useMemo(() => {
-    if (!filterByDishType) {
+    if (!filterByDishType || !myRecipesMealTypes.includes(filterByDishType)) {
       return myRecipes;
     }
     return myRecipes.filter(recipe =>

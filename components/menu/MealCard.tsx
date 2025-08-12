@@ -9,20 +9,25 @@ import { RecipeShort } from "@/models/mealPlan";
 // Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { Coffee, Sun, Moon, Apple, Trash2, ChevronRight, Flame, ArrowRightLeft, Clock, Users  } from "lucide-react-native";
+import { Coffee, Sun, Moon, Apple, Trash2, ChevronRight, Flame, ArrowRightLeft, Clock, Users, Cookie, Leaf, GlassWater, Soup  } from "lucide-react-native";
 
 
-const getMealIcon = (mealKey: "breakfast" | "lunch" | "dinner") => {
+export const getMealIcon = (mealKey: string) => {
   switch (mealKey) {
     case "breakfast": return Coffee;
     case "lunch": return Sun;
     case "dinner": return Moon;
+    case "snack": return Apple;
+    case "dessert": return Cookie;
+    case "salad": return Leaf;
+    case "beverage": return GlassWater;
+    case "appetizer": return Soup;
     default: return Apple;
   }
 };
 
 interface MealCardProps {
-  mealTypeKey: "breakfast" | "lunch" | "dinner";
+  mealType: string;
   mealTypeDisplay: string;
   recipe: RecipeShort;
   onPress?: () => void;
@@ -30,9 +35,9 @@ interface MealCardProps {
   onChange: () => void;
 }
 
-const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onChange }: MealCardProps) => {
+const MealCard = ({ mealType, mealTypeDisplay, recipe, onPress, onDelete, onChange }: MealCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
-  const Icon = getMealIcon(mealTypeKey);
+  const Icon = getMealIcon(mealType);
 
   return (
     <Pressable

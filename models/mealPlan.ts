@@ -76,9 +76,10 @@ export interface RecipeDetail {
 }
 
 export interface SlotMeal{
-  meal_item_id: number;
+  meal_item_id: number | null;
   slot: number;
   recipe: RecipeShort | null;
+  meal_type: string;
 }
 
 export interface DayMealsGroup{
