@@ -6,6 +6,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import { Check, ListTodo, ShoppingCart, RefreshCw, Share2, ArrowUp } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 
 // Components imports
 import TitleParagraph from '@/components/text/TitleParagraph';
@@ -26,6 +27,8 @@ import { useMenu } from '@/hooks/useMenu';
 import Toast from 'react-native-toast-message';
 import { getLogoBase64 } from '@/utils/imageToBase64';
 import { generatePdfHtml } from '@/utils/pdfGenerator';
+import { useAuth } from '@/hooks/useAuth';
+import { getWeekDateRange } from '@/utils/dates';
 
 
 
@@ -33,6 +36,7 @@ import { generatePdfHtml } from '@/utils/pdfGenerator';
 const ShoppingListScreen = () => {
   const { t } = useTranslation();
   const { shoppingList, loading, generateList } = useShoppingList();
+  const { user } = useAuth();
   const { menu } = useMenu();
   const [isSharing, setIsSharing] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
@@ -90,19 +94,38 @@ const ShoppingListScreen = () => {
     setIsSharing(true);
     try {
       const logoBase64 = await getLogoBase64();
-      const html = generatePdfHtml(shoppingList, logoBase64, t, unitSystem);
+      const menuDates = getWeekDateRange();
+      const html = generatePdfHtml({
+        shoppingList,
+        logoBase64,
+        t,
+        unitSystem,
+        userName: user?.name || '',
+        menuDates: menuDates
+      });
 
-      const { uri } = await Print.printToFileAsync({ html, base64: false });
-      console.log('File has been saved to:', uri);
+      const { uri: tempUri } = await Print.printToFileAsync({ html, base64: false });
+      console.log('File has been saved to:', tempUri);
+      const date = new Date();
+      const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+      const filename = t('shoppingList.pdf.filename', { date: formattedDate, defaultValue: `Shopping-List-FastDiet-${formattedDate}.pdf` });
+    
+      const newUri = `${FileSystem.cacheDirectory}${filename}`;
+       await FileSystem.moveAsync({
+        from: tempUri,
+        to: newUri,
+      });
 
       // 4. Compartir el PDF
       if (!(await Sharing.isAvailableAsync())) {
         Toast.show({ type: 'info', text1: t('sharing.notAvailable') });
+        setIsSharing(false);
         return;
       }
-      await Sharing.shareAsync(uri, {
+      await Sharing.shareAsync(newUri, {
         dialogTitle: t('shoppingList.shareTitle'),
         mimeType: 'application/pdf',
+        UTI: '.pdf',
       });
 
     } catch (error) {

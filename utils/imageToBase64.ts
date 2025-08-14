@@ -3,7 +3,7 @@ import { Asset } from 'expo-asset';
 
 export const getLogoBase64 = async (): Promise<string | null> => {
   try {
-    const asset = Asset.fromModule(require('@/assets/images/registerFastdiet.png')); 
+    const asset = Asset.fromModule(require('@/assets/images/logoFastdiet.png')); 
     await asset.downloadAsync();
     
     if (!asset.localUri) {

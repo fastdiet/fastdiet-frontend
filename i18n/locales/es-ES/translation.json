@@ -578,7 +578,7 @@
         "noBreakfastPlanned": "No hay desayuno planificado",
         "noLunchPlanned": "No hay almuerzo planificado",
         "noDinnerPlanned": "No hay cena planificada",
-        "addExtraMeal": "Añadir Comida Extra",
+        "addExtraMeal": "Añadir Comida o Bebida Extra",
         "noSnackPlanned": "Añadir un snack",
         "noDessertPlanned": "Añadir un postre"
       },
@@ -802,7 +802,14 @@
     "title": "Lista de la compra",
     "subtitle": "Aquí puedes ver los ingredientes necesarios para tu menú semanal, organizados por secciones",
     "shareTitle": "Compartir mi lista de la compra",
-    "generatedBy": "Lista generada por",
+    "pdf": {
+      "forUser": "Lista de la compra para {{name}}",
+      "weekOf": "Semana del {{startDate}} al {{endDate}}",
+      "introHello": "¡Hola, {{name}}! 👋 \n",
+      "introText": "Aquí tienes tu lista de la compra personalizada para el menú de la semana. Hemos organizado todos los ingredientes por secciones para que tus compras sean más rápidas y organizadas.",
+      "generatedBy": "Documento generado por",
+      "filename": "Lista-de-la-Compra-FastDiet-{{date}}.pdf"
+    },
     "clearChecked": "Limpiar seleccionados",
     "error": "No hemos podido generar tu lista de la compra. Inténtalo de nuevo más tarde",
     "cta": {
