@@ -77,18 +77,12 @@ export default function SelectActivityScreen() {
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.activity.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.activity.titleParagraph.paragraph"
-                )}
-              />
-              <TitleParagraph
                   title={isEditMode 
-                    ? t("profile.edit.personalData.title") 
-                    : t("auth.completeRegister.basic.titleParagraph.title")}
+                    ? t("profile.edit.activity.title") 
+                    : t("auth.completeRegister.activity.titleParagraph.title")}
                   paragraph={isEditMode 
-                    ? t("profile.edit.personalData.paragraph")
-                    : t("auth.completeRegister.basic.titleParagraph.paragraph")}
+                    ? t("profile.edit.activity.paragraph")
+                    : t("auth.completeRegister.activity.titleParagraph.paragraph")}
                 />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <StyledRadioButtonList

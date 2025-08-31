@@ -59,12 +59,7 @@ export default function SelectIntoleranceScreen() {
     }
 
     setLoading(false);
-
-    
     router.replace("/menu/");
-    
-
-    
   };
 
   return (
@@ -74,12 +69,12 @@ export default function SelectIntoleranceScreen() {
         <ViewContentContinue>
           <ViewForm>
             <TitleParagraph
-              title={t(
-                "auth.completeRegister.intolerance.titleParagraph.title"
-              )}
-              paragraph={t(
-                "auth.completeRegister.intolerance.titleParagraph.paragraph"
-              )}
+              title={isEditMode 
+                ? t("profile.edit.intolerances.title") 
+                : t("auth.completeRegister.intolerance.titleParagraph.title")}
+              paragraph={isEditMode 
+                ? t("profile.edit.intolerances.paragraph")
+                : t("auth.completeRegister.intolerance.titleParagraph.paragraph")}
             />
             {errorMessage ? <ErrorText text={errorMessage} /> : null}
             <View style={{ width: "100%" }}>

@@ -78,10 +78,12 @@ export default function SelectGoalScreen() {
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.goal.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.goal.titleParagraph.paragraph"
-                )}
+                title={isEditMode 
+                  ? t("profile.edit.goal.title") 
+                  : t("auth.completeRegister.goal.titleParagraph.title")}
+                paragraph={isEditMode 
+                  ? t("profile.edit.goal.paragraph")
+                  : t("auth.completeRegister.goal.titleParagraph.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <StyledRadioButtonList

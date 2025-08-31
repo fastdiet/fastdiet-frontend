@@ -103,10 +103,12 @@ export default function SelectCuisineScreen() {
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.cuisine.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.cuisine.titleParagraph.paragraph"
-                )}
+                title={isEditMode 
+                  ? t("profile.edit.cuisines.title") 
+                  : t("auth.completeRegister.cuisine.titleParagraph.title")}
+                paragraph={isEditMode 
+                  ? t("profile.edit.cuisines.paragraph")
+                  : t("auth.completeRegister.cuisine.titleParagraph.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <View style={{ width: "100%" }}>

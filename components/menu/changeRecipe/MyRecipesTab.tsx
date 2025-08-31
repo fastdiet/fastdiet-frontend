@@ -18,7 +18,7 @@ import { RecipeShort } from '@/models/mealPlan';
 // Style imports
 import { Colors } from '@/constants/Colors';
 import { Search } from 'lucide-react-native';
-
+import { getMealTypeDetails } from '@/constants/dishTypes';
 
 
 interface MyRecipesTabProps {
@@ -32,9 +32,9 @@ const MyRecipesTab: React.FC<MyRecipesTabProps> = ({ onRecipeSelect, onCloseModa
   const [searchQuery, setSearchQuery] = useState('');
   const { t } = useTranslation();
   const router = useRouter();
-  const myRecipesMealTypes = ["breakfast", "lunch", "dinner"];
+  
   const recipesMatchingDishType = useMemo(() => {
-    if (!filterByDishType || !myRecipesMealTypes.includes(filterByDishType)) {
+    if (!filterByDishType) {
       return myRecipes;
     }
     return myRecipes.filter(recipe =>
@@ -74,9 +74,10 @@ const MyRecipesTab: React.FC<MyRecipesTabProps> = ({ onRecipeSelect, onCloseModa
       );
     }
 
-     if (recipesMatchingDishType.length === 0 && !searchQuery) {
-      const genderContext = filterByDishType === 'dinner' ? 'female' : 'male';
-      const mealTypeTranslation = t(`constants.meals.${filterByDishType}`);
+     if (recipesMatchingDishType.length === 0 && !searchQuery && filterByDishType) {
+      const mealTypeDetails = getMealTypeDetails(filterByDishType);
+      const genderContext = mealTypeDetails.gender || 'male';
+      const mealTypeTranslation = t(mealTypeDetails.labelKey);
       return (
         <EmptyStateTabs
          title={t("myRecipes.emptyState.noDishType.title", { 

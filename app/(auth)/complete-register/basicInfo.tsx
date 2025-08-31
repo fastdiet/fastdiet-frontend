@@ -1,7 +1,6 @@
 // React & React Native Imports
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View, StyleSheet } from "react-native";
-import Toast from "react-native-toast-message";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
@@ -13,6 +12,8 @@ import PaddingView from "@/components/views/PaddingView";
 import CustomRadioGroup from "@/components/forms/CustomRadioGroup";
 import ViewInputs from "@/components/views/ViewInputs";
 import ViewForm from "@/components/views/ViewForm";
+import LabeledTextInput from "@/components/forms/LabeledTextInput";
+import FormLabel from "@/components/forms/FormLabel";
 
 // Hook Imports
 import { useAuth } from "@/hooks/useAuth";
@@ -24,8 +25,7 @@ import { useTranslation } from "react-i18next";
 import globalStyles from "@/styles/global";
 import { Colors } from "@/constants/Colors";
 import { getGenderOptions } from "@/constants/genders";
-import LabeledTextInput from "@/components/forms/LabeledTextInput";
-import FormLabel from "@/components/forms/FormLabel";
+
 
 export default function BasicInfoScreen() {
   const { completeBasicInfo, updateUserMetrics, user } = useAuth();
@@ -65,22 +65,13 @@ export default function BasicInfoScreen() {
     weight: validations.weight,
     height: validations.height,
   });
-  
-
-  
 
   const handleSaveProfile = async () => {
-    console.log("Saving profile with data:")
     setErrorMessage("");
     const dataToValidate = isEditMode
       ? { gender: selectedGender, age, weight, height }
       : { name, username, gender: selectedGender, age, weight, height };
-    console.log("Validation errors:", errors);
-    console.log("Data to validate:", dataToValidate);
     const isValid = validateForm(dataToValidate);
-    console.log("Validation errors:", errors);
-    console.log("Data to validate:", dataToValidate);
-    console.log("Is valid:", isValid);
     if (!isValid) return;
     
     setLoading(true);

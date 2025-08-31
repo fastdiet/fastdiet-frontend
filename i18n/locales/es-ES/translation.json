@@ -47,19 +47,26 @@
       "noCode": "¿No recibiste el código? ",
       "sendOtherCodeLink": "Solicita otro",
       "verify": "Verificar código",
-      "sending": "Enviando..."
+      "sending": "Enviando...",
+      "verifyEmail": "Verifica tu correo",
+      "codeResent": "Código reenviado",
+      "codeResentDescription": "Se ha enviado un nuevo código a tu correo",
+      "codeVerified": "Código verificado",
+      "establishNewPassword": "Establece tu nueva contraseña"
     },
     "resetPassword": {
       "titleParagraph": {
         "title": "Nueva contraseña",
         "paragraph": "Establece una nueva contraseña para tu cuenta"
       },
+      "passwordUpdated": "Contraseña actualizada correctamente",
       "newPassword": "Nueva contraseña",
       "confirmPassword": "Confirmar contraseña",
       "updatePassword": "Actualizar contraseña"
     },
     "completeRegister":{
       "basic": {
+        "title": "Información personal",
         "titleParagraph": {
           "title": "¡Bienvenido a FastDiet!",
           "paragraph" : "Empieza creando tu perfil para disfrutar de una experiencia personalizada"
@@ -72,30 +79,35 @@
         "height": "Altura (cm)"
       },
       "activity": {
+        "title": "Actividad",
         "titleParagraph": {
           "title": "Elige tu nivel de actividad física",
           "paragraph": "Esto nos ayudará a calcular mejor tus necesidades calóricas diarias"
         }
       },
       "goal": {
+        "title": "Objetivo",
         "titleParagraph": {
           "title": "¿Cuál es tu objetivo?",
           "paragraph": "Elige tu meta para ajustar tu plan nutricional"
         }
       },
       "diet": {
+        "title": "Dieta",
         "titleParagraph": {
           "title": "Selecciona tu tipo de dieta",
           "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
         }
       },
       "cuisine":{
+        "title": "Cocinas",
         "titleParagraph": {
           "title": "¿Qué cocinas te gustan?",
           "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
         }
       },
       "intolerance":{
+        "title": "Intolerancias",
         "titleParagraph": {
           "title": "¿Tienes alguna intolerancia?",
           "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
@@ -484,8 +496,8 @@
     "incorrectCurrentPassword": "La contraseña actual es incorrecta",
     "internalServerError": "Ha ocurrido un error interno. Por favor, inténtalo de nuevo",
     "networkError": "Problema de conexión. Verifica tu internet",
-    "timeoutError": "La solicitud está tardando demasiado",
-    "serverError": "Error del servidor. Inténtalo más tarde"
+    "timeoutError": "La petición tardó demasiado. Por favor, revisa tu conexión a internet",
+    "serverError": "Error de red. Asegúrate de estar conectado a internet"
   },
   "errorsFrontend":{
     "shareFailedTitle": "Error al compartir",
@@ -494,6 +506,9 @@
     "selectDiet": "Por favor, elige un tipo de dieta",
     "selectActivity": "Selecciona un nivel de actividad física",
     "selectGoal": "Selecciona un objetivo",
+    "reviewForm": "Revisa el formulario",
+    "someInvalidFields": "Algunos campos tienen errores",
+    "recipeNotSaved": "No se puedo guardar la receta",
     "validations": {
       "required": "Este campo es obligatorio",
       "atLeastOneSelected": "Debes seleccionar al menos una opción",
@@ -704,8 +719,8 @@
       "mealType": "Tipo de Comida"
     },
     "units": {
-      "metric": "Métrico",
-      "imperial": "Imperial"
+      "metric": "Sist. Métrico",
+      "imperial": "Sist. Imperial"
     },
     "detailLoading": "Cargando receta...",
     "notDetailed": "¡Dale vida a tu receta! Añade los detalles que faltan.",
@@ -802,6 +817,12 @@
     "title": "Lista de la compra",
     "subtitle": "Aquí puedes ver los ingredientes necesarios para tu menú semanal, organizados por secciones",
     "shareTitle": "Compartir mi lista de la compra",
+    "servingsModal": {
+      "title": "Ajustar Raciones",
+      "text": "Indica para cuántas personas es el menú semanal.",
+      "subText": "Calcularemos las cantidades proporcionales para generar una lista de la compra precisa.",
+      "generate": "Generar lista"
+    },
     "pdf": {
       "forUser": "Lista de la compra para {{name}}",
       "weekOf": "Semana del {{startDate}} al {{endDate}}",
@@ -823,6 +844,10 @@
       "title": "Lista vacía",
       "subtitle": "No se encontraron ingredientes para mostrar."
     },
+    "successToast": {
+      "title": "¡Lista Generada!",
+      "subtitle": "Tu lista de la compra está lista."
+    },
     "noMenu": {
       "title": "No tienes menú",
       "subtitle": "Primero genera tu menú para poder crear la lista de la compra."
@@ -834,6 +859,18 @@
       "finalizingList": "Finalizando la lista...",
       "readyToShop": "¡Lista de la compra lista!"
     }
+  },
+  "imagePicker":{
+    "addPhoto": "Añadir foto de portada",
+    "title1Change" : "Cambiar imagen",
+    "title1Select" : "Seleccionar imagen",
+    "title2": "¿Qué quieres hacer?",
+    "takePhoto": "Tomar foto",
+    "selectGallery": "Elegir de la galería",
+    "deletePhoto": "Eliminar foto",
+    "cancel": "Cancelar",
+    "noGalleryPermissions": "Necesitas dar permisos para acceder a tus fotos.",
+    "noCameraPermissions": "Necesitas dar usar la cámara."
   },
   "units": {
     "minutesShort": "min",
@@ -868,6 +905,7 @@
   "male": "Hombre",
   "female": "Mujer",
   "retry": "Reintentar",
+  "add": "Añadir",
   "backToMenu": "Volver al Menú",
   "seeMore": "Ver más",
   "seeLess": "Ver menos",

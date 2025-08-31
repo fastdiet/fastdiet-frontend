@@ -40,6 +40,7 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
 
   const [suggestions, setSuggestions] = useState<RecipeShort[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState<boolean>(false);
+   const [modalMode, setModalMode] = useState<'add' | 'change'>('change');
 
 
   const dayData = useMemo(() => {
@@ -58,6 +59,8 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
 
   const handleChangeRecipeRequest = async (slotData: SlotMeal) => {
 
+    const isAdding = !slotData.recipe;
+    setModalMode(isAdding ? 'add' : 'change');
     setIsLoadingSuggestions(true);
     setActiveChangeSlot(slotData);
     setChangeModalVisible(true);
@@ -70,12 +73,13 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
 
     if (success && data) {
       setSuggestions(data);
+      setIsLoadingSuggestions(false);
     } else {
-      Toast.show({ type: 'error', text1: error?.message || t("errors.generic") });
+      setChangeModalVisible(false);
+      Toast.show({ type: 'error', text1: t("error"), text2: error?.message });
+      setIsLoadingSuggestions(false);
       setSuggestions([]);
     }
-    
-    setIsLoadingSuggestions(false);
   };
 
   const handleRecipeSelection = async (newRecipe : RecipeShort) => {
@@ -119,6 +123,7 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
     setChangeModalVisible(false);
     setActiveChangeSlot(null);
     setSuggestions([]);
+    setIsLoadingSuggestions(false);
   };
 
   const deleteRecipe = (slotMeal: SlotMeal) => {
@@ -202,6 +207,7 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
           onRecipeSelected={handleRecipeSelection}
           suggestions={suggestions}
           isLoading={isLoadingSuggestions}
+          mode={modalMode}
         />
       )}
       <AddExtraMealTypeModal

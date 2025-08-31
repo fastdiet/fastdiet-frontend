@@ -6,13 +6,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 // Model imports
 import { RecipeShort } from "@/models/mealPlan";
 
-// Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { Coffee, Sun, Moon, Apple, Flame } from "lucide-react-native";
-import { getMealIcon } from "@/components/menu/MealCard";
-
-
+import { Flame } from "lucide-react-native";
+import { getMealTypeDetails } from "@/constants/dishTypes";
 
 
 interface ChangeMealCardProps {
@@ -23,7 +20,7 @@ interface ChangeMealCardProps {
 
 const ChangeMealCard = ({ mealType, mealTypeDisplay, recipe }: ChangeMealCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
-  const Icon = getMealIcon(mealType);
+  const { icon: Icon } = getMealTypeDetails(mealType);
 
   return (
     <View style={styles.shadowContainer}>

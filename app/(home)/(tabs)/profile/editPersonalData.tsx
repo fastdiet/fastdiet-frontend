@@ -83,81 +83,81 @@ export default function EditPersonalDataScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
     >
-        <View style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={{ height: 16 }} />
-            <PaddingView>
-              <ViewForm>
-                <TitleParagraph
-                  title={t("profile.edit.personalData.title")}
-                  paragraph={t("profile.edit.personalData.paragraph")}
-                />
-                {errorMessage ? <ErrorText text={errorMessage} /> : null}
-
-                <ViewInputs>
-                  <LabeledTextInput
-                    label={t("auth.completeRegister.basic.name")}
-                    value={name}
-                    onChangeText={setName}
-                    errorMessage={errors.name}
-                  />
-                  <LabeledTextInput
-                    label={t("auth.completeRegister.basic.username")}
-                    value={username}
-                    onChangeText={(text) => setUsername(text.toLowerCase())}
-                    errorMessage={errors.username}
-                    autoCapitalize="none"
-                  />
-                  <View style={{ width: '100%'}}>
-                    <FormLabel text={t("auth.completeRegister.basic.gender")} />
-                    <CustomRadioGroup
-                      options={genderOptions}
-                      layout="row"
-                      onValueChange={setSelectedGender}
-                      selectedValue={selectedGender}
-                      errorMessage={errors.gender}
-                    />
-                  </View>
-                  <LabeledTextInput
-                    label={t("auth.completeRegister.basic.age")}
-                    keyboardType="numeric"
-                    value={age}
-                    onChangeText={setAge}
-                    errorMessage={errors.age}
-                  />
-                  <LabeledTextInput
-                    label={t("auth.completeRegister.basic.weight")}
-                    keyboardType="numeric"
-                    value={weight}
-                    onChangeText={setWeight}
-                    errorMessage={errors.weight}
-                  />
-                  <LabeledTextInput
-                    label={t("auth.completeRegister.basic.height")}
-                    keyboardType="numeric"
-                    value={height}
-                    onChangeText={setHeight}
-                    errorMessage={errors.height}
-                  />
-                </ViewInputs>
-              </ViewForm>
-            </PaddingView>
-          </ScrollView>
-
-          <View style={styles.fixedButton}>
-            <PaddingView>
-              <PrimaryButton
-                title={t("save")}
-                onPress={handleSave}
-                style={{ width: "100%" }}
-                loading={loading}
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ height: 16 }} />
+          <PaddingView>
+            <ViewForm>
+              <TitleParagraph
+                title={t("profile.edit.personalData.title")}
+                paragraph={t("profile.edit.personalData.paragraph")}
               />
-            </PaddingView>
-          </View>
+              {errorMessage ? <ErrorText text={errorMessage} /> : null}
+
+              <ViewInputs>
+                <LabeledTextInput
+                  label={t("auth.completeRegister.basic.name")}
+                  value={name}
+                  onChangeText={setName}
+                  errorMessage={errors.name}
+                />
+                <LabeledTextInput
+                  label={t("auth.completeRegister.basic.username")}
+                  value={username}
+                  onChangeText={(text) => setUsername(text.toLowerCase())}
+                  errorMessage={errors.username}
+                  autoCapitalize="none"
+                />
+                <View style={{ width: '100%'}}>
+                  <FormLabel text={t("auth.completeRegister.basic.gender")} />
+                  <CustomRadioGroup
+                    options={genderOptions}
+                    layout="row"
+                    onValueChange={setSelectedGender}
+                    selectedValue={selectedGender}
+                    errorMessage={errors.gender}
+                  />
+                </View>
+                <LabeledTextInput
+                  label={t("auth.completeRegister.basic.age")}
+                  keyboardType="numeric"
+                  value={age}
+                  onChangeText={setAge}
+                  errorMessage={errors.age}
+                />
+                <LabeledTextInput
+                  label={t("auth.completeRegister.basic.weight")}
+                  keyboardType="numeric"
+                  value={weight}
+                  onChangeText={setWeight}
+                  errorMessage={errors.weight}
+                />
+                <LabeledTextInput
+                  label={t("auth.completeRegister.basic.height")}
+                  keyboardType="numeric"
+                  value={height}
+                  onChangeText={setHeight}
+                  errorMessage={errors.height}
+                />
+              </ViewInputs>
+            </ViewForm>
+          </PaddingView>
+        </ScrollView>
+
+        <View style={styles.fixedButton}>
+          <PaddingView>
+            <PrimaryButton
+              title={t("save")}
+              onPress={handleSave}
+              style={{ width: "100%" }}
+              loading={loading}
+            />
+          </PaddingView>
         </View>
+      </View>
     </KeyboardAvoidingView>
   );
 }

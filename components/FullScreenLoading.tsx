@@ -61,7 +61,7 @@ const FullScreenLoading = ({ visible, textKey, lottieAnimationSource = DEFAULT_L
   }, [visible, messages, disableDynamicText, dynamicTextInterval]);
 
   if (!visible) return null;
-
+  
   return (
     <Modal
       transparent={true}

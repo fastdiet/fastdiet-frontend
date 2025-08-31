@@ -22,15 +22,6 @@ import { Colors } from '@/constants/Colors';
 import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
 
 
-const getSlotName = (slotIndex: number, t: (key: string) => string): string => {
-  const slotKeyMap: { [key: number]: string } = {
-    0: "constants.meals.breakfast",
-    1: "constants.meals.lunch",
-    2: "constants.meals.dinner",
-  };
-  return t(slotKeyMap[slotIndex] || "constants.meals.meal");
-};
-
 const RecipeDetailScreen = () => {
   const { t } = useTranslation();
   const params = useLocalSearchParams<{ recipeId: string; day?: string; slot?: string, mealType?: string }>();

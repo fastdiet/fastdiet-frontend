@@ -7,7 +7,10 @@ export default function MyRecipesLayout() {
   const { t } = useTranslation();
   return (
     <Stack 
-        screenOptions={{ contentStyle: { backgroundColor: Colors.colors.gray[100] }}}
+      screenOptions={{
+        headerBackTitle: t('back'),
+        contentStyle: { backgroundColor: Colors.colors.gray[100] },
+      }}
     >
       <Stack.Screen 
         name="index" 
@@ -19,7 +22,6 @@ export default function MyRecipesLayout() {
         name="create"
         options={{ 
           headerTitle: t("myRecipes.createPageTitle"),
-          headerBackTitle: t("back"),
           headerTitleStyle: {
             ...globalStyles.title,
             fontSize: 20,
@@ -28,15 +30,11 @@ export default function MyRecipesLayout() {
       />
       <Stack.Screen 
         name="detail/[recipeId]" 
-        options={{ 
-          headerBackTitle: t("back"),
-        }} 
       />
       <Stack.Screen 
         name="edit/[recipeId]" 
         options={{ 
-          headerTitle: t("myRecipes.editPageTitlecafd"),
-          headerBackTitle: t("back"),
+          headerTitle: t("myRecipes.editPageTitle"),
           headerTitleStyle: {
             ...globalStyles.title,
             fontSize: 20,

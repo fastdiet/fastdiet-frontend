@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useMyRecipes } from './useMyRecipes'; // Usaremos el contexto principal
+import { useMyRecipes } from '@/hooks/useMyRecipes';
 import { RecipeDetail } from '@/models/mealPlan';
 
 interface UseRecipeResult {

@@ -1,8 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import api from '@/utils/api';
 import { ShoppingListResponse } from '@/models/shoppingList';
 import Toast from 'react-native-toast-message';
 import { useTranslation } from 'react-i18next';
+import { handleApiError } from '@/utils/errorHandler';
+
+const MIN_LOADING_DURATION = 500; 
 
 export const useShoppingList = () => {
   const { t } = useTranslation();
@@ -10,11 +13,15 @@ export const useShoppingList = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchShoppingList = useCallback(async () => {
+  const fetchShoppingList = useCallback(async (servings: number) => {
+    const startTime = Date.now();
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get<ShoppingListResponse>('/shopping_lists/me');
+      const response = await api.get<ShoppingListResponse>(
+        '/shopping_lists/me',
+        { params: { servings } }
+      );
       setShoppingList(response.data);
       if (response.data.aisles.length === 0) {
         Toast.show({
@@ -22,12 +29,27 @@ export const useShoppingList = () => {
           text1: t("shoppingList.emptyToast.title"),
           text2: t("shoppingList.emptyToast.subtitle"),
         });
+      }else {
+        Toast.show({
+            type: "success",
+            text1: t("shoppingList.successToast.title"),
+            text2: t("shoppingList.successToast.subtitle"),
+        });
       }
     } catch (err) {
-      Toast.show({type: "error", text1: t("error"), text2: t("shoppingList.error"),});
+      const apiError = handleApiError(err);
+      setError(apiError.message);
+      Toast.show({type: "error", text1: t("error"), text2: apiError.message,});
       //console.error(err);
     } finally {
-      setLoading(false);
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = MIN_LOADING_DURATION - elapsedTime;
+
+      if (remainingTime > 0) {
+        setTimeout(() => setLoading(false), remainingTime);
+      } else {
+        setLoading(false);
+      }
     }
   }, []);
 

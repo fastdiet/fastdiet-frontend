@@ -49,6 +49,7 @@ export default function SendPasswordResetCodeScreen() {
       setLoading(false);
       return;
     }
+    setLoading(false);
     router.push("/verifyPasswordReset");
   };
 

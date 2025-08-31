@@ -3,7 +3,7 @@ import { Colors } from "@/constants/Colors";
 import { MenuProvider } from "@/context/MenuContext";
 import { MyRecipesProvider } from "@/context/MyRecipesContext";
 import { useAuth } from "@/hooks/useAuth";
-import { Redirect, Slot, Stack, useRouter } from "expo-router";
+import { Redirect,Stack, useRouter } from "expo-router";
 
 
 export default function HomeLayout() {
@@ -11,6 +11,10 @@ export default function HomeLayout() {
   const { user } = useAuth();
   const router = useRouter();
   if (!user) return <Redirect href="/login"/>
+
+  if (user && !user.username) {
+    return <Redirect href="/complete-register/basicInfo" />;
+  }
 
   return (
     <MyRecipesProvider>

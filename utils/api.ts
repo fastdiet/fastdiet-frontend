@@ -6,7 +6,7 @@ import i18n from "@/i18n";
 
 const api = axios.create({
   baseURL: getBackendUrl(),
-  timeout: 20000
+  timeout: 30000
 });
 
 api.interceptors.request.use(
@@ -35,10 +35,12 @@ api.interceptors.request.use(
   },
   (error) => {
     if (error.code === "ECONNABORTED") {
-      throw new Error("timeoutError");
+      error.code = "TIMEOUT";
+      return Promise.reject(error);
     }
     if (!error.response) {
-      throw new Error("networkError");
+      error.code = "ERR_NETWORK";
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

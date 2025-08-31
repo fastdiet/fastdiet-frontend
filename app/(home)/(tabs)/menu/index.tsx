@@ -11,8 +11,6 @@ import NoCurrentMenuIndex from "@/components/index/NoCurrentMenuIndex";
 import CurrentMenuIndex from "@/components/index/CurrentMenuIndex";
 
 // Style imports
-import { Colors } from "@/constants/Colors";
-import globalStyles from "@/styles/global";
 import { useMyRecipes } from "@/hooks/useMyRecipes";
 import FullScreenLoading from "@/components/FullScreenLoading";
 
@@ -20,7 +18,6 @@ import FullScreenLoading from "@/components/FullScreenLoading";
 export default function IndexScreen() {
   const { menu, loading: loadingMenu } = useMenu();
   const { loading: loadingRecipes } = useMyRecipes();
-  const { t } = useTranslation();
 
 
   if (loadingMenu || loadingRecipes) {

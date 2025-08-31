@@ -3,6 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '@/constants/Colors';
 import globalStyles from "@/styles/global";
 import { Camera } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   imageUri: string | null;
@@ -12,27 +13,28 @@ interface Props {
 const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
   const [mediaPermission, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraPermission, requestCameraPermission] = ImagePicker.useCameraPermissions();
+  const { t } = useTranslation();
 
   const handlePickImage = async () => {
     if (imageUri) {
       Alert.alert(
-        'Cambiar imagen',
-        '¿Qué quieres hacer?',
+        t("imagePicker.title1Change"),
+        t("imagePicker.title2"),
         [
-          { text: 'Tomar foto', onPress: takePhoto },
-          { text: 'Elegir de galería', onPress: pickFromGallery },
-          { text: 'Eliminar foto', onPress: () => onImagePicked(null), style: 'destructive' },
-          { text: 'Cancelar', style: 'cancel' },
+          { text: t("imagePicker.takePhoto"), onPress: takePhoto },
+          { text: t("imagePicker.selectGallery"), onPress: pickFromGallery },
+          { text: t("imagePicker.deletePhoto"), onPress: () => onImagePicked(null), style: 'destructive' },
+          { text: t("imagePicker.cancel"), style: 'cancel' },
         ]
       );
     } else {
       Alert.alert(
-        'Seleccionar imagen',
+        t("imagePicker.title1Select"),
         '',
         [
-          { text: 'Tomar foto', onPress: takePhoto },
-          { text: 'Elegir de galería', onPress: pickFromGallery },
-          { text: 'Cancelar', style: 'cancel' },
+          { text: t("imagePicker.takePhoto"), onPress: takePhoto },
+          { text: t("imagePicker.selectGallery"), onPress: pickFromGallery },
+          { text: t("imagePicker.cancel"), style: 'cancel' },
         ]
       );
     }
@@ -41,7 +43,7 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
   const pickFromGallery = async () => {
     const permission = await requestMediaPermission();
     if (!permission.granted) {
-      alert('Necesitas dar permisos para acceder a tus fotos.');
+      alert(t("imagePicker.noGalleryPermissions"));
       return;
     }
 
@@ -59,7 +61,7 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
   const takePhoto = async () => {
     const permission = await requestCameraPermission();
     if (!permission.granted) {
-      alert('Necesitas dar permisos para usar la cámara.');
+      alert(t("imagePicker.noCameraPermissions"));
       return;
     }
 
@@ -80,7 +82,7 @@ const ImagePickerComponent = ({ imageUri, onImagePicked }: Props) => {
       ) : (
         <View style={styles.placeholder}>
           <Camera size={40} strokeWidth={1.75} color={Colors.colors.gray[400]} />
-          <Text style={styles.placeholderText}>Añadir foto de portada</Text>
+          <Text style={styles.placeholderText}>{t("imagePicker.addPhoto")}</Text>
         </View>
       )}
     </TouchableOpacity>

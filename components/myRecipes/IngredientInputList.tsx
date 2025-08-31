@@ -56,6 +56,7 @@ const IngredientInputList = ({ ingredients, setIngredients }: Props) => {
               label={t('myRecipes.form.unit')}
               value={ing.unit}
               placeholder='g, ml...'
+              autoCapitalize="none"
               onChangeText={(v) => handleUpdateIngredient(ing.id, 'unit', v)}
             />
           </View>

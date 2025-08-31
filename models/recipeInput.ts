@@ -33,3 +33,5 @@ export interface RecipeCreationData {
   ingredients: ApiInputIngredient[];
   analyzed_instructions?: ApiInstructionStep[];
 }
+
+

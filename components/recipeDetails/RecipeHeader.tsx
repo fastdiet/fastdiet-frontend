@@ -18,7 +18,7 @@ interface RecipeHeaderProps {
 const RecipeHeader: React.FC<RecipeHeaderProps> = React.memo(({ imageUrl, title, summary }) => {
   const [imageLoading, setImageLoading] = useState(true);
   const cleanedSummary = useMemo(() => getShortSummary(summary || "", 2), [summary]);
-
+  console.log(imageUrl)
   return (
     <>
       <View style={styles.imageContainer}>

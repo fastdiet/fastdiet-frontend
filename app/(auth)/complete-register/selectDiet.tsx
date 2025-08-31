@@ -98,10 +98,12 @@ export default function SelectDietScreen() {
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.diet.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.diet.titleParagraph.paragraph"
-                )}
+                title={isEditMode 
+                  ? t("profile.edit.diet.title") 
+                  : t("auth.completeRegister.diet.titleParagraph.title")}
+                paragraph={isEditMode 
+                  ? t("profile.edit.diet.paragraph")
+                  : t("auth.completeRegister.diet.titleParagraph.paragraph")}
               />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <View style={{ width: "100%" }}>

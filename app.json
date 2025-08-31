@@ -15,7 +15,24 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fastdiet.app"
+      "bundleIdentifier": "com.fastdiet.app",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "storage.googleapis.com": {
+              "NSIncludesSubdomains": true,
+              "NSThirdPartyExceptionRequiresForwardSecrecy": true,
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            },
+            "accounts.google.com": {
+              "NSIncludesSubdomains": true,
+              "NSThirdPartyExceptionRequiresForwardSecrecy": true,
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            }
+          }
+        },
+        "LSApplicationQueriesSchemes": ["google", "com.googleusercontent.apps.1029285084877-up0oqd75c8jofll6he0vs10959v2r4ub"]
+      }
     },
     "android": {
       "adaptiveIcon": {

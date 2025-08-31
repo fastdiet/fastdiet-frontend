@@ -1,6 +1,6 @@
 // React & React Native Imports
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 // Component Imports
@@ -53,20 +53,22 @@ export default function VerifyEmailScreen() {
       Toast.show({type: "success", text1: t("auth.verifyCode.codeSent"),
         text2: t("auth.verifyCode.codeSentDescription")});
     } else {
-      Toast.show({type: "error", text1: "Error", text2: error?.message ?? "",});
+      Toast.show({type: "error", text1: t("error"), text2: error?.message ?? "",});
     }
     setResendLoading(false);
   };
 
   return (
-    <ConfirmationCodeForm
-      onSubmit={handleVerifyCode}
-      onResend={handleResendCode}
-      loading={loading}
-      resendLoading={resendLoading}
-      errorMessage={errorMessage}
-      codeError={errors.code}
-      email={user!.email!}
-    />
+    <>
+      <ConfirmationCodeForm
+        onSubmit={handleVerifyCode}
+        onResend={handleResendCode}
+        loading={loading}
+        resendLoading={resendLoading}
+        errorMessage={errorMessage}
+        codeError={errors.code}
+        email={user!.email!}
+      />
+    </>
   );
 }

@@ -5,21 +5,13 @@ import { X } from 'lucide-react-native';
 
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
-import { getMealIcon } from '@/components/menu/MealCard';
+import { extraMealTypes } from '@/constants/dishTypes';
 
 interface AddExtraMealTypeModalProps {
   isVisible: boolean;
   onClose: () => void;
   onSelectType: (type: string) => void;
 }
-
-const extraMealTypes = [
-  { key: 'snack', labelKey: 'constants.meals.snack' },
-  { key: 'dessert', labelKey: 'constants.meals.dessert' },
-  { key: 'salad', labelKey: 'constants.meals.salad' },
-  { key: 'beverage', labelKey: 'constants.meals.beverage' },
-  { key: 'appetizer', labelKey: 'constants.meals.appetizer' },
-];
 
 const AddExtraMealTypeModal: React.FC<AddExtraMealTypeModalProps> = ({ isVisible, onClose, onSelectType }) => {
   const { t } = useTranslation();
@@ -49,7 +41,7 @@ const AddExtraMealTypeModal: React.FC<AddExtraMealTypeModalProps> = ({ isVisible
             data={extraMealTypes}
             keyExtractor={(item) => item.key}
             renderItem={({ item }) => {
-              const IconComponent = getMealIcon(item.key);
+              const IconComponent = item.icon;
 
               return (
                 <Pressable 

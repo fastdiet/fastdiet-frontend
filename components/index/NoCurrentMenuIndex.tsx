@@ -107,66 +107,66 @@ const NoCurrentMenuIndex = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1}}
         >
-            <PaddingView>
-                    <TitleParagraph
-                      title={t('index.noMenu.welcome', { name: user?.name})}
-                      paragraph={t('index.noMenu.subtitle')}
-                      titleStyle={{ fontSize: 28, lineHeight: 34}}
-                      containerStyle={{ marginTop: 16 }}
-                    />
-                <View style={styles.featuresCard}>
-                    <Text style={[globalStyles.subtitle, { color: Colors.colors.primary[100], marginBottom: 10 }]}>
-                    {t('index.noMenu.featuresTitle')}
-                    </Text>
-                    
-                    <FeatureItem 
-                    icon="check-circle" 
-                    title={t('index.noMenu.feature1.title')}
-                    description={t('index.noMenu.feature1.description')}
-                    />
-                    
-                    <FeatureItem 
-                    icon="cutlery" 
-                    title={t('index.noMenu.feature2.title')}
-                    description={t('index.noMenu.feature2.description')}
-                    />
-                    
-                    <FeatureItem 
-                    icon="refresh" 
-                    title={t('index.noMenu.feature3.title')}
-                    description={t('index.noMenu.feature3.description')}
-                    />
-                </View>
-                <View style={{ marginBottom: 24 }}>
-                {errorMessage ? <ErrorText text={errorMessage}/> : null}
-                </View>
-                <View style={styles.actionsContainer}>
-                    <PrimaryButton 
-                    title={t('index.noMenu.generateMenu')}
-                    onPress={handleGenerateMenu}
-                    style={styles.primaryButton}
-                    />
-                    
-                    <SecondaryButton 
-                    title={t('index.noMenu.checkPreferences')}
-                    onPress={() => router.push('/complete-register/basicInfo?edit=true')}
-                    icon="sliders"
-                    />
-                </View>
+          <PaddingView>
+              <TitleParagraph
+                title={t('index.noMenu.welcome', { name: user?.name})}
+                paragraph={t('index.noMenu.subtitle')}
+                titleStyle={{ fontSize: 28, lineHeight: 34}}
+                containerStyle={{ marginTop: 16 }}
+              />
+              <View style={styles.featuresCard}>
+                  <Text style={[globalStyles.subtitle, { color: Colors.colors.primary[100], marginBottom: 10 }]}>
+                  {t('index.noMenu.featuresTitle')}
+                  </Text>
+                  
+                  <FeatureItem 
+                  icon="check-circle" 
+                  title={t('index.noMenu.feature1.title')}
+                  description={t('index.noMenu.feature1.description')}
+                  />
+                  
+                  <FeatureItem 
+                  icon="cutlery" 
+                  title={t('index.noMenu.feature2.title')}
+                  description={t('index.noMenu.feature2.description')}
+                  />
+                  
+                  <FeatureItem 
+                  icon="refresh" 
+                  title={t('index.noMenu.feature3.title')}
+                  description={t('index.noMenu.feature3.description')}
+                  />
+              </View>
+              <View style={{ marginBottom: 24 }}>
+              {errorMessage ? <ErrorText text={errorMessage}/> : null}
+              </View>
+              <View style={styles.actionsContainer}>
+                <PrimaryButton 
+                  title={t('index.noMenu.generateMenu')}
+                  onPress={handleGenerateMenu}
+                  style={styles.primaryButton}
+                />
+                  
+                <SecondaryButton 
+                  title={t('index.noMenu.checkPreferences')}
+                  onPress={() => router.push('/complete-register/basicInfo?edit=true')}
+                  icon="sliders"
+                />
+              </View>
 
-                <View style={styles.tipContainer}>
-                    <FontAwesome 
-                    name="lightbulb-o" 
-                    size={24} 
-                    color={Colors.colors.accent[100]} 
-                    style={{ marginRight: 12 }} 
-                    />
-                    <Text style={[globalStyles.mediumBodyRegular, styles.tipText]}>
-                    {t('index.noMenu.tip')}
-                    </Text>
-                </View>
-                
-                <View style={{ height: 24 }} />
+              <View style={styles.tipContainer}>
+                  <FontAwesome 
+                  name="lightbulb-o" 
+                  size={24} 
+                  color={Colors.colors.accent[100]} 
+                  style={{ marginRight: 12 }} 
+                  />
+                  <Text style={[globalStyles.mediumBodyRegular, styles.tipText]}>
+                  {t('index.noMenu.tip')}
+                  </Text>
+              </View>
+              
+              <View style={{ height: 24 }} />
             </PaddingView>
       </ScrollView>
       <FullScreenLoading visible={isGenerating} />

@@ -1,5 +1,3 @@
-// /utils/pdfGenerator.ts
-
 import { ShoppingListResponse } from '@/models/shoppingList';
 import { getAisleInfo } from '@/constants/aisles';
 import { formatAmount } from '@/utils/clean';
@@ -26,9 +24,6 @@ export const generatePdfHtml = ({
   menuDates,
 }: PdfGeneratorProps): string => {
 
-
-
-  // --- ESTILOS CSS PROFESIONALES PARA PDF ---
   const styles = `
   <style>
     @page { 
@@ -160,7 +155,6 @@ export const generatePdfHtml = ({
     }
   });
 
-  // --- FUNCIÓN HELPER PARA RENDERIZAR LOS ITEMS DE UNA COLUMNA ---
   const renderColumn = (aisles: typeof shoppingList.aisles) => {
     return aisles.map(aisle => {
       const { name: translatedAisleName, icon } = getAisleInfo(aisle.aisle, t);
@@ -193,7 +187,6 @@ export const generatePdfHtml = ({
     }).join('');
   };
 
-  // --- DOCUMENTO HTML FINAL ENSAMBLADO ---
   return `
     <html>
       <head>

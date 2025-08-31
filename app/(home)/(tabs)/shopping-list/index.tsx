@@ -1,5 +1,5 @@
 // React and Expo imports
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
@@ -15,13 +15,13 @@ import PrimaryButton from '@/components/buttons/PrimaryButton';
 import ShoppingListItem from '@/components/shoppingList/ShoppingListItem';
 import Section from '@/components/ui/Section';
 import FullScreenLoading from '@/components/FullScreenLoading';
+import ServingsModal from '@/components/shoppingList/ServingsModal';
 
 // Hooks, Styles, and Models
 import { useShoppingList } from '@/hooks/useShoppingList';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { getAisleInfo } from '@/constants/aisles';
-import { formatAmount } from '@/utils/clean';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMenu } from '@/hooks/useMenu';
 import Toast from 'react-native-toast-message';
@@ -41,6 +41,8 @@ const ShoppingListScreen = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [unitSystem, setUnitSystem] = useState<'metric' | 'us'>('metric');
+  const [isServingsModalVisible, setServingsModalVisible] = useState(false);
+  const [servingsToGenerate, setServingsToGenerate] = useState<number | null>(null);
 
   const scrollViewRef = useRef<ScrollView>(null);
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
@@ -63,6 +65,7 @@ const ShoppingListScreen = () => {
   };
 
   const handleGenerateShoppingList = () => {
+    console.log("lista")
     if(!menu){
       Toast.show({
         type: "info",
@@ -70,9 +73,22 @@ const ShoppingListScreen = () => {
         text2: t("shoppingList.noMenu.subtitle"),
       });
     }else{
-      generateList()
+      setServingsModalVisible(true)
     }
   }
+
+  const handleConfirmGeneration = (servings: number) => {
+    setServingsModalVisible(false);
+    setServingsToGenerate(servings);
+  };
+
+  useEffect(() => {
+    if (servingsToGenerate !== null) {
+      console.log(`Generating shopping list for ${servingsToGenerate} servings.`);
+      generateList(servingsToGenerate);
+      setServingsToGenerate(null);
+    }
+  }, [servingsToGenerate]);
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -116,7 +132,6 @@ const ShoppingListScreen = () => {
         to: newUri,
       });
 
-      // 4. Compartir el PDF
       if (!(await Sharing.isAvailableAsync())) {
         Toast.show({ type: 'info', text1: t('sharing.notAvailable') });
         setIsSharing(false);
@@ -150,95 +165,105 @@ const ShoppingListScreen = () => {
         style={{ marginTop: 24, paddingHorizontal: 32 }}
         leftIcon={<ListTodo size={20} color={Colors.colors.neutral[100]} />}
       />
-      <FullScreenLoading visible={loading} mode="shoppingList" />
+      <ServingsModal
+        visible={isServingsModalVisible}
+        onClose={() => setServingsModalVisible(false)}
+        onConfirm={handleConfirmGeneration}
+      />
     </View>
   );
-
-  if (loading && !shoppingList) {
-    return <FullScreenLoading visible={true} mode="shoppingList" />
-  }
-
-  if (!shoppingList || shoppingList.aisles.length === 0) {
-    return renderEmptyState();
-  }
-
+  
   return (
     <View style={styles.outerContainer}> 
-    <ScrollView 
-      contentContainerStyle={styles.scrollContentContainer}
-      showsVerticalScrollIndicator={false}
-      scrollEventThrottle={16}
-      ref={scrollViewRef}
-      onScroll={handleScroll}
-    >
-      <PaddingView>
-        <TitleParagraph
-          title={t('shoppingList.title')}
-          paragraph={t('shoppingList.subtitle')}
-          containerStyle={{ marginTop: 16, marginBottom: 24 }}
-        />
-        <View style={styles.actionsBar}>
-          {hasSwitchableUnits && (
-            <SegmentedControlTab
-              values={[t('recipes.units.metric'), t('recipes.units.imperial')]}
-              selectedIndex={unitSystem === 'metric' ? 0 : 1}
-              onTabPress={(index) => setUnitSystem(index === 0 ? 'metric' : 'us')}
-              tabsContainerStyle={styles.tabsContainerStyle}
-              tabStyle={styles.tabStyle}
-              activeTabStyle={styles.activeTabStyle}
-              tabTextStyle={styles.tabTextStyle}
-              activeTabTextStyle={styles.activeTabTextStyle}
-            />
-          )}
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity onPress={handleGenerateShoppingList} style={styles.actionButton} disabled={isSharing}>
-              <RefreshCw size={22} color={loading ? Colors.colors.gray[300] : Colors.colors.primary[200]} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleShare} style={styles.actionButton}>
-              <Share2 size={22} color={Colors.colors.primary[200]} />
-            </TouchableOpacity>
+     {(shoppingList && shoppingList.aisles.length > 0) ? (
+      <ScrollView 
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+      >
+        <PaddingView>
+          <TitleParagraph
+            title={t('shoppingList.title')}
+            paragraph={t('shoppingList.subtitle')}
+            containerStyle={{ marginTop: 16, marginBottom: 24 }}
+          />
+          <View style={styles.actionsBar}>
+            {hasSwitchableUnits && (
+              <SegmentedControlTab
+                values={[t('recipes.units.metric'), t('recipes.units.imperial')]}
+                selectedIndex={unitSystem === 'metric' ? 0 : 1}
+                onTabPress={(index) => setUnitSystem(index === 0 ? 'metric' : 'us')}
+                tabsContainerStyle={styles.tabsContainerStyle}
+                tabStyle={styles.tabStyle}
+                activeTabStyle={styles.activeTabStyle}
+                tabTextStyle={styles.tabTextStyle}
+                activeTabTextStyle={styles.activeTabTextStyle}
+              />
+            )}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity onPress={handleGenerateShoppingList} style={styles.actionButton} disabled={isSharing}>
+                <RefreshCw size={22} color={loading ? Colors.colors.gray[300] : Colors.colors.primary[200]} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleShare} style={styles.actionButton}>
+                <Share2 size={22} color={Colors.colors.primary[200]} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        
-      </PaddingView>
+          
+        </PaddingView>
 
-      {shoppingList.aisles.map(aisle => {
-        const { name: translatedAisleName, icon } = getAisleInfo(aisle.aisle, t);
-        return(
-          <View key={aisle.aisle} style={styles.sectionWrapper}>
-            <Section 
-              title={translatedAisleName} 
-              icon={icon}
-              defaultOpen={false}
-              contentStyle={{ paddingHorizontal: 0, paddingTop: 0, paddingBottom: 0 }}
-            >
-              {aisle.items.map((item, index) => (
-                <ShoppingListItem
-                  key={`${item.ingredientId}-${index}`}
-                  item={item}
-                  isChecked={checkedItems.has(`${item.ingredientId}-${index}`)}
-                  onToggle={() => handleToggleItem(`${item.ingredientId}-${index}`)}
-                  unitSystem={unitSystem}
-                />
-              ))}
-            </Section>
-          </View>
-        );
-      })}
+        {shoppingList.aisles.map(aisle => {
+          const { name: translatedAisleName, icon } = getAisleInfo(aisle.aisle, t);
+          return(
+            <View key={aisle.aisle} style={styles.sectionWrapper}>
+              <Section 
+                title={translatedAisleName} 
+                icon={icon}
+                defaultOpen={false}
+                contentStyle={{ paddingHorizontal: 0, paddingTop: 0, paddingBottom: 0 }}
+              >
+                {aisle.items.map((item, index) => (
+                  <ShoppingListItem
+                    key={`${item.ingredientId}-${index}`}
+                    item={item}
+                    isChecked={checkedItems.has(`${item.ingredientId}-${index}`)}
+                    onToggle={() => handleToggleItem(`${item.ingredientId}-${index}`)}
+                    unitSystem={unitSystem}
+                  />
+                ))}
+              </Section>
+            </View>
+          );
+        })}
 
-      {checkedItems.size > 0 && (
-        <TouchableOpacity style={styles.clearButton} onPress={handleClearChecked}>
-          <Check size={16} color={Colors.colors.primary[200]}/>
-          <Text style={styles.clearButtonText}>{t('shoppingList.clearChecked')}</Text>
-        </TouchableOpacity>
+        {checkedItems.size > 0 && (
+          <TouchableOpacity style={styles.clearButton} onPress={handleClearChecked}>
+            <Check size={16} color={Colors.colors.primary[200]}/>
+            <Text style={styles.clearButtonText}>{t('shoppingList.clearChecked')}</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+      ) : (
+        renderEmptyState()
       )}
-    </ScrollView>
       {showScrollTopButton && (
         <TouchableOpacity style={[styles.scrollTopButton, {bottom: insets.bottom + TAB_BAR_HEIGHT + 20,}]} onPress={handleScrollToTop}>
           <ArrowUp size={24} color={Colors.colors.neutral[100]} />
         </TouchableOpacity>
       )}
-      <FullScreenLoading visible={loading || isSharing} mode="shoppingList" />
+
+      <FullScreenLoading
+        visible={loading || isSharing}
+        mode="shoppingList"
+      />
+      
+      <ServingsModal
+        visible={isServingsModalVisible}
+        onClose={() => setServingsModalVisible(false)}
+        onConfirm={handleConfirmGeneration}
+      />
     </View>
   );
 };
