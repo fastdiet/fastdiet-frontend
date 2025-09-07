@@ -1,21 +1,22 @@
 {
   "expo": {
     "name": "FastDiet",
-    "slug": "fastdiet-frontend",
+    "slug": "fastdiet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "newArchEnabled": false,
     "scheme": "fastdiet",
     "userInterfaceStyle": "light",
-    "newArchEnabled": false,
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
+      "icon": "./assets/images/icon-ios.png",
+      "buildNumber": "1",
       "supportsTablet": true,
       "bundleIdentifier": "com.fastdiet.app",
+      "splash": {
+        "image": "./assets/images/splash-ios.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#66bb6a"
+      },
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
@@ -35,15 +36,16 @@
       }
     },
     "android": {
+      "versionCode": 1,
+      "splash": {
+        "image": "./assets/images/splash-android.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#66bb6a"
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#66bb6a"
       },
-      "permissions": [
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.ACCESS_MEDIA_LOCATION"
-      ],
       "package": "com.fastdiet.app"
     },
     "web": {
