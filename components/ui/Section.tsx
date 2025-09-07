@@ -10,20 +10,27 @@ import { ChevronDown, ChevronUp, Icon, LucideIcon } from 'lucide-react-native';
 interface SectionProps {
   title: string;
   children: React.ReactNode;
-  iconComponent?: LucideIcon;
+  icon?: LucideIcon | string; 
   defaultOpen?: boolean;
   contentStyle?: ViewStyle;
 }
 
-const Section: React.FC<SectionProps> = React.memo(({ title, children, iconComponent: Icon, defaultOpen = false, contentStyle }) => {
+const Section: React.FC<SectionProps> = React.memo(({ title, children, icon: Icon, defaultOpen = false, contentStyle }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const toggleOpen = useCallback(() => setIsOpen(prev => !prev), []);
 
   return (
     <View style={styles.sectionContainer}>
-      <TouchableOpacity onPress={toggleOpen} style={styles.sectionHeader} activeOpacity={0.7}>
-        {Icon && <Icon size={22} color={Colors.colors.primary[100]} strokeWidth={ 2.3} style={styles.sectionIcon} />}
+      <TouchableOpacity onPress={toggleOpen}  style={[
+          styles.sectionHeader,
+          isOpen ? styles.sectionHeaderOpen : styles.sectionHeaderClosed
+        ]} activeOpacity={0.7}>
+        {Icon && (
+          typeof Icon === 'string' 
+            ? <Text style={styles.emojiIcon}>{Icon}</Text> 
+            : <Icon size={22} color={Colors.colors.primary[100]} strokeWidth={2.3} style={styles.sectionIcon} />
+        )}
         <Text style={styles.sectionTitle}>{title}</Text>
         {isOpen ? (
           <ChevronUp size={26} color={Colors.colors.gray[300]} />
@@ -55,7 +62,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.colors.gray[100],
   },
+  sectionHeaderOpen: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.colors.gray[100],
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  sectionHeaderClosed: {
+    borderBottomWidth: 0,
+  },
   sectionIcon: {
+    marginRight: 12,
+  },
+  emojiIcon: {
+    fontSize: 22,
     marginRight: 12,
   },
   sectionTitle: {

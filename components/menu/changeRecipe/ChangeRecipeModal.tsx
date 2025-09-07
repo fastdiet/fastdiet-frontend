@@ -26,6 +26,7 @@ interface ChangeRecipeModalProps {
   activeChangeSlot: SlotMeal | null; 
   suggestions: RecipeShort[];
   isLoading: boolean;
+  mode: 'add' | 'change';
 }
 
 const ChangeRecipeModal: React.FC<ChangeRecipeModalProps> = ({
@@ -34,7 +35,8 @@ const ChangeRecipeModal: React.FC<ChangeRecipeModalProps> = ({
   activeChangeSlot,
   onRecipeSelected: onRecipeSelectedProp,
   suggestions,
-  isLoading
+  isLoading,
+  mode,
 }) => {
     
   const { t } = useTranslation();
@@ -42,14 +44,10 @@ const ChangeRecipeModal: React.FC<ChangeRecipeModalProps> = ({
   const isKeyboardVisible = useKeyboardVisible();
   if (!activeChangeSlot) return null;
 
-  const mealsConfig = [
-    { key: "breakfast", slot: 0, label: t("constants.meals.breakfast") },
-    { key: "lunch", slot: 1, label: t("constants.meals.lunch") },
-    { key: "dinner", slot: 2, label: t("constants.meals.dinner") },
-  ];
-  const mealInfo = mealsConfig.find(m => m.slot === activeChangeSlot.slot);
+  const mealType = activeChangeSlot.meal_type;
+  const mealTypeDisplay = t(`constants.meals.${mealType}`, { defaultValue: mealType });
 
-   const onRecipeSelected = useCallback((newRecipe: RecipeShort) => {
+  const onRecipeSelected = useCallback((newRecipe: RecipeShort) => {
     onRecipeSelectedProp(newRecipe);
   }, [onRecipeSelectedProp]);
 
@@ -61,64 +59,66 @@ const ChangeRecipeModal: React.FC<ChangeRecipeModalProps> = ({
       visible={isVisible}
       onRequestClose={onClose}
     >
-        <SafeAreaView style={styles.safeArea}>
-          <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>{t('index.menu.changeMeal.title')}</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <X size={28} color={Colors.colors.gray[500]} />
-            </TouchableOpacity>
-          </View>
-          {!isKeyboardVisible && activeChangeSlot.recipe &&(
-            <View style={styles.cardWrapper}>
-              <ChangeMealCard 
-                recipe={activeChangeSlot.recipe!}
-                mealTypeDisplay={mealInfo?.label || ''}
-                mealTypeKey={mealInfo?.key as "breakfast" | "lunch" | "dinner" || 'breakfast'}
-              />
-            </View>
-          )}
-
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'suggestions' && styles.activeTab]}
-          onPress={() => setActiveTab('suggestions')}
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <Text style={[styles.tabText, activeTab === 'suggestions' && styles.activeTabText]}>
-            {t('index.menu.changeMeal.suggestions')}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>
+            {mode === 'add' ? t('add') : t('change')} {mealTypeDisplay}
           </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tabButton, activeTab === 'myrecipes' && styles.activeTab]}
-          onPress={() => setActiveTab('myrecipes')}
-        >
-          <Text style={[styles.tabText, activeTab === 'myrecipes' && styles.activeTabText]}>
-            {t('index.menu.changeMeal.myRecipes')}
-          </Text>
-        </TouchableOpacity>
-
-      </View>
-        <View style={styles.content}>
-          {activeTab === 'suggestions' ? (
-            <SuggestionsTab
-              suggestions={suggestions}
-              isLoading={isLoading}
-              onRecipeSelect={onRecipeSelected}
-            />
-          ) : (
-            <MyRecipesTab 
-              onRecipeSelect={onRecipeSelected} 
-              onCloseModal={onClose}
-              filterByDishType={mealInfo?.key as "breakfast" | "lunch" | "dinner" | undefined}
-            />
-          )}
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <X size={28} color={Colors.colors.gray[500]} />
+          </TouchableOpacity>
         </View>
-        </KeyboardAvoidingView>
-        </SafeAreaView>
+        {!isKeyboardVisible && activeChangeSlot.recipe &&(
+          <View style={styles.cardWrapper}>
+            <ChangeMealCard 
+              recipe={activeChangeSlot.recipe!}
+              mealTypeDisplay={mealTypeDisplay}
+              mealType={mealType}
+            />
+          </View>
+        )}
+
+    <View style={styles.tabContainer}>
+      <TouchableOpacity
+        style={[styles.tabButton, activeTab === 'suggestions' && styles.activeTab]}
+        onPress={() => setActiveTab('suggestions')}
+      >
+        <Text style={[styles.tabText, activeTab === 'suggestions' && styles.activeTabText]}>
+          {t('index.menu.changeMeal.suggestions')}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.tabButton, activeTab === 'myrecipes' && styles.activeTab]}
+        onPress={() => setActiveTab('myrecipes')}
+      >
+        <Text style={[styles.tabText, activeTab === 'myrecipes' && styles.activeTabText]}>
+          {t('index.menu.changeMeal.myRecipes')}
+        </Text>
+      </TouchableOpacity>
+
+    </View>
+      <View style={styles.content}>
+        {activeTab === 'suggestions' ? (
+          <SuggestionsTab
+            suggestions={suggestions}
+            isLoading={isLoading}
+            onRecipeSelect={onRecipeSelected}
+          />
+        ) : (
+          <MyRecipesTab 
+            onRecipeSelect={onRecipeSelected} 
+            onCloseModal={onClose}
+            filterByDishType={mealType}
+          />
+        )}
+      </View>
+      </KeyboardAvoidingView>
+      </SafeAreaView>
     </Modal>
     
   );

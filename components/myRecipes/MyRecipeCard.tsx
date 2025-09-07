@@ -67,7 +67,7 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
         ]
     );
   };
-
+  
   return (
     <Pressable
       style={({ pressed }) => [ styles.card, { transform: [{ scale: pressed ? 0.98 : 1 }] , opacity: pressed ? 0.9 : 1,} ]}
@@ -90,28 +90,28 @@ const MyRecipeCard = ({ recipe, onPress, onEdit }: RecipeCardProps) => {
           style={styles.gradient}
         />
         
-            <View style={styles.topOverlay}>
-                
-                <View style={styles.actionButtonsGroup}>
-                    <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={(e) => { e.stopPropagation(); onEdit(); }}
-                        hitSlop={10}
-                    >
-                      <Pencil size={22} color={Colors.colors.neutral[100]} />
-                    </TouchableOpacity>
-                    
-                    <View style={styles.separator} />
-                    
-                    <TouchableOpacity
-                        style={styles.actionButton}
-                        onPress={(e) => { e.stopPropagation(); handleDelete(); }}
-                        hitSlop={10}
-                    >
-                      <Trash2 size={22} color={Colors.colors.neutral[100]} />
-                    </TouchableOpacity>
-                </View>
+          <View style={styles.topOverlay}>
+              
+            <View style={styles.actionButtonsGroup}>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={(e) => { e.stopPropagation(); onEdit(); }}
+                hitSlop={10}
+              >
+              <Pencil size={22} color={Colors.colors.neutral[100]} />
+              </TouchableOpacity>
+              
+              <View style={styles.separator} />
+              
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={(e) => { e.stopPropagation(); handleDelete(); }}
+                hitSlop={10}
+              >
+              <Trash2 size={22} color={Colors.colors.neutral[100]} />
+              </TouchableOpacity>
             </View>
+          </View>
 
         <View style={styles.bottomInfoOverlay}>
           {recipe.ready_min && (

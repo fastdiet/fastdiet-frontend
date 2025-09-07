@@ -31,10 +31,6 @@ export default function ResetPasswordScreen() {
   const { t } = useTranslation();
   const {resetPassword,} = useAuth();
   const validations = useValidations();
-  
-  useEffect(() => {
-    Toast.show({type: "success", text1: "Código verificado", text2: "Establece tu nueva contraseña",});
-  }, []);
 
   const { errors, validateForm } = useFormValidation({
     newPassword: validations.password,
@@ -54,7 +50,7 @@ export default function ResetPasswordScreen() {
       setLoading(false);
       return
     }
-
+    Toast.show({type: "success", text1: t("auth.resetPassword.passwordUpdated"),});
     router.dismissAll();
     router.replace("/login")
   };

@@ -14,12 +14,13 @@ interface FullScreenLoadingProps {
   lottieAnimationSource?: any;
   disableDynamicText?: boolean;
   dynamicTextInterval?: number;
+  mode?: 'menu' | 'shoppingList';
 }
 
 const DEFAULT_LOTTIE_ANIMATION = require('@/assets/animations/loading-generating-menu.json');
 const { width: screenWidth } = Dimensions.get('window');
 
-const LOADING_KEYS = [
+const LOADING_KEYS_MENU = [
   'index.noMenu.loading.preparingKitchen',
   'index.noMenu.loading.sharpeningKnives',
   'index.noMenu.loading.cookingIdeas',
@@ -28,11 +29,20 @@ const LOADING_KEYS = [
   'index.noMenu.loading.almostReady',
 ];
 
-const FullScreenLoading = ({ visible, textKey, lottieAnimationSource = DEFAULT_LOTTIE_ANIMATION, disableDynamicText = false, dynamicTextInterval = 3000 }: FullScreenLoadingProps) => {
+const LOADING_KEYS_SHOPPING = [
+  'shoppingList.loading.collectingIngredients',
+  'shoppingList.loading.organizingAisles',
+  'shoppingList.loading.checkingPantry',
+  'shoppingList.loading.finalizingList',
+  'shoppingList.loading.readyToShop',
+];
+
+const FullScreenLoading = ({ visible, textKey, lottieAnimationSource = DEFAULT_LOTTIE_ANIMATION, disableDynamicText = false, dynamicTextInterval = 3000, mode = 'menu' }: FullScreenLoadingProps) => {
   const { t } = useTranslation();
+  const selectedKeys = mode === 'shoppingList' ? LOADING_KEYS_SHOPPING : LOADING_KEYS_MENU;
   const messages = useMemo(() => (
-    textKey ? [t(textKey)] : LOADING_KEYS.map(key => t(key))
-  ), [textKey, t]);
+    textKey ? [t(textKey)] : selectedKeys.map((key: string) => t(key))
+  ), [textKey, , selectedKeys, t]);
 
   const [messageIndex, setMessageIndex] = useState(0);
   const intervalRef = useRef<number | null>(null);
@@ -51,7 +61,7 @@ const FullScreenLoading = ({ visible, textKey, lottieAnimationSource = DEFAULT_L
   }, [visible, messages, disableDynamicText, dynamicTextInterval]);
 
   if (!visible) return null;
-
+  
   return (
     <Modal
       transparent={true}

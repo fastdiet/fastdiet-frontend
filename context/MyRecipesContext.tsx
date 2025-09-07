@@ -7,6 +7,7 @@ import { getMyRecipes, saveMyRecipes } from "@/utils/asyncStorage";
 import { ApiResponse } from "@/context/AuthContext";
 
 import { RecipeCreationData } from "@/models/recipeInput";
+import { UploadUrlResponse } from "@/models/imageUploader";
 
 
 interface MyRecipesContextType {
@@ -16,8 +17,9 @@ interface MyRecipesContextType {
   fetchRecipes: () => Promise<void>;
   getRecipeById: (id: number) => Promise<RecipeDetail>; 
   createRecipe: (recipeData: RecipeCreationData) => Promise<ApiResponse<{ newRecipe: RecipeDetail }>>;
+  generateUploadUrl: (fileName: string) => Promise<UploadUrlResponse>
   deleteRecipe: (recipeId: number, force: boolean) => Promise<ApiResponse>;
-  updateRecipe: (recipeId: number, updatedData: RecipeCreationData) => Promise<ApiResponse<{ updatedRecipe: RecipeDetail }>>;
+  updateRecipe: (recipeId: number, updatedData: Partial<RecipeCreationData>) => Promise<ApiResponse<{ updatedRecipe: RecipeDetail }>>;
 }
 
 export const MyRecipesContext = createContext<MyRecipesContextType | undefined>(undefined);
@@ -115,9 +117,21 @@ export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children 
     }
   };
 
-  const updateRecipe = async (recipeId: number, recipeData: RecipeCreationData): Promise<ApiResponse<{ updatedRecipe: RecipeDetail }>> => {
+  const generateUploadUrl = async (fileName: string): Promise<UploadUrlResponse> => {
     try {
-      const { data: updatedRecipe } = await api.put(`/recipes/me/${recipeId}`, recipeData);
+      const response = await api.post<UploadUrlResponse>('/recipes/generate-upload-url', {
+        file_name: fileName,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching signed URL:", error);
+      throw new Error("Could not get the upload URL from the server.");
+    }
+  }
+
+  const updateRecipe = async (recipeId: number, recipeData: Partial<RecipeCreationData>): Promise<ApiResponse<{ updatedRecipe: RecipeDetail }>> => {
+    try {
+      const { data: updatedRecipe } = await api.patch(`/recipes/me/${recipeId}`, recipeData);
       const updatedShortRecipe: RecipeShort = {
         id: updatedRecipe.id,
         title: updatedRecipe.title,
@@ -166,6 +180,7 @@ export const MyRecipesProvider: React.FC<{ children: ReactNode }> = ({ children 
         getRecipeById,
         fetchRecipes,
         createRecipe,
+        generateUploadUrl,
         updateRecipe,
         deleteRecipe,
       }}

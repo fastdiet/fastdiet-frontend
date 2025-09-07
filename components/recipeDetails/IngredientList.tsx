@@ -33,7 +33,7 @@ const IngredientList: React.FC<IngredientListProps> = React.memo(({ ingredients 
 
   if (!ingredients || ingredients.length === 0) {
     return (
-      <Section title={t("index.menu.recipe.ingredientsSectionTitle")} iconComponent={List}>
+      <Section title={t("index.menu.recipe.ingredientsSectionTitle")} icon={List}>
         <View style={styles.emptyContainer}>
           <Info size={21} strokeWidth={2.3} color={Colors.colors.gray[400]} />
           <Text style={styles.emptyText}>{t('recipes.noIngredientsMessage')}</Text>
@@ -45,7 +45,7 @@ const IngredientList: React.FC<IngredientListProps> = React.memo(({ ingredients 
   return (
     <Section 
       title={t("index.menu.recipe.ingredientsSectionTitle")}
-      iconComponent={List}
+      icon={List}
       contentStyle={{ paddingBottom: 0 }}
     >
       {hasSwitchableUnits && (
@@ -60,23 +60,28 @@ const IngredientList: React.FC<IngredientListProps> = React.memo(({ ingredients 
             activeTabTextStyle={styles.activeTabTextStyle}
           />
       )}
-      {ingredients.map((ing) => {
+      {ingredients.map((ing, index) => {
         const measure = ing.measures_json?.[unitSystem];
         const formattedAmount = measure ? formatAmount(measure.amount) : formatAmount(ing.amount);
         const unit = measure?.unitShort || ing.unit || "";
+        const isFirst = index === 0;
 
         return (
-          <View key={`ingredient-${ing.ingredient.id}`} style={styles.ingredientItem}>
-            {ing.ingredient.image_filename ? (
-              <Image
-                source={{ uri: `${INGREDIENT_IMAGE_BASE_URL}${ing.ingredient.image_filename}` }}
-                style={styles.ingredientImage}
-              />
-            ) : (
-              <View style={[styles.ingredientImage, styles.placeholderImage]}>
-                <MaterialCommunityIcons name="food-variant" size={24} color={Colors.colors.gray[300]} />
-              </View>
-            )}
+          <View key={`ingredient-${ing.ingredient.id}`} 
+            style={[styles.ingredientItem,!hasSwitchableUnits && isFirst && styles.firstItemNoBorder]}
+          >
+            <View style={styles.imageShadowContainer}>
+              {ing.ingredient.image_filename ? (
+                <Image
+                  source={{ uri: `${INGREDIENT_IMAGE_BASE_URL}${ing.ingredient.image_filename}` }}
+                  style={styles.ingredientImage}
+                />
+              ) : (
+                <View style={[styles.ingredientImage, styles.placeholderImage]}>
+                  <MaterialCommunityIcons name="food-variant" size={24} color={Colors.colors.gray[300]} />
+                </View>
+              )}
+            </View>
             <View style={styles.ingredientTextContainer}>
               <Text style={styles.ingredientName} numberOfLines={2} ellipsizeMode="tail">
                 {ing.ingredient.name}
@@ -100,20 +105,30 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.colors.gray[100],
   },
-  ingredientImage: {
+  firstItemNoBorder: {
+    borderTopWidth: 0,
+  },
+  imageShadowContainer: {
     width: 48,
     height: 48,
+    marginRight: 16,
+    borderRadius: 10,
+    shadowColor: "#000",
+    backgroundColor: Colors.colors.neutral[100],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  ingredientImage: {
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
     marginRight: 16,
     backgroundColor: Colors.colors.gray[100],
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 1.5,
-    elevation: 2,
   },
   ingredientTextContainer: {
     flex: 1,

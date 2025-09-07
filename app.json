@@ -1,26 +1,50 @@
 {
   "expo": {
     "name": "FastDiet",
-    "slug": "fastdiet-frontend",
+    "slug": "fastdiet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "fastdiet",
-    "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "scheme": "fastdiet",
+    "userInterfaceStyle": "light",
     "ios": {
+      "icon": "./assets/images/icon-ios.png",
+      "buildNumber": "1",
       "supportsTablet": true,
-      "bundleIdentifier": "com.fastdiet.app"
+      "bundleIdentifier": "com.fastdiet.app",
+      "splash": {
+        "image": "./assets/images/splash-ios.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#66bb6a"
+      },
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "storage.googleapis.com": {
+              "NSIncludesSubdomains": true,
+              "NSThirdPartyExceptionRequiresForwardSecrecy": true,
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            },
+            "accounts.google.com": {
+              "NSIncludesSubdomains": true,
+              "NSThirdPartyExceptionRequiresForwardSecrecy": true,
+              "NSExceptionAllowsInsecureHTTPLoads": false
+            }
+          }
+        },
+        "LSApplicationQueriesSchemes": ["google", "com.googleusercontent.apps.1029285084877-up0oqd75c8jofll6he0vs10959v2r4ub"]
+      }
     },
     "android": {
+      "versionCode": 1,
+      "splash": {
+        "image": "./assets/images/splash-android.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#66bb6a"
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#66bb6a"
       },
       "package": "com.fastdiet.app"
     },
@@ -43,7 +67,7 @@
       [
         "expo-image-picker",
         {
-           "photosPermission": "La app necesita acceder a tus fotos para que puedas añadir imágenes a tus recetas.",
+          "photosPermission": "La app necesita acceder a tus fotos para que puedas añadir imágenes a tus recetas.",
           "cameraPermission": "La app necesita acceder a la cámara para que puedas tomar fotos para tus recetas."
         }
       ]

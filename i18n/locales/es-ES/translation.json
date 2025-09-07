@@ -39,23 +39,34 @@
         "title": "Verificar código",
         "paragraph": "Ingresa el código de 6 dígitos que enviamos a "
       },
+      "emailVerified": "Email verificado",
+      "completeProfile": "Completa tu perfil",
+      "codeSent": "Código enviado",
+      "codeSentDescription": "Se ha enviado un nuevo código de verificación a tu correo",
       "codePlaceholder": "Código de 6 dígitos",
       "noCode": "¿No recibiste el código? ",
       "sendOtherCodeLink": "Solicita otro",
       "verify": "Verificar código",
-      "sending": "Enviando..."
+      "sending": "Enviando...",
+      "verifyEmail": "Verifica tu correo",
+      "codeResent": "Código reenviado",
+      "codeResentDescription": "Se ha enviado un nuevo código a tu correo",
+      "codeVerified": "Código verificado",
+      "establishNewPassword": "Establece tu nueva contraseña"
     },
     "resetPassword": {
       "titleParagraph": {
         "title": "Nueva contraseña",
         "paragraph": "Establece una nueva contraseña para tu cuenta"
       },
+      "passwordUpdated": "Contraseña actualizada correctamente",
       "newPassword": "Nueva contraseña",
       "confirmPassword": "Confirmar contraseña",
       "updatePassword": "Actualizar contraseña"
     },
     "completeRegister":{
       "basic": {
+        "title": "Información personal",
         "titleParagraph": {
           "title": "¡Bienvenido a FastDiet!",
           "paragraph" : "Empieza creando tu perfil para disfrutar de una experiencia personalizada"
@@ -68,30 +79,35 @@
         "height": "Altura (cm)"
       },
       "activity": {
+        "title": "Actividad",
         "titleParagraph": {
           "title": "Elige tu nivel de actividad física",
           "paragraph": "Esto nos ayudará a calcular mejor tus necesidades calóricas diarias"
         }
       },
       "goal": {
+        "title": "Objetivo",
         "titleParagraph": {
           "title": "¿Cuál es tu objetivo?",
           "paragraph": "Elige tu meta para ajustar tu plan nutricional"
         }
       },
       "diet": {
+        "title": "Dieta",
         "titleParagraph": {
           "title": "Selecciona tu tipo de dieta",
           "paragraph": "Elige cómo te alimentas. Si no sigues una dieta concreta, selecciona 'Equilibrada'"
         }
       },
       "cuisine":{
+        "title": "Cocinas",
         "titleParagraph": {
           "title": "¿Qué cocinas te gustan?",
           "paragraph": "Selecciona los tipos cocinas que prefieres incluir en tu dieta"
         }
       },
       "intolerance":{
+        "title": "Intolerancias",
         "titleParagraph": {
           "title": "¿Tienes alguna intolerancia?",
           "paragraph": "Selecciona los alimentos que quieres evitar en tus planes de comida"
@@ -137,18 +153,33 @@
   },
   "constants": {
     "diets": {
-      "Balanced": "Equilibrada",
-      "Vegetarian": "Vegetariana",
-      "Vegan": "Vegana",
-      "Gluten Free": "Sin Gluten",
-      "Pescetarian": "Pescetariana",
-      "Ketogenic": "Keto",
-      "Lacto-Vegetarian": "Lacto-Vegetariana",
-      "Ovo-Vegetarian": "Ovo-Vegetariana",
-      "Paleo": "Paleo",
-      "Primal": "Primal",
-      "Low FODMAP": "Baja en FODMAP",
-      "Whole30": "Whole30"
+      "1": "Equilibrada",
+      "2": "Vegetariana",
+      "3": "Vegana",
+      "4": "Sin Gluten",
+      "5": "Sin Lácteos",
+      "6": "Pescetariana",
+      "7": "Keto",
+      "8": "Lacto-Vegetariana",
+      "9": "Ovo-Vegetariana",
+      "10": "Paleo",
+      "11": "Primal",
+      "12": "Baja en Fodmap",
+      "13": "Whole 30"
+    },
+    "dietTags": {
+      "lacto ovo vegetarian": "Vegetariana",
+      "vegan": "Vegana",
+      "gluten free": "Sin Gluten",
+      "dairy free": "Sin Lácteos",
+      "pescatarian": "Pescetariana",
+      "ketogenic": "Keto",
+      "lacto vegetarian": "Lacto-Vegetariana",
+      "ovo vegetarian": "Ovo-Vegetariana",
+      "paleolithic": "Paleo",
+      "primal": "Primal",
+      "fodmap friendly": "Baja en Fodmap",
+      "whole 30": "Whole 30"
     },
     "cuisines":{
       "European": "Europea",
@@ -162,7 +193,21 @@
       "French": "Francesa",
       "British": "Británica",
       "German": "Alemana",
-      "Greek": "Griega"
+      "Greek": "Griega",
+      "English": "Inglesa",
+      "Scottish": "Escocesa",
+      "Thai": "Tailandesa",
+      "Chinese": "China",
+      "Indian": "India",
+      "Mexican": "Mexicana",
+      "Vietnamese": "Vietnamita",
+      "Irish": "Irlandesa",
+      "Middle eastern": "Oriente Medio",
+      "Japanese": "Japonesa",
+      "Southern": "Sureña",
+      "Nordic": "Nórdica",
+      "Scandinavian": "Escandinava",
+      "South american": "Sudamericana"
     },
     "intolerances":{
       "Dairy": "Lácteos",
@@ -177,6 +222,208 @@
       "Sesame": "Sésamo",
       "Sulfite": "Sulfitos",
       "Grain": "Granos"
+    },
+    "equipment":{
+      "skimmer": "espumadera",
+      "pie form": "molde para tartas",
+      "glass baking pan": "bandeja de horno de cristal",
+      "garlic press": "prensador de ajos",
+      "meat grinder": "picadora de carne",
+      "tongs": "pinzas de cocina",
+      "bread knife": "cuchillo de pan",
+      "tajine pot": "tajine",
+      "wire rack": "rejilla enfriadora",
+      "mincing knife": "cuchillo picador",
+      "cherry pitter": "deshuesador de cerezas",
+      "wooden skewers": "brochetas de madera",
+      "kitchen scissors": "tijeras de cocina",
+      "blow torch": "soplete de cocina",
+      "broiler pan": "bandeja para asar",
+      "heart shaped silicone form": "molde de silicona con forma de corazón",
+      "grill": "parrilla",
+      "immersion blender": "batidora de mano",
+      "baking sheet": "bandeja de horno",
+      "oven mitt": "guante de horno",
+      "pastry bag": "manga pastelera",
+      "palette knife": "espátula pastelera",
+      "pizza cutter": "cortador de pizza",
+      "bottle opener": "abrebotellas",
+      "bowl": "bol",
+      "pizza pan": "bandeja para pizza",
+      "candy thermometer": "termómetro para caramelos",
+      "rolling pin": "rodillo de cocina",
+      "frying pan": "sartén",
+      "casserole dish": "cazuela para horno",
+      "plastic wrap": "film transparente",
+      "salad spinner": "centrifugadora de ensaladas",
+      "broiler": "gratinador",
+      "silicone muffin tray": "molde de silicona para magdalenas",
+      "meat tenderizer": "ablandador de carne",
+      "edible cake image": "imagen comestible para tartas",
+      "measuring spoon": "cuchara medidora",
+      "kitchen thermometer": "termómetro de cocina",
+      "sifter": "tamiz",
+      "muffin tray": "molde para magdalenas",
+      "chocolate mold": "molde para chocolate",
+      "kitchen towels": "paños de cocina",
+      "potato ricer": "prensador de patatas",
+      "silicone kugelhopf pan": "molde de silicona para kugelhopf",
+      "offset spatula": "espátula acodada",
+      "cheesecloth": "gasa para quesos",
+      "lemon squeezer": "exprimidor de limones",
+      "cake form": "molde para tartas",
+      "mini muffin tray": "molde para mini magdalenas",
+      "carving fork": "tenedor trinchador",
+      "egg slicer": "cortador de huevos",
+      "ice cube tray": "cubitera",
+      "corkscrew": "sacacorchos",
+      "ice cream machine": "heladera",
+      "sieve": "colador",
+      "kugelhopf pan": "molde para kugelhopf",
+      "pastry brush": "brocha de repostería",
+      "popsicle sticks": "palos para polos",
+      "spatula": "espátula",
+      "cake server": "servidor de tartas",
+      "poultry shears": "tijeras para aves",
+      "box grater": "rallador de cuatro caras",
+      "cupcake toppers": "decoraciones para cupcakes",
+      "funnel": "embudo",
+      "drinking straws": "pajitas",
+      "slotted spoon": "cuchara ranurada",
+      "ceramic pie form": "molde cerámico para tartas",
+      "pepper grinder": "molinillo de pimienta",
+      "mortar and pestle": "mortero",
+      "baster": "inyector de jugos",
+      "melon baller": "sacabolas",
+      "zester": "rallador fino",
+      "pastry cutter": "cortapastas",
+      "ziploc bags": "bolsas con cierre hermético",
+      "aluminum foil": "papel de aluminio",
+      "toothpicks": "palillos",
+      "pot": "olla",
+      "baking pan": "bandeja de horno",
+      "ladle": "cazo",
+      "apple cutter": "cortador de manzanas",
+      "fillet knife": "cuchillo para filetear",
+      "toaster": "tostadora",
+      "heart shaped cake form": "molde para tartas con forma de corazón",
+      "grill pan": "plancha de cocina",
+      "wooden spoon": "cuchara de madera",
+      "paper towels": "rollo de papel de cocina",
+      "cookie cutter": "cortador de galletas",
+      "tart form": "molde para tartaletas",
+      "pizza board": "pala para pizza",
+      "glass casserole dish": "cazuela de cristal para horno",
+      "madeleine form": "molde para magdalenas francesas",
+      "metal skewers": "brochetas metálicas",
+      "microplane": "rallador microplane",
+      "stand mixer": "batidora de pie",
+      "whisk": "batidor de varillas",
+      "mixing bowl": "bol de mezclas",
+      "deep fryer": "freidora",
+      "canning jar": "tarro para conservas",
+      "cheese knife": "cuchillo para queso",
+      "hand mixer": "batidora de mano eléctrica",
+      "butter curler": "rizador de mantequilla",
+      "food processor": "robot de cocina",
+      "wax paper": "papel encerado",
+      "grater": "rallador",
+      "gravy boat": "salsera",
+      "muffin liners": "cápsulas para magdalenas",
+      "butter knife": "cuchillo para untar",
+      "waffle iron": "gofrera",
+      "double boiler": "baño maría",
+      "can opener": "abrelatas",
+      "mandoline": "mandolina",
+      "kitchen twine": "cordel de cocina",
+      "juicer": "exprimidor",
+      "wok": "wok",
+      "measuring cup": "taza medidora",
+      "ramekin": "ramequín",
+      "airfryer": "freidora de aire",
+      "instant pot": "olla multifunción",
+      "spoon": "cuchara",
+      "dough scraper": "rasqueta para masa",
+      "microwave": "microondas",
+      "roasting pan": "bandeja para asar",
+      "pressure cooker": "olla a presión",
+      "dehydrator": "deshidratador",
+      "baking paper": "papel de horno",
+      "silicone muffin liners": "cápsulas de silicona para magdalenas",
+      "loaf pan": "molde para pan",
+      "cake topper": "adorno para tartas",
+      "dutch oven": "cazuela de hierro fundido",
+      "baking spatula": "espátula de repostería",
+      "popsicle molds": "moldes para polos",
+      "teapot": "tetera",
+      "cocktail sticks": "palillos de cóctel",
+      "cleaver": "hacha de cocina",
+      "rice cooker": "arrocera",
+      "bread machine": "panificadora",
+      "fork": "tenedor",
+      "ice cream scoop": "cuchara para helado",
+      "slow cooker": "olla de cocción lenta",
+      "knife": "cuchillo",
+      "kitchen scale": "báscula de cocina",
+      "griddle": "plancha",
+      "frosting cake topper": "decoración de glaseado para tartas",
+      "cutting board": "tabla de cortar",
+      "cake pop mold": "molde para cake pops",
+      "oven": "horno",
+      "colander": "escurridor",
+      "kitchen timer": "temporizador de cocina",
+      "panini press": "sandwichera",
+      "pasta machine": "máquina para pasta",
+      "popcorn maker": "palomitero",
+      "lollipop sticks": "palos para piruletas",
+      "steamer basket": "cesta para vapor",
+      "chopsticks": "palillos chinos",
+      "chefs knife": "cuchillo de chef",
+      "blender": "batidora de vaso",
+      "pizza stone": "piedra para pizza",
+      "skewers": "brochetas",
+      "sauce pan": "cazo",
+      "peeler": "pelador",
+      "stove": "cocina",
+      "pot holder": "agarradera",
+      "springform pan": "molde desmontable",
+      "apple corer": "descorazonador de manzanas",
+      "potato masher": "triturador de patatas",
+      "serrated knife": "cuchillo de sierra"
+    },
+    "aisles": {
+      "baking": "Repostería",
+      "pastaAndRice": "Pasta y Arroz",
+      "cereal": "Cereales",
+      "pantryItems": "Despensa",
+      "cannedAndJarred": "Conservas y Enlatados",
+      "spicesAndSeasonings": "Especias y Condimentos",
+      "oilsAndVinegars": "Aceites y Vinagres (Aliño)",
+      "condiments": "Salsas y Condimentos",
+      "nutButtersAndJams": "Mermeladas, Mantequillas o Miel",
+      "produce": "Frutas y Verduras",
+      "meat": "Carne",
+      "seafood": "Pescado y Marisco",
+      "dairy": "Lácteos y Huevos",
+      "cheese": "Quesos",
+      "bread": "Panadería",
+      "refrigerated": "Refrigerados",
+      "frozen": "Congelados",
+      "beverages": "Bebidas",
+      "teaAndCoffee": "Té y Café",
+      "alcoholicBeverages": "Bebidas Alcohólicas",
+      "savorySnacks": "Snacks Salados",
+      "sweetSnacks": "Snacks Dulces",
+      "nuts": "Frutos Secos",
+      "driedFruits": "Frutas Deshidratadas",
+      "healthFoods": "Alimentos Saludables",
+      "ethnicFoods": "Comida Internacional",
+      "glutenFree": "Sin Gluten",
+      "gourmet": "Gourmet",
+      "online": "Compra Online",
+      "grillingSupplies": "Artículos para Barbacoa",
+      "homemade": "Casero",
+      "generic": "Ingredientes Propios"
     },
     "days": {
       "0": "Lunes",
@@ -200,7 +447,24 @@
     "meals":{
       "breakfast": "Desayuno",
       "lunch": "Almuerzo",
-      "dinner": "Cena"
+      "dinner": "Cena",
+      "snack": "Snack",
+      "dessert": "Postre",
+      "salad": "Ensalada",
+      "beverage": "Bebida",
+      "appetizer": "Aperitivo",
+      "morning meal": "Comida matutina",
+      "brunch": "Brunch",
+      "main course": "Plato principal",
+      "main dish": "Plato principal",
+      "side dish": "Guarnición",
+      "soup": "Sopa",
+      "drink": "Bebida",
+      "antipasti": "Entrante",
+      "starter": "Entrante",
+      "antipasto": "Entrante",
+      "hor d'oeuvre": "Entremés",
+      "fingerfood": "Comida para picar"
     }
   },
   "errorsBackend": {
@@ -224,7 +488,7 @@
     "mealItemNotFound": "No se encontró la comida en el menú",
     "mealPlanGenerationFailed": "No se pudo generar el menú semanal. Inténtalo de nuevo más tarde",
     "userPreferencesNotFound": "Preferencias del usuario no encontradas",
-
+    "preferencesTooStrict": "No pudimos encontrar suficientes recetas. Revisa tus preferencias",
     "cuisineRegionsNotFound": "Tipos de cocina no encontrados",
     "intolerancesNotFound": "No se encontraron las intolerancias seleccionadas.",
     "dietTypeNotFound": "Tipo de dieta no encontrado",
@@ -232,14 +496,19 @@
     "incorrectCurrentPassword": "La contraseña actual es incorrecta",
     "internalServerError": "Ha ocurrido un error interno. Por favor, inténtalo de nuevo",
     "networkError": "Problema de conexión. Verifica tu internet",
-    "timeoutError": "La solicitud está tardando demasiado",
-    "serverError": "Error del servidor. Inténtalo más tarde"
+    "timeoutError": "La petición tardó demasiado. Por favor, revisa tu conexión a internet",
+    "serverError": "Error de red. Asegúrate de estar conectado a internet"
   },
   "errorsFrontend":{
+    "shareFailedTitle": "Error al compartir",
+    "shareFailedSubtitle": "No se ha podido generar el PDF. Por favor, inténtalo de nuevo.",
     "selectCuisine": "Por favor, elige al menos un tipo de cocina",
     "selectDiet": "Por favor, elige un tipo de dieta",
     "selectActivity": "Selecciona un nivel de actividad física",
     "selectGoal": "Selecciona un objetivo",
+    "reviewForm": "Revisa el formulario",
+    "someInvalidFields": "Algunos campos tienen errores",
+    "recipeNotSaved": "No se puedo guardar la receta",
     "validations": {
       "required": "Este campo es obligatorio",
       "atLeastOneSelected": "Debes seleccionar al menos una opción",
@@ -289,6 +558,9 @@
       "welcome": "¡Hola, {{name}}! 👋",
       "subtitle": "Es hora de organizar tu alimentación",
       "generateMenu": "Genera tu menú semanal",
+      "menuGeneratedSuccessfuly": "Menú generado con éxito",
+      "menuGenerated": "¡Menú semanal generado!",
+      "partialMenuGenerated": "Hemos tenido que crear un plan más corto para ajustarnos a tus preferencias. Para un plan más completo, prueba a revisar tus preferencias",
       "checkPreferences": "Revisa tus preferencias",
       "featuresTitle": "Beneficios de tu menú personalizado",
       "feature1": {
@@ -320,7 +592,13 @@
       "day": {
         "noBreakfastPlanned": "No hay desayuno planificado",
         "noLunchPlanned": "No hay almuerzo planificado",
-        "noDinnerPlanned": "No hay cena planificada"
+        "noDinnerPlanned": "No hay cena planificada",
+        "addExtraMeal": "Añadir Comida o Bebida Extra",
+        "noSnackPlanned": "Añadir un snack",
+        "noDessertPlanned": "Añadir un postre"
+      },
+      "addExtraMealModal": {
+        "title": "¿Qué tipo de comida quieres añadir?"
       },
       "deleteMeal": {
         "confirmTitle": "Eliminar comida",
@@ -352,7 +630,7 @@
         "couldNotLoad": "Hubo un problema al cargar los detalles. Por favor, inténtalo de nuevo.",
         "ingredientsSectionTitle": "Ingredientes",
         "instructionsSectionTitle": "Preparación",
-        "equipmentSectionTitle": "Equipamiento Necesario",
+        "equipmentSectionTitle": "Equipo Necesario",
         "nutritionalInfoSectionTitle": "Información Nutricional",
         "showDetailedNutrients": "Mostrar todos los nutrientes",
         "hideDetailedNutrients": "Ocultar nutrientes detallados"
@@ -441,8 +719,8 @@
       "mealType": "Tipo de Comida"
     },
     "units": {
-      "metric": "Métrico",
-      "imperial": "Imperial"
+      "metric": "Sist. Métrico",
+      "imperial": "Sist. Imperial"
     },
     "detailLoading": "Cargando receta...",
     "notDetailed": "¡Dale vida a tu receta! Añade los detalles que faltan.",
@@ -464,6 +742,8 @@
     "title": "Mis Recetas",
     "subtitle": "Crea, edita y gestiona tus recetas personales",
     "searchPlaceholder": "Buscar en mis recetas...",
+    "createPageTitle": "Crear receta",
+    "editPageTitle": "Editar receta",
     "emptyState": {
       "noRecipes": {
         "title": "Tu recetario está vacío",
@@ -533,14 +813,83 @@
       "notFound": "¡Vaya! No hemos podido encontrar la receta"
     }
   },
+  "shoppingList": {
+    "title": "Lista de la compra",
+    "subtitle": "Aquí puedes ver los ingredientes necesarios para tu menú semanal, organizados por secciones",
+    "shareTitle": "Compartir mi lista de la compra",
+    "servingsModal": {
+      "title": "Ajustar Raciones",
+      "text": "Indica para cuántas personas es el menú semanal.",
+      "subText": "Calcularemos las cantidades proporcionales para generar una lista de la compra precisa.",
+      "generate": "Generar lista"
+    },
+    "pdf": {
+      "forUser": "Lista de la compra para {{name}}",
+      "weekOf": "Semana del {{startDate}} al {{endDate}}",
+      "introHello": "¡Hola, {{name}}! 👋 \n",
+      "introText": "Aquí tienes tu lista de la compra personalizada para el menú de la semana. Hemos organizado todos los ingredientes por secciones para que tus compras sean más rápidas y organizadas.",
+      "generatedBy": "Documento generado por",
+      "filename": "Lista-de-la-Compra-FastDiet-{{date}}.pdf"
+    },
+    "clearChecked": "Limpiar seleccionados",
+    "error": "No hemos podido generar tu lista de la compra. Inténtalo de nuevo más tarde",
+    "cta": {
+      "generate": "Generar lista"
+    },
+    "empty": {
+      "title": "Tu lista de la compra está vacía",
+      "subtitle": "Pulsa el botón para generar la lista de la compra basada en las recetas de tu menú semanal"
+    },
+    "emptyToast": {
+      "title": "Lista vacía",
+      "subtitle": "No se encontraron ingredientes para mostrar."
+    },
+    "successToast": {
+      "title": "¡Lista Generada!",
+      "subtitle": "Tu lista de la compra está lista."
+    },
+    "noMenu": {
+      "title": "No tienes menú",
+      "subtitle": "Primero genera tu menú para poder crear la lista de la compra."
+    },
+    "loading": {
+      "collectingIngredients": "Recopilando ingredientes...",
+      "organizingAisles": "Organizando secciones...",
+      "checkingPantry": "Comprobando la despensa...",
+      "finalizingList": "Finalizando la lista...",
+      "readyToShop": "¡Lista de la compra lista!"
+    }
+  },
+  "imagePicker":{
+    "addPhoto": "Añadir foto de portada",
+    "title1Change" : "Cambiar imagen",
+    "title1Select" : "Seleccionar imagen",
+    "title2": "¿Qué quieres hacer?",
+    "takePhoto": "Tomar foto",
+    "selectGallery": "Elegir de la galería",
+    "deletePhoto": "Eliminar foto",
+    "cancel": "Cancelar",
+    "noGalleryPermissions": "Necesitas dar permisos para acceder a tus fotos.",
+    "noCameraPermissions": "Necesitas dar usar la cámara."
+  },
   "units": {
     "minutesShort": "min",
     "kcal": "kcal",
     "servings": "raciones",
     "serving": "ración"
   },
+  "tabs":{
+    "menu": "Menú",
+    "myRecipes": "Mis recetas",
+    "shoppingList": "Compra",
+    "profile": "Perfil"
+  },
+  "sharing": {
+    "notAvailable": "La función de compartir no está disponible en este dispositivo."
+  },
   "all": "Todas",
   "continue": "Continuar",
+  "change": "Cambiar",
   "choose": "Elegir",
   "back": "Atrás",
   "save": "Guardar",
@@ -556,6 +905,7 @@
   "male": "Hombre",
   "female": "Mujer",
   "retry": "Reintentar",
+  "add": "Añadir",
   "backToMenu": "Volver al Menú",
   "seeMore": "Ver más",
   "seeLess": "Ver menos",

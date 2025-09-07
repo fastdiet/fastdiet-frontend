@@ -1,11 +1,16 @@
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { Stack } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 export default function MyRecipesLayout() {
+  const { t } = useTranslation();
   return (
     <Stack 
-        screenOptions={{ contentStyle: { backgroundColor: Colors.colors.gray[100] }}}
+      screenOptions={{
+        headerBackTitle: t('back'),
+        contentStyle: { backgroundColor: Colors.colors.gray[100] },
+      }}
     >
       <Stack.Screen 
         name="index" 
@@ -16,8 +21,7 @@ export default function MyRecipesLayout() {
       <Stack.Screen 
         name="create"
         options={{ 
-          headerTitle: 'Crear receta',
-          headerBackTitle: 'Atrás',
+          headerTitle: t("myRecipes.createPageTitle"),
           headerTitleStyle: {
             ...globalStyles.title,
             fontSize: 20,
@@ -26,15 +30,11 @@ export default function MyRecipesLayout() {
       />
       <Stack.Screen 
         name="detail/[recipeId]" 
-        options={{ 
-          headerBackTitle: 'Atrás',
-        }} 
       />
       <Stack.Screen 
         name="edit/[recipeId]" 
         options={{ 
-          headerTitle: 'Editar receta',
-          headerBackTitle: 'Atrás',
+          headerTitle: t("myRecipes.editPageTitle"),
           headerTitleStyle: {
             ...globalStyles.title,
             fontSize: 20,

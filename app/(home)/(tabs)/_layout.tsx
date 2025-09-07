@@ -10,12 +10,13 @@ import { Colors } from "@/constants/Colors";
 
 // Icon Imports
 import { getFocusedRouteNameFromRoute, Route } from "@react-navigation/native";
-import { BookOpen, Home, UserCircle2 } from "lucide-react-native";
+import { BookOpen, Home, ShoppingCart, UserCircle2 } from "lucide-react-native";
 import { useKeyboardVisible } from "@/hooks/useKeyboardVisible";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
   const isKeyboardVisible = useKeyboardVisible();
-
+  const { t } = useTranslation();
   const getTabBarStyle = (route: Partial<Route<string>>): ViewStyle => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'index';
     
@@ -50,7 +51,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="menu"
           options={{
-            title:"Menú",
+            title: t("tabs.menu"),
             tabBarIcon: ({ focused }) => (
               <Home 
                 size={28}
@@ -64,9 +65,23 @@ export default function TabLayout() {
         <Tabs.Screen
           name="my-recipes"
           options={{
-            title: "Mis recetas",
+            title: t("tabs.myRecipes"),
             tabBarIcon: ({ focused }) => (
               <BookOpen
+                size={28}
+                color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
+                strokeWidth={focused ? 2 : 1.7}
+              />
+            ),
+          }}
+        />
+
+         <Tabs.Screen
+          name="shopping-list/index"
+          options={{
+            title: t("tabs.shoppingList"),
+            tabBarIcon: ({ focused }) => (
+              <ShoppingCart
                 size={28}
                 color={focused ? Colors.colors.primary[200] : Colors.colors.gray[300]}
                 strokeWidth={focused ? 2 : 1.7}
@@ -79,7 +94,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            title: "Perfil",
+            title: t("tabs.profile"),
             tabBarIcon: ({ focused }) => (
               <UserCircle2
                 size={28}

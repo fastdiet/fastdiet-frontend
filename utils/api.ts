@@ -2,10 +2,11 @@ import axios from "axios";
 import { getAccessToken } from "./secureTokens";
 import { refreshAccessToken } from "@/services/refresh";
 import { getBackendUrl } from "@/utils/getBackendUrl";
+import i18n from "@/i18n";
 
 const api = axios.create({
   baseURL: getBackendUrl(),
-  timeout: 10000
+  timeout: 30000
 });
 
 api.interceptors.request.use(
@@ -21,6 +22,11 @@ api.interceptors.request.use(
       }
     }
 
+    const currentLanguage = i18n.language;
+    if (currentLanguage) {
+      config.headers["Accept-Language"] = currentLanguage;
+    }
+
     if (config.data instanceof URLSearchParams) {
       config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     }
@@ -29,10 +35,12 @@ api.interceptors.request.use(
   },
   (error) => {
     if (error.code === "ECONNABORTED") {
-      throw new Error("timeoutError");
+      error.code = "TIMEOUT";
+      return Promise.reject(error);
     }
     if (!error.response) {
-      throw new Error("networkError");
+      error.code = "ERR_NETWORK";
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

@@ -1,5 +1,5 @@
 // React and Expo imports
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,8 @@ import SectionHeader from '@/components/myRecipes/SectionHeader'
 import ErrorText from '@/components/text/ErrorText';
 import IngredientInputList from '@/components/myRecipes/IngredientInputList';
 import StepInputList from '@/components/myRecipes/StepInputList';
+import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
+import CustomRadioGroup from '@/components/forms/CustomRadioGroup';
 
 // Hooks imports
 import { useMyRecipes } from '@/hooks/useMyRecipes';
@@ -28,13 +30,12 @@ import { useFormValidation } from '@/hooks/useFormValidation';
 // Styles imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
+import { ChefHat, List, Utensils } from 'lucide-react-native';
 
 // Models imports
 import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
-import { AlertCircle, ChefHat, List, Utensils } from 'lucide-react-native';
-import RecipePageStatus from '@/components/recipeDetails/RecipePageStatus';
-import CustomRadioGroup from '@/components/forms/CustomRadioGroup';
-import { getDishTypesOptions } from '@/constants/dishTypes';
+import { getMealTypeOptions } from '@/constants/dishTypes';
+
 
 
 const EditRecipeScreen = () => {
@@ -43,12 +44,13 @@ const EditRecipeScreen = () => {
   const { recipeId } = useLocalSearchParams();
   const id = Number(recipeId);
   const { recipe, loading, error, refetch } = useRecipe(id);
-  const { updateRecipe } = useMyRecipes();
+  const { updateRecipe, generateUploadUrl } = useMyRecipes();
   const validations = useValidations();
-  const dishTypeOptions = getDishTypesOptions(t);
+  const dishTypeOptions = useMemo(() => getMealTypeOptions(t), [t]);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
   
-   const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     title: '',
     summary: '',
     readyMin: '',
@@ -72,17 +74,19 @@ const EditRecipeScreen = () => {
         id: nanoid(),
         description: step.step,
       })) ?? [];
-
+       const imageUrl = recipe.image_url || null;
       setFormData({
         title: recipe.title,
         summary: recipe.summary || '',
         readyMin: recipe.ready_min?.toString() || '',
         servings: recipe.servings?.toString() || '',
-        imageUri: recipe.image_url || null,
+        imageUri: imageUrl,
         dishTypes: recipe.dish_types || [],
         ingredients: mappedIngredients.length > 0 ? mappedIngredients : [{ id: nanoid(), name: '', amount: '', unit: '' }],
         steps: mappedSteps.length > 0 ? mappedSteps : [{ id: nanoid(), description: '' }],
       });
+
+      setOriginalImageUrl(imageUrl);
     }
   }, [recipe]);
 
@@ -117,44 +121,87 @@ const EditRecipeScreen = () => {
     if (!recipeId) return;
 
     const isValid = validateForm(formData);
-    //TODO TOAST
     if (!isValid) {
-      Toast.show({ type: 'error', text1: 'Revisa el formulario', text2: 'Algunos campos tienen errores.'});
+      Toast.show({ type: 'error', text1: t("errorsFrontend.reviewForm"), text2: t("errorsFrontend.someInvalidFields")});
       return;
     }
 
     setIsUpdating(true);
-    const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
-    const validSteps = formData.steps.filter(s => s.description.trim());
+    try {
+      let finalImageUrl: string | null | undefined = undefined;
+      const isNewImage = formData.imageUri && formData.imageUri !== originalImageUrl;
+      const isImageRemoved = !formData.imageUri && originalImageUrl;
 
-    const recipeData: RecipeCreationData = {
-      title: formData.title.trim(),
-      summary: formData.summary.trim() || undefined,
-      ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
-      servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
-      ingredients: validIngredients.map(ing => ({
-        name: ing.name.trim(),
-        amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
-        unit: ing.unit ? ing.unit.trim() : undefined,
-      })),
-      dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
-      image_url: formData.imageUri || null,
-      analyzed_instructions: validSteps.length > 0 ? validSteps.map((s, index) => ({
-        number: index + 1,
-        step: s.description.trim(),
-        ingredients: [],
-        equipment: [],
-      })) : undefined,
-    };
+       if (isNewImage) {
+        if (!formData.imageUri) {
+          throw new Error("Image URI is null.");
+        }
+        const fileName = formData.imageUri.split('/').pop();
+        if (!fileName) {
+          throw new Error("Could not determine the file name from the URI.");
+        }
 
-    const { success, error } = await updateRecipe(id, recipeData);
+        const { signed_url, public_url, content_type } = await generateUploadUrl(fileName);
+        const response = await fetch(formData.imageUri);
+        const imageBlob = await response.blob();
+        
+        const uploadResponse = await fetch(signed_url, {
+          method: 'PUT',
+          headers: { 'Content-Type': content_type },
+          body: imageBlob,
+        });
 
-    if (success) {
-      Toast.show({ type: 'success', text1: t('myRecipes.edit.success')});
-      router.back();
-    } else {
+        if (!uploadResponse.ok) {
+          const errorText = await uploadResponse.text();
+          console.error("GCS Upload Error:", errorText);
+          throw new Error('Error in the image upload');
+        }
+        
+        finalImageUrl = public_url;
+      
+      } else if (isImageRemoved) {
+        finalImageUrl = null;
+      }
+
+      const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
+      const validSteps = formData.steps.filter(s => s.description.trim());
+      
+      const recipeData: Partial<RecipeCreationData> = {
+        title: formData.title.trim(),
+        summary: formData.summary.trim() || undefined,
+        ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
+        servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
+        ingredients: validIngredients.map(ing => ({
+          name: ing.name.trim(),
+          amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
+          unit: ing.unit ? ing.unit.trim() : undefined,
+        })),
+        dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
+        analyzed_instructions: validSteps.length > 0 ? validSteps.map((s, index) => ({
+          number: index + 1,
+          step: s.description.trim(),
+          ingredients: [],
+          equipment: [],
+        })) : undefined,
+      };
+
+      if (finalImageUrl !== undefined) {
+        recipeData.image_url = finalImageUrl;
+      }
+
+      const { success, error } = await updateRecipe(id, recipeData);
+
+      if (success) {
+        Toast.show({ type: 'success', text1: t('myRecipes.edit.success')});
+        router.back();
+      } else {
+        Toast.show({ type: 'error', text1: t("error"), text2: error?.message });
+      }
+    } catch (err) {
+      console.error("Error updating the recipe:", err);
+      Toast.show({ type: 'error', text1: t("error"), text2: t("errorsFrontend.recipeNotSaved") });
+    } finally {
       setIsUpdating(false);
-      Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? ""});
     }
   };
 
@@ -216,21 +263,21 @@ const EditRecipeScreen = () => {
                   <View style={styles.rowInputs}>
                      <View style={{flex: 1}}>
                         <LabeledTextInput
-                            label={t('myRecipes.form.prepTime')}
-                            keyboardType="numeric"
-                            value={formData.readyMin}
-                            onChangeText={(text) => handleInputChange('readyMin', text)}
-                            placeholder={t('myRecipes.form.minutes')}
-                            errorMessage={errors.readyMin}
+                          label={t('myRecipes.form.prepTime')}
+                          keyboardType="numeric"
+                          value={formData.readyMin}
+                          onChangeText={(text) => handleInputChange('readyMin', text)}
+                          placeholder={t('myRecipes.form.minutes')}
+                          errorMessage={errors.readyMin}
                         />
                      </View>
                      <View style={{flex: 1}}>
                         <LabeledTextInput
-                            label={t('myRecipes.form.servings')}
-                            keyboardType="numeric"
-                            value={formData.servings}
-                            onChangeText={(text) => handleInputChange('servings', text)}
-                            errorMessage={errors.servings}
+                          label={t('myRecipes.form.servings')}
+                          keyboardType="numeric"
+                          value={formData.servings}
+                          onChangeText={(text) => handleInputChange('servings', text)}
+                          errorMessage={errors.servings}
                         />
                      </View>
                   </View>

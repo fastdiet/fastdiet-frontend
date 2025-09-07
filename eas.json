@@ -1,7 +1,7 @@
 {
   "cli": {
-    "version": ">= 16.13.4",
-    "appVersionSource": "remote"
+    "version": ">= 9.0.0",
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
@@ -9,10 +9,22 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api-de-produccion.tu-dominio.com" 
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api-de-produccion.tu-dominio.com"
+      },
+      "android": {
+        "buildType": "aab"
+      },
+      "ios": {
+        "image": "latest" 
+      }
     }
   },
   "submit": {

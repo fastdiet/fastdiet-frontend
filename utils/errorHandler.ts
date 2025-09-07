@@ -22,6 +22,7 @@ const backendErrorMap: Record<string, string> = {
   CANNOT_DELETE_IMPORTED_RECIPE: "errorsBackend.cannotDeleteImportedRecipe",
   MEAL_ITEM_NOT_FOUND: "errorsBackend.mealItemNotFound",
   MEAL_PLAN_GENERATION_FAILED: "errorsBackend.mealPlanGenerationFailed",
+  PREFERENCES_TOO_STRICT: "errorsBackend.preferencesTooStrict",
   USER_PREFERENCES_NOT_FOUND: "errorsBackend.userPreferencesNotFound",
 
   CUISINE_REGIONS_NOT_FOUND: "errorsBackend.cuisineRegionsNotFound",
@@ -34,18 +35,27 @@ const backendErrorMap: Record<string, string> = {
 
 export const handleApiError = (error: unknown, defaultMessageKey = "errorsBackend.genericError"): ApiError => {
   if (axios.isAxiosError(error)) {
-    const detail = error.response?.data?.detail;
-
-    if (detail && typeof detail === "object" && "code" in detail && "message" in detail) {
-      const code = detail.code;
-      const translationKey = backendErrorMap[code] || defaultMessageKey;
-
-      if (code === "DUPLICATED_INGREDIENT" && detail.ingredient) {
-        return { code, message: i18n.t(translationKey, { ingredient: detail.ingredient }),};
-      }
-
-      return {code, message: i18n.t(translationKey),};
+    if (error.code === 'ECONNABORTED') {
+      return { code: 'TIMEOUT', message: i18n.t("errorsBackend.timeoutError") };
     }
+    if (error.code === 'ERR_NETWORK') {
+      return { code: 'NETWORK_ERROR', message: i18n.t("errorsBackend.serverError") };
+    }
+    if(error.response){
+      const detail = error.response?.data?.detail;
+
+      if (detail && typeof detail === "object" && "code" in detail && "message" in detail) {
+        const code = detail.code;
+        const translationKey = backendErrorMap[code] || defaultMessageKey;
+
+        if (code === "DUPLICATED_INGREDIENT" && detail.ingredient) {
+          return { code, message: i18n.t(translationKey, { ingredient: detail.ingredient }),};
+        }
+
+        return {code, message: i18n.t(translationKey),};
+      }
+    }
+   
   }
 
   return {code: null, message: i18n.t(defaultMessageKey),};

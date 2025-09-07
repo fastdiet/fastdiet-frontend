@@ -1,4 +1,4 @@
-import { MealPlan, RecipeDetail, RecipeShort } from "@/models/mealPlan";
+import { MealPlan, RecipeShort } from "@/models/mealPlan";
 import { UserPreferences } from "@/models/user_preferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

@@ -3,33 +3,31 @@ import { Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 
-// TODO REVIEW TYPE TO REUSE
-type MealTypeFilter = 'all' | 'breakfast' | 'lunch' | 'dinner';
 
 interface FilterTabsProps {
-  options: { label: string; value: MealTypeFilter }[];
-  selectedValue: MealTypeFilter;
-  onSelect: (value: MealTypeFilter) => void;
+  options: { label: string; value: string }[];
+  selectedValue: string;
+  onSelect: (value: string) => void;
 }
 
 const FilterTabs: React.FC<FilterTabsProps> = ({ options, selectedValue, onSelect }) => {
   return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
-        {options.map((option) => {
-          const isSelected = option.value === selectedValue;
-          return (
-            <TouchableOpacity
-              key={option.value}
-              onPress={() => onSelect(option.value)}
-              style={[styles.tab, isSelected && styles.selectedTab]}
-            >
-              <Text style={[styles.tabText, isSelected && styles.selectedTabText]}>
-                {option.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+      {options.map((option) => {
+        const isSelected = option.value === selectedValue;
+        return (
+          <TouchableOpacity
+            key={option.value}
+            onPress={() => onSelect(option.value)}
+            style={[styles.tab, isSelected && styles.selectedTab]}
+          >
+            <Text style={[styles.tabText, isSelected && styles.selectedTabText]}>
+              {option.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
   );
 };
 

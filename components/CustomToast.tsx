@@ -3,7 +3,7 @@ import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
-import { AlertCircle, CheckCircle } from 'lucide-react-native';
+import { AlertCircle, CheckCircle, Info } from 'lucide-react-native';
 
 interface CustomToastProps {
   text1?: string;
@@ -21,6 +21,17 @@ const SuccessToast = ({ text1, text2 }: CustomToastProps) => (
   </View>
 );
 
+const InfoToast = ({ text1, text2 }: CustomToastProps) => (
+  <View style={[styles.base, styles.infoBase]}>
+    <Info size={24} color={Colors.colors.accent[100]} style={styles.icon} />
+    <View style={styles.textContainer}>
+      {text1 && <Text style={styles.text1}>{text1}</Text>}
+      {text2 && <Text style={styles.text2}>{text2}</Text>}
+    </View>
+  </View>
+);
+
+
 const ErrorToastCustom = ({ text1, text2 }: CustomToastProps) => (
   <View style={[styles.base, styles.errorBase]}>
     <AlertCircle size={24} color={Colors.colors.error[100]} style={styles.icon} />
@@ -34,6 +45,7 @@ const ErrorToastCustom = ({ text1, text2 }: CustomToastProps) => (
 const toastConfig = {
   success: (props: CustomToastProps) => <SuccessToast {...props} />,
   error: (props: CustomToastProps) => <ErrorToastCustom {...props} />,
+  info: (props: CustomToastProps) => <InfoToast {...props} />,
 };
 
 export const AppToast = () => {
@@ -67,6 +79,9 @@ const styles = StyleSheet.create({
   },
   errorBase: {
     backgroundColor: Colors.colors.error[400]
+  },
+  infoBase: {
+    backgroundColor: Colors.colors.accent[400]
   },
   icon: {
     marginRight: 12,

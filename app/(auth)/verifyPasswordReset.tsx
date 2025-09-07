@@ -10,6 +10,7 @@ import ConfirmationCodeForm from "@/components/forms/ConfirmationCodeForm";
 import {useFormValidation} from "@/hooks/useFormValidation";
 import { useValidations } from "@/hooks/useValidations";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 export default function VerifyPasswordResetScreen() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function VerifyPasswordResetScreen() {
   const [resendLoading, setResendLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const {verifyPasswordResetCode, sendPasswordResetCode, emailReset } = useAuth();
-  
+  const { t } =  useTranslation();
   const validations = useValidations();
   const { errors, validateForm } = useFormValidation({
     code: validations.confirmationCode,
@@ -35,7 +36,9 @@ export default function VerifyPasswordResetScreen() {
       setLoading(false);
       return;
     }
-    router.push("/resetPassword");
+    
+    Toast.show({type: "success", text1: t("auth.verifyCode.codeVerified"), text2: t("auth.verifyCode.establishNewPassword"),});
+    router.replace("/resetPassword");
     
   };
 
@@ -45,9 +48,9 @@ export default function VerifyPasswordResetScreen() {
 
     const { success, error } = await sendPasswordResetCode(emailReset);
     if (success) {
-      Toast.show({type: "success", text1: "Código reenviado", text2: "Se ha enviado un nuevo código a tu correo.",});
+      Toast.show({type: "success", text1: t("auth.verifyCode.codeResent"), text2: t("auth.verifyCode.codeResentDescription"),});
     } else {
-      Toast.show({type: "error", text1: "Error", text2: error?.message ?? "",});
+      Toast.show({type: "error", text1: t("error"), text2: error?.message ?? "",});
     }
     setResendLoading(false);
   };

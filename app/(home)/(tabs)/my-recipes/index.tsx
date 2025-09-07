@@ -16,10 +16,11 @@ import { useMyRecipes } from '@/hooks/useMyRecipes';
 // Styles imports
 import { Colors } from '@/constants/Colors';
 import globalStyles from '@/styles/global';
-import { BookOpen, Plus } from 'lucide-react-native';
+import { BookOpen, Plus, Search } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import FilterTabs from '@/components/myRecipes/FilterTabs';
 import SearchInput from '@/components/forms/SearchInput';
+import { getMealTypeDetails, getMealTypeOptions, MealType } from '@/constants/dishTypes';
 
 
 
@@ -31,7 +32,7 @@ const MyRecipesScreen = () => {
   const TAB_BAR_HEIGHT = 68;
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedMealType, setSelectedMealType] = useState<'all' | 'breakfast' | 'lunch' | 'dinner'>('all');
+  const [selectedMealType, setSelectedMealType] = useState<'all' | MealType>('all');
 
   const recipesMatchingMealType = useMemo(() => {
     if (selectedMealType === 'all') {
@@ -51,12 +52,7 @@ const MyRecipesScreen = () => {
     );
   }, [recipesMatchingMealType, searchQuery]);
 
-  const filterOptions = [
-    { label: t('all'), value: 'all' as const },
-    { label: t('constants.meals.breakfast'), value: 'breakfast' as const },
-    { label: t('constants.meals.lunch'), value: 'lunch' as const },
-    { label: t('constants.meals.dinner'), value: 'dinner' as const },
-  ];
+  const filterOptions = useMemo(() => getMealTypeOptions(t, true), [t]);
 
   const handleAddNewRecipe = () => router.push('/(home)/(tabs)/my-recipes/create');
   const handleEditRecipe = (recipeId: number) => {
@@ -104,8 +100,9 @@ const MyRecipesScreen = () => {
   }
 
   if (recipesMatchingMealType.length === 0 && !searchQuery && selectedMealType !== 'all') {
-      const genderContext = selectedMealType === 'dinner' ? 'female' : 'male';
-      const mealTypeTranslation = t(`constants.meals.${selectedMealType}`);
+      const mealTypeDetails = getMealTypeDetails(selectedMealType);
+      const genderContext = mealTypeDetails.gender || 'male';
+      const mealTypeTranslation = t(mealTypeDetails.labelKey);
 
       return (
         <View style={styles.centeredContainer}>
@@ -126,7 +123,7 @@ const MyRecipesScreen = () => {
   return (
     <View style={styles.centeredContainer}>
       <View style={styles.iconCircle}>
-        <BookOpen size={50} color={Colors.colors.primary[200]} strokeWidth={1.5} />
+        <Search size={50} color={Colors.colors.primary[200]} strokeWidth={1.5} />
       </View>
         <Text style={styles.emptyStateTitle}>{t('myRecipes.emptyState.noSearchResults.title')}</Text>
         <Text style={styles.emptyStateText}>{t('myRecipes.emptyState.noSearchResults.subtitle')}</Text>

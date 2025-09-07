@@ -1,7 +1,7 @@
 // React & React Native Imports
 import { View, StyleSheet, ScrollView } from "react-native";
-import { useRef, useState } from "react";
-import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 // Component Imports
 import PaddingView from "@/components/views/PaddingView";
@@ -25,11 +25,19 @@ export default function SelectActivityScreen() {
   const { t } = useTranslation();
   const [activityLevel, setActivityLevel] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { selectActivity } = useAuth();
+  const { selectActivity, userPreferences } = useAuth();
   const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
 
   const activityOptions = getActivityOptions(t);
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+  const isEditMode = edit === 'true';
+
+  useEffect(() => {
+    if (isEditMode && userPreferences?.activity_level) {
+      setActivityLevel(userPreferences.activity_level || "");
+    }
+  }, [isEditMode, userPreferences]); 
 
   const handleContinue = async () => {
     setErrorMessage("");
@@ -48,8 +56,14 @@ export default function SelectActivityScreen() {
       return;
     }
 
-    router.push("/complete-register/selectGoal");
     setLoading(false);
+
+    const nextRoute = "/complete-register/selectGoal";
+    if (isEditMode) {
+      router.push(`${nextRoute}?edit=true`);
+    } else {
+      router.push(nextRoute);
+    }
   };
 
   return (
@@ -63,11 +77,13 @@ export default function SelectActivityScreen() {
           <PaddingView>
             <ViewForm>
               <TitleParagraph
-                title={t("auth.completeRegister.activity.titleParagraph.title")}
-                paragraph={t(
-                  "auth.completeRegister.activity.titleParagraph.paragraph"
-                )}
-              />
+                  title={isEditMode 
+                    ? t("profile.edit.activity.title") 
+                    : t("auth.completeRegister.activity.titleParagraph.title")}
+                  paragraph={isEditMode 
+                    ? t("profile.edit.activity.paragraph")
+                    : t("auth.completeRegister.activity.titleParagraph.paragraph")}
+                />
               {errorMessage ? <ErrorText text={errorMessage} /> : null}
               <StyledRadioButtonList
                 options={activityOptions}

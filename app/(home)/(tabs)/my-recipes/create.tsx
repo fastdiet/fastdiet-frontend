@@ -1,5 +1,5 @@
 // React and Expo imports
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -31,17 +31,17 @@ import { Colors } from '@/constants/Colors';
 import { FormInputIngredient, FormInputStep, RecipeCreationData } from '@/models/recipeInput';
 import { ChefHat, List, Utensils } from 'lucide-react-native';
 import CustomRadioGroup from '@/components/forms/CustomRadioGroup';
-import { getDishTypesOptions } from '@/constants/dishTypes';
+import { getMealTypeOptions } from '@/constants/dishTypes';
 
 
 const CreateRecipeScreen = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { createRecipe } = useMyRecipes();
+  const { createRecipe, generateUploadUrl } = useMyRecipes();
   const validations = useValidations();
   const [loading, setLoading] = useState(false);
 
-  const dishTypeOptions = getDishTypesOptions(t);
+  const dishTypeOptions = useMemo(() => getMealTypeOptions(t), [t]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -83,54 +83,77 @@ const CreateRecipeScreen = () => {
   const handleSaveRecipe = async () => {
    const isValid = validateForm(formData);
     if (!isValid) {
-      Toast.show({ type: 'error', text1: 'Revisa el formulario', text2: 'Algunos campos tienen errores.'});
+      Toast.show({ type: 'error', text1: t("errorsFrontend.reviewForm"), text2: t("errorsFrontend.someInvalidFields")});
       return;
     }
 
-    // 1. Lógica de subida de imagen (a futuro)
-    // setLoading(true); // Activar el loading ANTES de cualquier operación async
-    // let finalImageUrl = null;
-    // try {
-    //   if (formData.imageUri) {
-    //     // y devuelve la URL pública.
-    //     finalImageUrl = await uploadImage(formData.imageUri);
-    //   }
-    // } catch (uploadError) {
-    //   setLoading(false);
-    //   Toast.show({ type: 'error', text1: 'Error al subir la imagen' });
-    //   return;
-    // }
-
     setLoading(true);
-    const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
-    const validSteps = formData.steps.filter(s => s.description.trim());
-    const recipeData: RecipeCreationData = {
-      title: formData.title.trim(),
-      summary: formData.summary.trim() || undefined,
-      ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
-      servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
-      dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
-      ingredients: validIngredients.map(ing => ({
-        name: ing.name.trim(),
-        amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
-        unit: ing.unit ? ing.unit.trim() : undefined,
-      })),
-      image_url: formData.imageUri || null,
-      analyzed_instructions: validSteps.map((s, index) => ({
-        number: index + 1,
-        step: s.description.trim(),
-        ingredients: [],
-        equipment: [],
-      }))
-    };
-    const { success, error } = await createRecipe(recipeData);
+    
 
-    if (success) {
-      Toast.show({ type: 'success', text1: t('myRecipes.create.success')});
-      router.replace('/my-recipes');
-    } else {
+    try {
+      let finalImageUrl: string | null = null;
+      if (formData.imageUri) {
+        const fileName = formData.imageUri.split('/').pop();
+        if (!fileName) {
+          throw new Error("Could not determine the file name from the URI.");
+        }
+
+        const { signed_url, public_url, content_type } = await generateUploadUrl(fileName);
+        const response = await fetch(formData.imageUri);
+        const imageBlob = await response.blob();
+        
+        const uploadResponse = await fetch(signed_url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': content_type,
+          },
+          body: imageBlob,
+        });
+
+        if (!uploadResponse.ok) {
+          const errorText = await uploadResponse.text();
+          console.error("GCS Upload Error:", errorText);
+          throw new Error('Error in the image updload');
+        }
+        
+        finalImageUrl = public_url;
+      }
+    
+      const validIngredients = formData.ingredients.filter(ing => ing.name.trim() && ing.amount.trim());
+      const validSteps = formData.steps.filter(s => s.description.trim());
+      const recipeData: RecipeCreationData = {
+        title: formData.title.trim(),
+        summary: formData.summary.trim() || undefined,
+        ready_min: formData.readyMin ? parseInt(formData.readyMin, 10) : undefined,
+        servings: formData.servings ? parseInt(formData.servings, 10) : undefined,
+        dish_types: formData.dishTypes.length > 0 ? formData.dishTypes : undefined,
+        ingredients: validIngredients.map(ing => ({
+          name: ing.name.trim(),
+          amount: ing.amount ? parseFloat(ing.amount.replace(',', '.')) : 0,
+          unit: ing.unit ? ing.unit.trim() : undefined,
+        })),
+        image_url: finalImageUrl,
+        analyzed_instructions: validSteps.map((s, index) => ({
+          number: index + 1,
+          step: s.description.trim(),
+          ingredients: [],
+          equipment: [],
+        }))
+      };
+      
+      const { success, error } = await createRecipe(recipeData);
+
+      if (success) {
+        Toast.show({ type: 'success', text1: t('myRecipes.create.success')});
+        router.replace('/my-recipes');
+      } else {
+        Toast.show({ type: 'error', text1: t("error"), text2: error?.message });
+      }
+    } catch (err) {
+      console.error("Error creating the recipe:", err);
+      Toast.show({ type: 'error', text1: t("error"), text2: t("errorsFrontend.recipeNotSaved") });
+    } finally {
       setLoading(false);
-      Toast.show({ type: 'error', text1: t('error'), text2: error?.message ?? ""});
     }
   };
 

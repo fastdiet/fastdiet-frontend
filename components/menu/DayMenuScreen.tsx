@@ -21,6 +21,7 @@ import { RecipeShort, SlotMeal } from "@/models/mealPlan";
 import { useMenu } from "@/hooks/useMenu";
 import { fetchRecipeSuggestions } from "@/services/recipeSuggestions";
 import { PlusCircle } from "lucide-react-native";
+import AddExtraMealTypeModal from "./AddExtraMealTypeModal";
 
 
 
@@ -33,76 +34,60 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
   const { menu, updateMealRecipe, addMealRecipe, deleteMeal } = useMenu();
   const router = useRouter();
 
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [isChangeModalVisible, setChangeModalVisible] = useState<boolean>(false);
   const [activeChangeSlot, setActiveChangeSlot] = useState<SlotMeal | null>(null);
+  const [isExtraTypeModalVisible, setExtraTypeModalVisible] = useState<boolean>(false);
 
   const [suggestions, setSuggestions] = useState<RecipeShort[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState<boolean>(false);
+   const [modalMode, setModalMode] = useState<'add' | 'change'>('change');
 
-  const mealsConfig = useMemo(() => [
-    { key: "breakfast", slot: 0, label: t("constants.meals.breakfast"), noMealText: t("index.menu.day.noBreakfastPlanned") },
-    { key: "lunch", slot: 1, label: t("constants.meals.lunch"), noMealText: t("index.menu.day.noLunchPlanned") },
-    { key: "dinner", slot: 2, label: t("constants.meals.dinner"), noMealText: t("index.menu.day.noDinnerPlanned") },
-  ], [t]);
 
   const dayData = useMemo(() => {
-    return menu?.days.find(day => day.day === dayIndex)?.meals || null;
+    return menu?.days.find(day => day.day === dayIndex)?.meals.sort((a, b) => a.slot - b.slot) || null;
   }, [menu, dayIndex]);
 
 
-  const navigateToRecipeDetail = (recipe: RecipeShort, slot: number) => {
+  const navigateToRecipeDetail = (recipe: RecipeShort, slot: number, mealType: string) => {
     if (recipe && recipe.id) {
       router.push({
         pathname: "/(home)/(tabs)/menu/recipe/[recipeId]",
-        params: { recipeId: recipe.id.toString(), day: dayIndex.toString(), slot: slot.toString() }
+        params: { recipeId: recipe.id.toString(), day: dayIndex.toString(), slot: slot.toString(), mealType: mealType }
       });
     }
   };
 
-  const handleAddRecipeRequest = (mealKey: string, slot: number) => {
-    const mockSlotData: SlotMeal = {
-      slot: slot,
-      meal_item_id: 0,
-      recipe: null,
-    };
+  const handleChangeRecipeRequest = async (slotData: SlotMeal) => {
 
-    handleChangeRecipeRequest(mockSlotData, mealKey, slot);
-  };
-
-  const handleChangeRecipeRequest = async (slotData: SlotMeal, mealKey?: string, slot?: number) => {
-
+    const isAdding = !slotData.recipe;
+    setModalMode(isAdding ? 'add' : 'change');
     setIsLoadingSuggestions(true);
     setActiveChangeSlot(slotData);
-    setModalVisible(true);
+    setChangeModalVisible(true);
 
-    let apiResponse;
-    if (slotData.recipe && slotData.meal_item_id) {
-      apiResponse = await fetchRecipeSuggestions({ meal_item_id: slotData.meal_item_id });
-    } else {
-      apiResponse= await fetchRecipeSuggestions({ dayIndex: dayIndex, slot: slot });
-    }
+    const params = slotData.recipe && slotData.meal_item_id
+      ? { meal_item_id: slotData.meal_item_id }
+      : { dayIndex: dayIndex, slot: slotData.slot, mealType: slotData.meal_type };
 
-    const { success, error, data } = apiResponse;
+    const { success, error, data } = await fetchRecipeSuggestions(params);
 
     if (success && data) {
       setSuggestions(data);
+      setIsLoadingSuggestions(false);
     } else {
-      Toast.show({ type: 'error', text1: error?.message || t("errors.generic") });
+      setChangeModalVisible(false);
+      Toast.show({ type: 'error', text1: t("error"), text2: error?.message });
+      setIsLoadingSuggestions(false);
       setSuggestions([]);
     }
-    
-    setIsLoadingSuggestions(false);
   };
 
   const handleRecipeSelection = async (newRecipe : RecipeShort) => {
     if (!activeChangeSlot) return;
 
-    let apiResponse;
-    if (activeChangeSlot.recipe && activeChangeSlot.meal_item_id) {
-      apiResponse = await updateMealRecipe(dayIndex, activeChangeSlot, newRecipe);
-    } else {
-      apiResponse = await addMealRecipe(dayIndex, activeChangeSlot.slot, newRecipe);
-    }
+    const apiResponse = activeChangeSlot.meal_item_id
+      ? await updateMealRecipe(dayIndex, activeChangeSlot, newRecipe)
+      : await addMealRecipe(dayIndex, activeChangeSlot.slot, activeChangeSlot.meal_type, newRecipe);
 
     if (apiResponse.success) {
       Toast.show({ type: 'success', text1: t('index.menu.changeMeal.success') });
@@ -113,14 +98,32 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
         text2: apiResponse.error?.message || '',
       });
     }
-    closeModal()
+    closeChangeModal()
+  };
+
+  const handleExtraMealTypeSelected = async (mealType: string) => {
+    setExtraTypeModalVisible(false);
+
+    const nextSlot = dayData && dayData.length > 0
+      ? Math.max(...dayData.map(m => m.slot)) + 1
+      : 3;
+
+    const mockSlotData: SlotMeal = {
+      slot: nextSlot,
+      meal_item_id: null,
+      recipe: null,
+      meal_type: mealType
+    };
+    
+    await handleChangeRecipeRequest(mockSlotData);
   };
 
 
-  const closeModal = () => {
-    setModalVisible(false);
+  const closeChangeModal = () => {
+    setChangeModalVisible(false);
     setActiveChangeSlot(null);
     setSuggestions([]);
+    setIsLoadingSuggestions(false);
   };
 
   const deleteRecipe = (slotMeal: SlotMeal) => {
@@ -133,7 +136,7 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
           text: t('delete'),
           style: 'destructive',
           onPress: async () => {
-            const { success, error } = await deleteMeal(slotMeal.meal_item_id);
+            const { success, error } = await deleteMeal(slotMeal.meal_item_id!);
             if (success) {
               Toast.show({ type: 'success', text1: t('index.menu.deleteMeal.success') });
             } else {
@@ -144,6 +147,15 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
       ]
     );
   };
+
+  const getEmptyMealTextKey = (mealType: string): string => {
+    const keyMap: { [key: string]: string } = {
+      'breakfast': 'index.menu.day.noBreakfastPlanned',
+      'lunch': 'index.menu.day.noLunchPlanned',
+      'dinner': 'index.menu.day.noDinnerPlanned',
+    };
+    return keyMap[mealType] || 'index.menu.day.addExtraMeal';
+  };
   
 
   return (
@@ -151,49 +163,58 @@ const DayMenuScreen: React.FC<DayMenuScreenProps> = ({ dayIndex }) => {
       <ScrollView contentContainerStyle={styles.scrollContentContainer}>
         <PaddingView>
           <View style={styles.mealCardsContainer}>
-            {mealsConfig.map((meal) => {
-              const slotData = dayData?.find(r => r.slot === meal.slot) || null;
-              const recipe = slotData?.recipe || null;
+            {dayData?.map((meal) => (
+              meal.recipe ? (
+                <MealCard
+                  key={`meal_item_${meal.meal_item_id}`}
+                  mealType={meal.meal_type}
+                  mealTypeDisplay={t(`constants.meals.${meal.meal_type}`)}
+                  recipe={meal.recipe}
+                  onPress={() => navigateToRecipeDetail(meal.recipe!, meal.slot, meal.meal_type)}
+                  onChange={() => handleChangeRecipeRequest(meal)}
+                  onDelete={() => deleteRecipe(meal)}
+                />
+              ) : (
+                <TouchableOpacity 
+                  key={`empty_slot_${meal.slot}`}
+                  style={styles.noMealCard}
+                  onPress={() => handleChangeRecipeRequest(meal)}
+                  activeOpacity={0.7}
+                >
+                  <PlusCircle size={32} color={Colors.colors.gray[400]} strokeWidth={1.5} />
+                  <Text style={styles.noMealText}>{t(getEmptyMealTextKey(meal.meal_type))}</Text>
+                </TouchableOpacity>
+              )
+            ))}
 
-              return (recipe && slotData) ?
-                (
-                  <MealCard
-                    key={meal.key}
-                    mealTypeKey={meal.key as "breakfast" | "lunch" | "dinner"}
-                    mealTypeDisplay={meal.label}
-                    recipe={recipe}
-                    onPress={() => navigateToRecipeDetail(recipe, meal.slot)}
-                    onChange={() => handleChangeRecipeRequest(slotData)}
-                    onDelete={() => deleteRecipe(slotData)}
-                  />
-                )
-              : (
-                  <TouchableOpacity 
-                    key={meal.key} 
-                    style={styles.noMealCard}
-                    onPress={() => handleAddRecipeRequest(meal.key, meal.slot)}
-                    activeOpacity={0.7}
-                  >
-                    <PlusCircle size={32} color={Colors.colors.gray[400]} strokeWidth={1.5} />
-                    <Text style={styles.noMealText}>{meal.noMealText}</Text>
-                  </TouchableOpacity>
-                );
-              }
-            )}
+            <TouchableOpacity 
+              style={styles.noMealCard}
+              onPress={() => setExtraTypeModalVisible(true)}
+              activeOpacity={0.7}
+            >
+              <PlusCircle size={32} color={Colors.colors.gray[400]} strokeWidth={1.5} />
+              <Text style={styles.noMealText}>{t("index.menu.day.addExtraMeal")}</Text>
+            </TouchableOpacity>
             
           </View>
         </PaddingView>
       </ScrollView>
       {activeChangeSlot && (
         <ChangeRecipeModal
-          isVisible={isModalVisible}
-          onClose={closeModal}
+          isVisible={isChangeModalVisible}
+          onClose={closeChangeModal}
           activeChangeSlot={activeChangeSlot} 
           onRecipeSelected={handleRecipeSelection}
           suggestions={suggestions}
           isLoading={isLoadingSuggestions}
+          mode={modalMode}
         />
       )}
+      <AddExtraMealTypeModal
+        isVisible={isExtraTypeModalVisible}
+        onClose={() => setExtraTypeModalVisible(false)}
+        onSelectType={handleExtraMealTypeSelected}
+      />
     </View>
   );
 };

@@ -16,7 +16,7 @@ interface MenuContextType {
   deleteMeal: (mealItemId: number) => Promise<ApiResponse>;
   removeRecipeFromPlan: (recipeIdToRemove: number) => void;
   updateMealRecipe: (dayIndex: number, slotMealToChange: SlotMeal, newRecipe: RecipeShort) => Promise<ApiResponse>;
-  addMealRecipe: (dayIndex: number, slot: number, newRecipe: RecipeShort) => Promise<ApiResponse>;
+  addMealRecipe: (dayIndex: number, slot: number, mealType: string, newRecipe: RecipeShort) => Promise<ApiResponse>;
   fetchMenuFromServer: (isSilentRefresh?: boolean) => Promise<void>;
 }
 
@@ -90,21 +90,23 @@ export const MenuProvider: React.FC<{ children: ReactNode }> = ({
   }, [user, initialLoadComplete, loading]);
 
 
-  const generateMenu = async () => {
+  const generateMenu = async (): Promise<ApiResponse> => {
     try {
-      const { data: menuData } = await api.post("/meal_plans/generate");
-      setMenu(menuData);
-      await saveMenu(menuData);
-      return { success: true, error: null};
+      const response = await api.post("/meal_plans/generate");
+      setMenu(response.data.meal_plan);
+      await saveMenu(response.data.meal_plan);
+      return { success: true, data: response.data, error: null};
     } catch (error) {
       return {success: false, error: handleApiError(error)};
     }
   };
 
   const updateMealRecipe = async (dayIndex: number, slotMealToChange: SlotMeal, newRecipe: RecipeShort): Promise<ApiResponse> => {
-    //TODO NO MENU AVAILABLE
-    if (!menu) return { success: false, error: {code: null, message: "No menu available"} };
+    if (!menu) {
+      return { success: false, error: { code: null, message: "No menu available" } };
+    }
     const originalMenu = JSON.parse(JSON.stringify(menu));
+    
     try {
       const updatedDays = menu.days.map((dayGroup) => {
         if (dayGroup.day !== dayIndex) {
@@ -135,45 +137,62 @@ export const MenuProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const addMealRecipe = async (dayIndex: number, slot: number, newRecipe: RecipeShort): Promise<ApiResponse> => {
+  const addMealRecipe = async (dayIndex: number, slot: number, mealType: string, newRecipe: RecipeShort): Promise<ApiResponse> => {
     if (!menu) return { success: false, error: {code: null, message: "No menu available"} };
     const originalMenu = JSON.parse(JSON.stringify(menu));
 
-    const tempMealItemId = Date.now();
-    const tempNewMealItem: SlotMeal = {
-      meal_item_id: tempMealItemId,
-      recipe: newRecipe,
-      slot: slot,
-    };
-
+    const tempItemId = Date.now()
+    let mealAddedOrUpdated = false;
     const updatedDays = menu.days.map(day => {
       if (day.day !== dayIndex) return day;
-      return { ...day, meals: [...day.meals, tempNewMealItem] };
+
+      const updatedMeals = day.meals.map(meal => {
+        if (meal.slot === slot) {
+          mealAddedOrUpdated = true;
+          return { ...meal, recipe: newRecipe, meal_type: mealType, meal_item_id: tempItemId };
+        }
+          return meal;
+      });
+        
+      if (!mealAddedOrUpdated) {
+        updatedMeals.push({ meal_item_id: tempItemId, slot: slot, meal_type: mealType, recipe: newRecipe });
+      }
+      return { ...day, meals: updatedMeals };
     });
-    
-    const updatedMenu: MealPlan = { ...menu, days: updatedDays };
-    setMenu(updatedMenu);
+    setMenu({ ...menu, days: updatedDays });
 
     try {
       const { data: finalNewMealItem } = await api.post<SlotMeal>(`/meal_plans/meal_items`, {
         meal_plan_id: menu.id,
         day_index: dayIndex,
         slot: slot,
-        recipe_id: newRecipe.id
+        recipe_id: newRecipe.id,
+        meal_type: mealType
       });
 
-     const finalUpdatedDays = updatedMenu.days.map(day => {
+      const finalMenuState: MealPlan = { ...menu, days: originalMenu.days };
+      const finalUpdatedDays = finalMenuState.days.map(day => {
         if (day.day !== dayIndex) return day;
-        return {
-          ...day,
-          meals: day.meals.map(meal => meal.meal_item_id === tempMealItemId ? finalNewMealItem : meal),
-        };
+          
+        let mealReplaced = false;
+        const finalMeals = day.meals.map((m) => {
+          if (m.slot === slot) {
+            mealReplaced = true;
+            return finalNewMealItem;
+          }
+          return m;
+        });
+        if (!mealReplaced) {
+          finalMeals.push(finalNewMealItem);
+        }
+        return { ...day, meals: finalMeals };
       });
-      const finalMenu: MealPlan = { ...menu, days: finalUpdatedDays };
-      setMenu(finalMenu);
-      await saveMenu(finalMenu);
 
-      return { success: true, error: null };
+      setMenu({ ...finalMenuState, days: finalUpdatedDays });
+      await saveMenu({ ...finalMenuState, days: finalUpdatedDays });
+
+      return { success: true, error: null, data: finalNewMealItem };
+
     } catch (error) {
         setMenu(originalMenu);
         await saveMenu(originalMenu);
@@ -184,19 +203,38 @@ export const MenuProvider: React.FC<{ children: ReactNode }> = ({
   const deleteMeal = async (mealItemId: number): Promise<ApiResponse> => {
     if (!menu) return { success: false, error: {code: null, message: "No menu available"} };
     const originalMenu = JSON.parse(JSON.stringify(menu));
+    let mealToDelete: SlotMeal | undefined;
+
+    menu.days.forEach(day => {
+      const found = day.meals.find(meal => meal.meal_item_id === mealItemId);
+      if (found) mealToDelete = found;
+    });
+
+    if (!mealToDelete) {
+      return { success: false, error: { message: "Meal not found", code: null} };
+    }
 
     const updatedMenu: MealPlan = {
       ...menu,
       days: menu.days.map(day => ({
         ...day,
-        meals: day.meals.filter(meal => meal.meal_item_id !== mealItemId)
+        meals: day.meals.map(meal => {
+          if (meal.meal_item_id !== mealItemId) {
+            return meal;
+          }
+
+          if (meal.slot <= 2) {
+            return {...meal, recipe: null, meal_item_id: null,};
+          }
+          return null;
+        }).filter(Boolean) as SlotMeal[]
       }))
     };
-    setMenu(updatedMenu); 
+    
+    setMenu(updatedMenu);
 
     try {
       await api.delete(`/meal_plans/meal_items/${mealItemId}`);
-      console.log(updatedMenu)
       await saveMenu(updatedMenu);
       return { success: true, error: null };
     } catch (error) {
@@ -208,15 +246,24 @@ export const MenuProvider: React.FC<{ children: ReactNode }> = ({
 
   const removeRecipeFromPlan = (recipeIdToRemove: number) => {
     if (!menu) return;
-    const newMenu: MealPlan = {
+    const updatedMenu: MealPlan = {
       ...menu,
       days: menu.days.map(day => ({
         ...day,
-        meals: day.meals.filter(meal => meal.recipe?.id !== recipeIdToRemove)
+        meals: day.meals.map(meal => {
+          if (meal.recipe?.id !== recipeIdToRemove) {
+            return meal;
+          }
+          if (meal.slot <= 2) {
+            return { ...meal, recipe: null, meal_item_id: null };
+          }
+          return null;
+        }).filter(Boolean) as SlotMeal[]
       }))
     };
-    setMenu(newMenu);
-    saveMenu(newMenu);
+
+    setMenu(updatedMenu);
+    saveMenu(updatedMenu);
   };
   
 
@@ -267,7 +314,7 @@ export const MenuProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <MenuContext.Provider value={value}>
-      {(initialLoadComplete || menu) ? children : null}
+      {children}
     </MenuContext.Provider>
   );
 };

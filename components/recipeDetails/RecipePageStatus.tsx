@@ -26,12 +26,15 @@ const RecipePageStatus: React.FC<RecipePageStatusProps> = ({ status, errorDetail
 
   if (status === 'loading') {
     return (
-      <View style={styles.centeredContainer}>
-        <ActivityIndicator size="large" color={Colors.colors.primary[200]} />
-        <Text style={[globalStyles.mediumBodySemiBold, styles.messageText]}>
-          {t("recipes.detailLoading")} 
-        </Text>
-      </View>
+      <>
+       <Stack.Screen options={{ title: t("recipes.detailLoading") }} />
+        <View style={styles.centeredContainer}>
+          <ActivityIndicator size="large" color={Colors.colors.primary[200]} />
+          <Text style={[globalStyles.mediumBodySemiBold, styles.messageText]}>
+            {t("recipes.detailLoading")} 
+          </Text>
+        </View>
+      </>
     );
   }
 

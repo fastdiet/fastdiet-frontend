@@ -9,20 +9,12 @@ import { RecipeShort } from "@/models/mealPlan";
 // Style imports
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/styles/global";
-import { Coffee, Sun, Moon, Apple, Trash2, ChevronRight, Flame, ArrowRightLeft, Clock, Users  } from "lucide-react-native";
+import { Trash2, ChevronRight, Flame, ArrowRightLeft, Clock, Users } from "lucide-react-native";
+import { getMealTypeDetails } from "@/constants/dishTypes";
 
-
-const getMealIcon = (mealKey: "breakfast" | "lunch" | "dinner") => {
-  switch (mealKey) {
-    case "breakfast": return Coffee;
-    case "lunch": return Sun;
-    case "dinner": return Moon;
-    default: return Apple;
-  }
-};
 
 interface MealCardProps {
-  mealTypeKey: "breakfast" | "lunch" | "dinner";
+  mealType: string;
   mealTypeDisplay: string;
   recipe: RecipeShort;
   onPress?: () => void;
@@ -30,10 +22,9 @@ interface MealCardProps {
   onChange: () => void;
 }
 
-const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onChange }: MealCardProps) => {
+const MealCard = ({ mealType, mealTypeDisplay, recipe, onPress, onDelete, onChange }: MealCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
-  const Icon = getMealIcon(mealTypeKey);
-
+  const { icon: Icon } = getMealTypeDetails(mealType);
   return (
     <Pressable
       style={({ pressed }) => [
@@ -48,7 +39,7 @@ const MealCard = ({ mealTypeKey, mealTypeDisplay, recipe, onPress, onDelete, onC
           <ActivityIndicator style={StyleSheet.absoluteFill} size="large" color={Colors.colors.primary[200]} />
         )}
         <Image
-          source={recipe.image_url ? { uri: recipe.image_url } : require('@/assets/images/recipe-placeholder.jpg')}
+          source={recipe.image_url ? { uri: recipe.image_url} : require('@/assets/images/recipe-placeholder.jpg')}
           style={styles.image}
           onLoadStart={() => setImageLoading(true)}
           onLoadEnd={() => setImageLoading(false)}

@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import globalStyles from '@/styles/global';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -82,14 +83,22 @@ const NoCurrentMenuIndex = () => {
     console.log("Generar menu");
     setIsGenerating(true);
     setErrorMessage("");
-    const {success, error} = await generateMenu();
-    if(!success){
-      setErrorMessage(error?.message ?? "");
+    const response = await generateMenu();
+    if(response.success && response.data){
+      if(response.data.status === "PARTIAL_SUCCESS"){
+        Toast.show({
+          type: 'info',
+          text1: t('index.noMenu.menuGenerated'),
+          text2: t('index.noMenu.partialMenuGenerated'),
+          visibilityTime: 10000,
+        });
+      } else if (response.data.status === 'FULL_SUCCESS') {
+        Toast.show({type: 'success', text1: t('index.noMenu.menuGeneratedSuccessfuly'),});
+      }
+    } else {
+      setErrorMessage(response.error?.message ?? t('errorsBackend.genericError'));
       setIsGenerating(false);
-      return;
     }
-
-    setIsGenerating(false);
   };
 
   return (
@@ -98,64 +107,66 @@ const NoCurrentMenuIndex = () => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ flexGrow: 1}}
         >
-            <PaddingView>
-                    {errorMessage ? <ErrorText text={errorMessage} /> : null}
-                    <TitleParagraph
-                      title={t('index.noMenu.welcome', { name: user?.name})}
-                      paragraph={t('index.noMenu.subtitle')}
-                      titleStyle={{ fontSize: 28, lineHeight: 34}}
-                      containerStyle={{ marginTop: 16 }}
-                    />
-                <View style={styles.featuresCard}>
-                    <Text style={[globalStyles.subtitle, { color: Colors.colors.primary[100], marginBottom: 10 }]}>
-                    {t('index.noMenu.featuresTitle')}
-                    </Text>
-                    
-                    <FeatureItem 
-                    icon="check-circle" 
-                    title={t('index.noMenu.feature1.title')}
-                    description={t('index.noMenu.feature1.description')}
-                    />
-                    
-                    <FeatureItem 
-                    icon="cutlery" 
-                    title={t('index.noMenu.feature2.title')}
-                    description={t('index.noMenu.feature2.description')}
-                    />
-                    
-                    <FeatureItem 
-                    icon="refresh" 
-                    title={t('index.noMenu.feature3.title')}
-                    description={t('index.noMenu.feature3.description')}
-                    />
-                </View>
-                <View style={styles.actionsContainer}>
-                    <PrimaryButton 
-                    title={t('index.noMenu.generateMenu')}
-                    onPress={handleGenerateMenu}
-                    style={styles.primaryButton}
-                    />
-                    
-                    <SecondaryButton 
-                    title={t('index.noMenu.checkPreferences')}
-                    onPress={() => console.log("Revisar o ajustar tus preferencias")}
-                    icon="sliders"
-                    />
-                </View>
+          <PaddingView>
+              <TitleParagraph
+                title={t('index.noMenu.welcome', { name: user?.name})}
+                paragraph={t('index.noMenu.subtitle')}
+                titleStyle={{ fontSize: 28, lineHeight: 34}}
+                containerStyle={{ marginTop: 16 }}
+              />
+              <View style={styles.featuresCard}>
+                  <Text style={[globalStyles.subtitle, { color: Colors.colors.primary[100], marginBottom: 10 }]}>
+                  {t('index.noMenu.featuresTitle')}
+                  </Text>
+                  
+                  <FeatureItem 
+                  icon="check-circle" 
+                  title={t('index.noMenu.feature1.title')}
+                  description={t('index.noMenu.feature1.description')}
+                  />
+                  
+                  <FeatureItem 
+                  icon="cutlery" 
+                  title={t('index.noMenu.feature2.title')}
+                  description={t('index.noMenu.feature2.description')}
+                  />
+                  
+                  <FeatureItem 
+                  icon="refresh" 
+                  title={t('index.noMenu.feature3.title')}
+                  description={t('index.noMenu.feature3.description')}
+                  />
+              </View>
+              <View style={{ marginBottom: 24 }}>
+              {errorMessage ? <ErrorText text={errorMessage}/> : null}
+              </View>
+              <View style={styles.actionsContainer}>
+                <PrimaryButton 
+                  title={t('index.noMenu.generateMenu')}
+                  onPress={handleGenerateMenu}
+                  style={styles.primaryButton}
+                />
+                  
+                <SecondaryButton 
+                  title={t('index.noMenu.checkPreferences')}
+                  onPress={() => router.push('/complete-register/basicInfo?edit=true')}
+                  icon="sliders"
+                />
+              </View>
 
-                <View style={styles.tipContainer}>
-                    <FontAwesome 
-                    name="lightbulb-o" 
-                    size={24} 
-                    color={Colors.colors.accent[100]} 
-                    style={{ marginRight: 12 }} 
-                    />
-                    <Text style={[globalStyles.mediumBodyRegular, styles.tipText]}>
-                    {t('index.noMenu.tip')}
-                    </Text>
-                </View>
-                
-                <View style={{ height: 24 }} />
+              <View style={styles.tipContainer}>
+                  <FontAwesome 
+                  name="lightbulb-o" 
+                  size={24} 
+                  color={Colors.colors.accent[100]} 
+                  style={{ marginRight: 12 }} 
+                  />
+                  <Text style={[globalStyles.mediumBodyRegular, styles.tipText]}>
+                  {t('index.noMenu.tip')}
+                  </Text>
+              </View>
+              
+              <View style={{ height: 24 }} />
             </PaddingView>
       </ScrollView>
       <FullScreenLoading visible={isGenerating} />
@@ -166,13 +177,15 @@ const NoCurrentMenuIndex = () => {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: Colors.colors.neutral[100] 
+    backgroundColor: Colors.colors.gray[100] 
   },
   
   featuresCard: { 
     marginTop: 32,
     marginVertical: 24,
-    
+    backgroundColor: Colors.colors.neutral[100], 
+    borderRadius: 14,
+    padding: 16,
   },
   featureContainer: { 
     flexDirection: 'row', 
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
     marginRight: 12
   },
   actionsContainer: { 
-    marginTop: 8, 
+    //marginTop: 8, 
     marginBottom: 24
   },
   primaryButton: { 
