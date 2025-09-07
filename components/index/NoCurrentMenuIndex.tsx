@@ -104,8 +104,8 @@ const NoCurrentMenuIndex = () => {
   return (
     <View style={styles.container}>
         <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
         >
           <PaddingView>
               <TitleParagraph

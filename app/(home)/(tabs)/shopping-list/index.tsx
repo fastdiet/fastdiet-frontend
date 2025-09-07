@@ -151,6 +151,7 @@ const ShoppingListScreen = () => {
         text2: t('errorsFrontend.shareFailedSubtitle'),
       });
     } finally {
+      console.log("Cleaning up sharing state");
       setIsSharing(false);
     }
   };

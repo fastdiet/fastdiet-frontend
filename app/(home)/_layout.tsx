@@ -3,12 +3,16 @@ import { Colors } from "@/constants/Colors";
 import { MenuProvider } from "@/context/MenuContext";
 import { MyRecipesProvider } from "@/context/MyRecipesContext";
 import { useAuth } from "@/hooks/useAuth";
-import { Redirect,Stack, useRouter } from "expo-router";
+import { Redirect, SplashScreen,Stack, useRouter } from "expo-router";
 
 
 export default function HomeLayout() {
 
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) {
+    SplashScreen.preventAutoHideAsync();
+    return null;
+  }
   const router = useRouter();
   if (!user) return <Redirect href="/login"/>
 

@@ -7,6 +7,7 @@ import {
   getUser,
   deleteAccessToken,
   deleteRefreshToken,
+  getAccessToken,
 } from "@/utils/secureTokens";
 import api from "@/utils/api";
 import { handleApiError } from "@/utils/errorHandler";
@@ -70,18 +71,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   // Load user on mount
   useEffect(() => {
-    const loadUser = async () => {
+    const load = async () => {
       const storedUser = await getUser();
-      if (storedUser) setUser(storedUser);
-    };
-    const loadUserPreferences = async () => {
+      const storedToken = await getAccessToken();
       const storedUserPreferences = await getUserPreferences();
+
+      if (storedToken && storedUser) {
+        setUser(storedUser);
+      } else {
+        setUser(null);
+      }
+
       if (storedUserPreferences) setUserPreferences(storedUserPreferences);
+
+      setLoading(false);
     };
-    
-    loadUser();
-    loadUserPreferences();
-    setLoading(false);
+    load();
   }, []);
 
   

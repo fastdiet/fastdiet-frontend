@@ -7,7 +7,7 @@ export default function IndexLayout() {
   const { t } = useTranslation();
   return (
     <Stack 
-        screenOptions={{ contentStyle: { backgroundColor: Colors.colors.gray[100] }}}
+      screenOptions={{ contentStyle: { backgroundColor: Colors.colors.gray[100] }}}
     >
       <Stack.Screen 
         name="index" 

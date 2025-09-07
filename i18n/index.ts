@@ -13,7 +13,7 @@ const resources = {
 const normalizeLanguageCode = (locale: string): string => {
   if (locale.startsWith("es")) return "es-ES";
   if (locale.startsWith("en")) return "en-US";
-  return "es-ES";
+  return "en-US";
 };
 
 const getSavedLanguage = async (): Promise<string> => {
@@ -21,13 +21,13 @@ const getSavedLanguage = async (): Promise<string> => {
     const storedLang = await AsyncStorage.getItem("language");
     if (storedLang) return normalizeLanguageCode(storedLang);
 
-    const systemLang = Localization.getLocales()[0]?.languageTag || "es-ES";
+    const systemLang = Localization.getLocales()[0]?.languageTag || "en-US";
     const normalizedLang = normalizeLanguageCode(systemLang);
     await AsyncStorage.setItem("language", normalizedLang);
     return normalizedLang;
   } catch (error) {
     console.error("Error getting saved language:", error);
-    return "es-ES";
+    return "en-US";
   }
 };
 
@@ -37,7 +37,7 @@ export const initI18n = async () => {
   i18n.use(initReactI18next).init({
     resources,
     lng: savedLanguage,
-    fallbackLng: "es-ES",
+    fallbackLng: "en-US",
     interpolation: {
       escapeValue: false,
     },

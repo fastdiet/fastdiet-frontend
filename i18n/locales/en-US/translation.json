@@ -10,18 +10,18 @@
       "forgotPassword": "Forgot your password? ",
       "recoverLink": "Recover",
       "notAccount": "Don't have an account? ",
-      "registerLink": "Sign up for free",
+      "registerLink": "Sign up free",
       "google": "Sign in with Google"
     },
     "register": {
       "titleParagraph": {
-        "title": "Sign up for free",
-        "paragraph": "Start your journey toward a healthier life today."
+        "title": "Sign up free",
+        "paragraph": "Start today and begin your journey to a healthier life"
       },
       "email": "Email",
       "password": "Password",
-      "repeatPassword": "Repeat your password",
-      "passwordDetails": "Your password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character",
+      "repeatPassword": "Repeat password",
+      "passwordDetails": "Your password must be at least 8 characters and include an uppercase, a lowercase, a number, and a special character",
       "alreadyAccount": "Already have an account? ",
       "loginLink": "Log in"
     },
@@ -39,145 +39,908 @@
         "title": "Verify code",
         "paragraph": "Enter the 6-digit code we sent to "
       },
+      "emailVerified": "Email verified",
+      "completeProfile": "Complete your profile",
+      "codeSent": "Code sent",
+      "codeSentDescription": "A new verification code has been sent to your email",
       "codePlaceholder": "6-digit code",
-      "noCode": "Didn't receive the code? ",
-      "sendOtherCodeLink": "Request a new code",
+      "noCode": "Didn't get the code? ",
+      "sendOtherCodeLink": "Request another",
       "verify": "Verify code",
-      "sending": "Sending..."
+      "sending": "Sending...",
+      "verifyEmail": "Verify your email",
+      "codeResent": "Code resent",
+      "codeResentDescription": "A new code has been sent to your email",
+      "codeVerified": "Code verified",
+      "establishNewPassword": "Set your new password"
     },
     "resetPassword": {
       "titleParagraph": {
         "title": "New password",
         "paragraph": "Set a new password for your account"
       },
+      "passwordUpdated": "Password updated successfully",
       "newPassword": "New password",
       "confirmPassword": "Confirm password",
       "updatePassword": "Update password"
     },
     "completeRegister": {
       "basic": {
+        "title": "Personal info",
         "titleParagraph": {
           "title": "Welcome to FastDiet!",
-          "paragraph": "Start by creating your profile to enjoy a personalized experience"
+          "paragraph": "Start by creating your profile for a personalized experience"
         },
         "name": "Name",
-        "username": "Username"
+        "username": "Username",
+        "gender": "Gender",
+        "age": "Age",
+        "weight": "Weight (kg)",
+        "height": "Height (cm)"
+      },
+       "activity": {
+        "title": "Activity",
+        "titleParagraph": {
+          "title": "Choose your activity level",
+          "paragraph": "This helps us better estimate your daily calorie needs"
+        }
+      },
+      "goal": {
+        "title": "Goal",
+        "titleParagraph": {
+          "title": "What's your goal?",
+          "paragraph": "Pick your target to adjust your nutrition plan"
+        }
       },
       "diet": {
+        "title": "Diet",
         "titleParagraph": {
           "title": "Select your diet type",
-          "paragraph": "Choose your eating style. If you don't follow a specific diet, select 'Balanced'"
+          "paragraph": "Choose how you eat. If you don't follow one, select 'Balanced'"
         }
       },
       "cuisine": {
+        "title": "Cuisines",
         "titleParagraph": {
-          "title": "What cuisines do you like?",
-          "paragraph": "Select the types of cuisine you prefer to include in your diet"
+          "title": "Which cuisines do you like?",
+          "paragraph": "Select the types of cuisines you'd like to include in your diet"
         }
       },
       "intolerance": {
+        "title": "Intolerances",
         "titleParagraph": {
           "title": "Do you have any intolerances?",
-          "paragraph": "Select the food you want to avoid in your meal plans"
+          "paragraph": "Choose the foods you want to avoid in your meal plans"
         }
       }
     }
   },
+   "activity": {
+    "sedentary": {
+      "title": "Sedentary",
+      "description": "Little to no physical activity, desk job, mostly inactive lifestyle."
+    },
+    "light": {
+      "title": "Light activity",
+      "description": "Light exercise 1-3 days per week or a low-intensity job."
+    },
+    "moderate": {
+      "title": "Moderate activity",
+      "description": "Moderate exercise 3-5 days per week or a somewhat active job."
+    },
+    "high": {
+      "title": "High activity",
+      "description": "Intense exercise 6-7 days per week or physically demanding work."
+    },
+    "very_high": {
+      "title": "Very high activity",
+      "description": "Very intense training, pro athletes, or two workouts a day."
+    }
+  },
+  "goal": {
+    "lose_weight": {
+      "title": "Lose weight",
+      "description": "Reduce body fat while keeping muscle mass."
+    },
+    "maintain_weight": {
+      "title": "Maintain weight",
+      "description": "Keep your current weight in a healthy way."
+    },
+    "gain_weight": {
+      "title": "Build muscle",
+      "description": "Increase weight with a focus on muscle growth."
+    }
+  },
   "constants": {
     "diets": {
-      "balanced": "Balanced",
-      "vegetarian": "Vegetarian",
+      "1": "Balanced",
+      "2": "Vegetarian",
+      "3": "Vegan",
+      "4": "Gluten Free",
+      "5": "Dairy Free",
+      "6": "Pescatarian",
+      "7": "Keto",
+      "8": "Lacto-Vegetarian",
+      "9": "Ovo-Vegetarian",
+      "10": "Paleo",
+      "11": "Primal",
+      "12": "Low FODMAP",
+      "13": "Whole 30"
+    },
+    "dietTags": {
+      "lacto ovo vegetarian": "Vegetarian",
       "vegan": "Vegan",
-      "glutenFree": "Gluten-Free",
-      "pescetarian": "Pescetarian",
+      "gluten free": "Gluten Free",
+      "dairy free": "Dairy Free",
+      "pescatarian": "Pescatarian",
       "ketogenic": "Keto",
-      "lactoVegetarian": "Lacto-Vegetarian",
-      "ovoVegetarian": "Ovo-Vegetarian",
-      "paleo": "Paleo",
+      "lacto vegetarian": "Lacto-Vegetarian",
+      "ovo vegetarian": "Ovo-Vegetarian",
+      "paleolithic": "Paleo",
       "primal": "Primal",
-      "lowFodmap": "Low FODMAP",
-      "whole30": "Whole30"
+      "fodmap friendly": "Low FODMAP",
+      "whole 30": "Whole 30"
     },
-    "cuisines": {
-      "european": "European",
-      "american": "American",
-      "asian": "Asian",
-      "african": "African",
-      "mediterranean": "Mediterranean",
-      "latinAmerican": "Latin American",
-      "spanish": "Spanish",
-      "italian": "Italian",
-      "french": "French",
-      "british": "British",
-      "german": "German",
-      "greek": "Greek"
+    "cuisines":{
+      "European": "European",
+      "American": "American",
+      "Asian": "Asian",
+      "African": "African",
+      "Mediterranean": "Mediterranean",
+      "Latin American": "Latin American",
+      "Spanish": "Spanish",
+      "Italian": "Italian",
+      "French": "French",
+      "British": "British",
+      "German": "German",
+      "Greek": "Greek",
+      "English": "English",
+      "Scottish": "Scottish",
+      "Thai": "Thai",
+      "Chinese": "Chinese",
+      "Indian": "Indian",
+      "Mexican": "Mexican",
+      "Vietnamese": "Vietnamese",
+      "Irish": "Irish",
+      "Middle eastern": "Middle eastern",
+      "Japanese": "Japanese",
+      "Southern": "Southern",
+      "Nordic": "Nordic",
+      "Scandinavian": "Scandinavian",
+      "South american": "South american"
     },
-    "intolerances": {
-      "dairy": "Dairy",
-      "gluten": "Gluten",
-      "egg": "Egg",
-      "peanut": "Peanut",
-      "treeNut": "Tree nuts",
-      "shellfish": "Shellfish and mollusks",
+    "intolerances":{
+      "Dairy": "Dairy",
+      "Gluten": "Gluten",
+      "Egg": "Egg",
+      "Peanut": "Peanut",
+      "Tree Nut": "Tree Nut",
+      "Shellfish": "Shellfish",
+      "Seafood": "Seafood",
+      "Soy": "Soy",
+      "Wheat": "Wheat",
+      "Sesame": "Sesame",
+      "Sulfite": "Sulfite",
+      "Grain": "Grain"
+    },
+    "equipment":{
+      "skimmer": "skimmer",
+      "pie form": "pie form",
+      "glass baking pan": "glass baking pan",
+      "garlic press": "garlic press",
+      "meat grinder": "meat grinder",
+      "tongs": "tongs",
+      "bread knife": "bread knife",
+      "tajine pot": "tajine pot",
+      "wire rack": "wire rack",
+      "mincing knife": "mincing knife",
+      "cherry pitter": "cherry pitter",
+      "wooden skewers": "wooden skewers",
+      "kitchen scissors": "kitchen scissors",
+      "blow torch": "blow torch",
+      "broiler pan": "broiler pan",
+      "heart shaped silicone form": "heart shaped silicone form",
+      "grill": "grill",
+      "immersion blender": "immersion blender",
+      "baking sheet": "baking sheet",
+      "oven mitt": "oven mitt",
+      "pastry bag": "pastry bag",
+      "palette knife": "palette knife",
+      "pizza cutter": "pizza cutter",
+      "bottle opener": "bottle opener",
+      "bowl": "bowl",
+      "pizza pan": "pizza pan",
+      "candy thermometer": "candy thermometer",
+      "rolling pin": "rolling pin",
+      "frying pan": "frying pan",
+      "casserole dish": "casserole dish",
+      "plastic wrap": "plastic wrap",
+      "salad spinner": "salad spinner",
+      "broiler": "broiler",
+      "silicone muffin tray": "silicone muffin tray",
+      "meat tenderizer": "meat tenderizer",
+      "edible cake image": "editable cake image",
+      "measuring spoon": "measuring spoon",
+      "kitchen thermometer": "kitchen thermometer",
+      "sifter": "sifter",
+      "muffin tray": "muffin tray",
+      "chocolate mold": "chocolate mold",
+      "kitchen towels": "kitchen towels",
+      "potato ricer": "potato ricer",
+      "silicone kugelhopf pan": "silicone kugelhopf pan",
+      "offset spatula": "offset spatula",
+      "cheesecloth": "cheesecloth",
+      "lemon squeezer": "lemon squeezer",
+      "cake form": "cake form",
+      "mini muffin tray": "mini muffin tray",
+      "carving fork": "carving fork",
+      "egg slicer": "egg slicer",
+      "ice cube tray": "ice cube tray",
+      "corkscrew": "corkscrew",
+      "ice cream machine": "ice cream machine",
+      "sieve": "sieve",
+      "kugelhopf pan": "kugelhopf pan",
+      "pastry brush": "pastry bush",
+      "popsicle sticks": "popsicle sticks",
+      "spatula": "spatula",
+      "cake server": "cake server",
+      "poultry shears": "poultry shears",
+      "box grater": "box grater",
+      "cupcake toppers": "cupcake toppers",
+      "funnel": "funnel",
+      "drinking straws": "drinking straws",
+      "slotted spoon": "slotted spoon",
+      "ceramic pie form": "ceramic pie form",
+      "pepper grinder": "pepper grinder",
+      "mortar and pestle": "mortar and pestle",
+      "baster": "baster",
+      "melon baller": "melon baller",
+      "zester": "zester",
+      "pastry cutter": "pastry cutter",
+      "ziploc bags": "ziploc bags",
+      "aluminum foil": "aluminum foil",
+      "toothpicks": "toothpicks",
+      "pot": "pot",
+      "baking pan": "baking pan",
+      "ladle": "ladle",
+      "apple cutter": "apple cutter",
+      "fillet knife": "fillet knife",
+      "toaster": "toaster",
+      "heart shaped cake form": "heart shaped cake form",
+      "grill pan": "grill pan",
+      "wooden spoon": "wooden spoon",
+      "paper towels": "paper towels",
+      "cookie cutter": "cookie cutter",
+      "tart form": "tart form",
+      "pizza board": "pizza board",
+      "glass casserole dish": "glass casserole dish",
+      "madeleine form": "madeleine form",
+      "metal skewers": "metal skewers",
+      "microplane": "microplane",
+      "stand mixer": "stand mixer",
+      "whisk": "whisk",
+      "mixing bowl": "mixing bowl",
+      "deep fryer": "deep fryer",
+      "canning jar": "canning jar",
+      "cheese knife": "cheese knife",
+      "hand mixer": "hand mixer",
+      "butter curler": "butter curler",
+      "food processor": "food processor",
+      "wax paper": "wax paper",
+      "grater": "grater",
+      "gravy boat": "gravy boat",
+      "muffin liners": "muffin liners",
+      "butter knife": "butter knife",
+      "waffle iron": "waffle iron",
+      "double boiler": "double boiler",
+      "can opener": "can opener",
+      "mandoline": "mandoliea",
+      "kitchen twine": "kitchen twine",
+      "juicer": "juicer",
+      "wok": "wok",
+      "measuring cup": "measuring cup",
+      "ramekin": "ramekin",
+      "airfryer": "airfryer",
+      "instant pot": "instant pot",
+      "spoon": "spoon",
+      "dough scraper": "dough scraper",
+      "microwave": "microwave",
+      "roasting pan": "roasting pan",
+      "pressure cooker": "pressure cooker",
+      "dehydrator": "dehydrator",
+      "baking paper": "baking paper",
+      "silicone muffin liners": "silicone muffin liners",
+      "loaf pan": "loaf pan",
+      "cake topper": "cake topper",
+      "dutch oven": "dutch oven",
+      "baking spatula": "baking spatula",
+      "popsicle molds": "popsicle molds",
+      "teapot": "teapot",
+      "cocktail sticks": "cocktail sticks",
+      "cleaver": "cleaver",
+      "rice cooker": "rice cooker",
+      "bread machine": "bread machine",
+      "fork": "fork",
+      "ice cream scoop": "ice cream scoop",
+      "slow cooker": "slow cooker",
+      "knife": "knife",
+      "kitchen scale": "kitchen scale",
+      "griddle": "griddle",
+      "frosting cake topper": "frosting cake topper",
+      "cutting board": "cutting board",
+      "cake pop mold": "cake pop mold",
+      "oven": "oven",
+      "colander": "colander",
+      "kitchen timer": "kitchen timer",
+      "panini press": "panini press",
+      "pasta machine": "pasta machine",
+      "popcorn maker": "popcorn maker",
+      "lollipop sticks": "lollipop sticks",
+      "steamer basket": "steamer basket",
+      "chopsticks": "chopsticks",
+      "chefs knife": "chefs knife",
+      "blender": "blender",
+      "pizza stone": "pizza stone",
+      "skewers": "skewers",
+      "sauce pan": "sauce pan",
+      "peeler": "peeler",
+      "stove": "stove",
+      "pot holder": "pot holder",
+      "springform pan": "springform pan",
+      "apple corer": "apple corer",
+      "potato masher": "potato masher",
+      "serrated knife": "serrated knife"
+    },
+    "aisles": {
+      "baking": "Baking",
+      "pastaAndRice": "Pasta & Rice",
+      "cereal": "Cereals",
+      "pantryItems": "Pantry",
+      "cannedAndJarred": "Canned & Jarred",
+      "spicesAndSeasonings": "Spices & Seasonings",
+      "oilsAndVinegars": "Oils & Vinegars",
+      "condiments": "Condiments & Sauces",
+      "nutButtersAndJams": "Jams, Nut Butters & Honey",
+      "produce": "Produce",
+      "meat": "Meat",
       "seafood": "Seafood",
-      "soy": "Soy",
-      "wheat": "Wheat",
-      "sesame": "Sesame",
-      "sulfite": "Sulfites",
-      "grain": "Grains"
+      "dairy": "Dairy & Eggs",
+      "cheese": "Cheese",
+      "bread": "Bakery",
+      "refrigerated": "Refrigerated",
+      "frozen": "Frozen",
+      "beverages": "Beverages",
+      "teaAndCoffee": "Tea & Coffee",
+      "alcoholicBeverages": "Alcoholic Drinks",
+      "savorySnacks": "Savory Snacks",
+      "sweetSnacks": "Sweet Snacks",
+      "nuts": "Nuts",
+      "driedFruits": "Dried Fruits",
+      "healthFoods": "Health Foods",
+      "ethnicFoods": "International Foods",
+      "glutenFree": "Gluten-Free",
+      "gourmet": "Gourmet",
+      "online": "Online shopping",
+      "grillingSupplies": "BBQ Supplies",
+      "homemade": "Homemade",
+      "generic": "Own Ingredients"
+    },
+    "days": {
+      "0": "Monday",
+      "1": "Tuesday",
+      "2": "Wednesday",
+      "3": "Thursday",
+      "4": "Friday",
+      "5": "Saturday",
+      "6": "Sunday",
+      "today": "Today"
+    },
+    "daysShort": {
+      "0": "Mon",
+      "1": "Tue",
+      "2": "Wed",
+      "3": "Thu",
+      "4": "Fri",
+      "5": "Sat",
+      "6": "Sun"
+    },
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "snack": "Snack",
+      "dessert": "Dessert",
+      "salad": "Salad",
+      "beverage": "Beverage",
+      "appetizer": "Appetizer",
+      "morning meal": "Morning meal",
+      "brunch": "Brunch",
+      "main course": "Main course",
+      "main dish": "Main dish",
+      "side dish": "Side dish",
+      "soup": "Soup",
+      "drink": "Drink",
+      "antipasti": "Antipasti",
+      "starter": "Starter",
+      "antipasto": "Antipasto",
+      "hor d'oeuvre": "Hors d'oeuvre",
+      "fingerfood": "Finger food"
     }
   },
   "errorsBackend": {
-    "invalidCredentials": "Incorrect username or password",
-    "userNotVerified": "User not verified. Please check your email",
-    "emailAlreadyRegistered": "Email already registered",
     "userNotFound": "User not found",
-    "userAlreadyVerified": "User already verified",
+    "usernameExists": "Username already exists",
+    "emailAlreadyRegistered": "This email is already registered",
+    "emailAlreadyVerified": "This email is already verified",
     "invalidEmail": "Invalid email",
     "emailSendError": "Error sending email. Please try again",
-    "invalidRefreshToken": "Invalid or expired refresh token",
+    "userNotVerified": "User not verified. Please verify your email",
+    "invalidCredentials": "Incorrect username or password",
     "invalidToken": "Invalid token",
-    "verifyEmailBeforeReset": "You must verify your email before resetting the password",
-    "invalidResetCode": "Incorrect or expired reset code",
-    "invalidCode": "Incorrect or expired verification code",
-    "usernameExists": "Username already exists",
-    "dietTypeNotFound": "Diet type not found",
+    "invalidRefreshToken": "Invalid or expired refresh token",
+    "invalidVerificationCode": "The verification code is invalid or expired",
+    "invalidResetCode": "The reset code is invalid or expired",
+
+    "recipeNotFound": "Recipe not found",
+    "recipeLinkedToMealPlan": "This recipe is part of your weekly plan",
+    "duplicatedIngredient": "There’s a duplicated ingredient in the recipe",
+    "cannotDeleteImportedRecipe": "You cannot delete this recipe",
+    "mealItemNotFound": "Meal not found in the plan",
+    "mealPlanGenerationFailed": "Could not generate weekly plan. Please try again later",
+    "userPreferencesNotFound": "User preferences not found",
+    "preferencesTooStrict": "Not enough recipes found. Please review your preferences",
     "cuisineRegionsNotFound": "Cuisine types not found",
-    "genericError": "An unexpected error occurred",
+    "intolerancesNotFound": "Selected intolerances not found",
+    "dietTypeNotFound": "Diet type not found",
+    "genericError": "An error occurred. Please try again later",
+    "incorrectCurrentPassword": "Current password is incorrect",
+    "internalServerError": "Internal error occurred. Please try again",
     "networkError": "Connection issue. Check your internet",
-    "timeoutError": "The request is taking too long",
-    "serverError": "Server error. Please try again later"
+    "timeoutError": "Request took too long. Please check your internet",
+    "serverError": "Network error. Make sure you're connected"
   },
   "errorsFrontend": {
-    "selectCuisine": "Please choose at least one type of cuisine",
-    "selectDiet": "Please choose a type of diet",
+    "shareFailedTitle": "Sharing error",
+    "shareFailedSubtitle": "Could not generate PDF. Please try again",
+    "selectCuisine": "Please choose at least one cuisine type",
+    "selectDiet": "Please choose a diet type",
+    "selectActivity": "Select a physical activity level",
+    "selectGoal": "Select a goal",
+    "reviewForm": "Review the form",
+    "someInvalidFields": "Some fields contain errors",
+    "recipeNotSaved": "Recipe could not be saved",
     "validations": {
+      "required": "This field is required",
+      "atLeastOneSelected": "Select at least one option",
+      "numericInvalid": "Value must be a valid number",
+      "positiveNumberInvalid": "Value must be a positive number",
       "emptyUserid": "Please enter your username or email",
-      "usernameRequired": "Username is required.",
-      "usernameLength": "Username must be between 3 and 20 characters.",
-      "usernameNoSpaces": "Username cannot contain spaces.",
-      "usernameInvalidChars": "Username can only contain letters, numbers, underscores, and hyphens.",
+      "usernameRequired": "Username is required",
+      "usernameLength": "Username must be between 3 and 20 characters",
+      "usernameNoSpaces": "Username cannot contain spaces",
+      "usernameInvalidChars": "Username can only include letters, numbers, underscores, and hyphens",
 
-      "emailRequired": "Email is required.",
-      "emailInvalid": "Email is not valid.",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is not valid",
 
-      "passwordRequired": "Password is required.",
-      "passwordMinLength": "Password must be at least 8 characters long",
-      "passwordUppercase": "Password must contain at least one uppercase letter",
-      "passwordLowercase": "Password must contain at least one lowercase letter",
-      "passwordDigit": "Password must contain at least one number",
-      "passwordSpecialChar": "Password must contain at least one special character",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordUppercase": "Password must include at least one uppercase letter",
+      "passwordLowercase": "Password must include at least one lowercase letter",
+      "passwordDigit": "Password must include at least one number",
+      "passwordSpecialChar": "Password must include at least one special character",
 
-      "passwordCheckRequired": "Please confirm your password.",
-      "passwordsDontMatch": "Passwords do not match.",
+      "passwordCheckRequired": "Please confirm your password",
+      "passwordsDontMatch": "Passwords do not match",
 
-      "confirmationCodeRequired": "Please enter the verification code.",
-      "confirmationCodeInvalid": "The code must be 6 digits.",
+      "confirmationCodeRequired": "Please enter the verification code",
+      "confirmationCodeInvalid": "The code must be 6 digits",
 
-      "nameRequired": "Name is required.",
-      "nameLength": "Name must be between 3 and 50 characters."
+      "nameRequired": "Name is required",
+      "nameLength": "Name must be between 3 and 50 characters",
+      "recipeTitleLength": "Recipe title cannot exceed 60 characters",
+
+      "ageRequired": "Age is required",
+      "ageInvalid": "Enter a valid age",
+      "weightRequired": "Weight is required",
+      "weightInvalid": "Enter a valid weight",
+      "heightRequired": "Height is required",
+      "heightInvalid": "Enter a valid height in cm",
+      "genderRequired": "Select a gender",
+      "ingredientMissingAmount": "Ingredient \"{{name}}\" needs an amount",
+      "ingredientMissingName": "You added an amount without specifying the ingredient",
+      "ingredientInvalidUnit": "Ingredient unit for \"{{name}}\" cannot be a number",
+      "ingredientDuplicated": "Ingredient \"{{name}}\" is duplicated"
     }
   },
+  "index": {
+    "noMenu": {
+      "welcome": "Hi, {{name}}! 👋",
+      "subtitle": "Time to organize your meals",
+      "generateMenu": "Generate your weekly menu",
+      "menuGeneratedSuccessfuly": "Menu generated successfully",
+      "menuGenerated": "Weekly menu ready!",
+      "partialMenuGenerated": "We created a shorter plan to match your preferences. For a full plan, review your settings",
+      "checkPreferences": "Review your preferences",
+      "featuresTitle": "Benefits of your personalized menu",
+      "feature1": {
+        "title": "Save time",
+        "description": "Automatic planning based on your preferences"
+      },
+      "feature2": {
+        "title": "Balanced nutrition",
+        "description": "Recipes tailored to your needs"
+      },
+      "feature3": {
+        "title": "Variety guaranteed",
+        "description": "Never run out of ideas to cook"
+      },
+      "tip": "For best results, keep your profile up to date.",
+      "loading": {
+        "preparingKitchen": "Getting the kitchen ready...",
+        "sharpeningKnives": "Sharpening knives...",
+        "cookingIdeas": "Cooking up ideas...",
+        "creatingMenu": "Creating your custom menu...",
+        "platingOptions": "Plating your options...",
+        "almostReady": "Your menu is almost ready!"
+      }
+    },
+    "menu": {
+      "title": "Weekly Menu",
+      "subtitle": "Here’s your plan for the week",
+      "noMealsForDay": "No meals",
+      "day": {
+        "noBreakfastPlanned": "No breakfast planned",
+        "noLunchPlanned": "No lunch planned",
+        "noDinnerPlanned": "No dinner planned",
+        "addExtraMeal": "Add Extra Meal or Drink",
+        "noSnackPlanned": "Add a snack",
+        "noDessertPlanned": "Add a dessert"
+      },
+      "addExtraMealModal": {
+        "title": "What type of meal do you want to add?"
+      },
+      "deleteMeal": {
+        "confirmTitle": "Delete meal",
+        "confirmMessage": "Are you sure you want to remove this meal from the plan?",
+        "success": "Meal deleted successfully"
+      },
+      "changeMeal": {
+        "title": "Change meal",
+        "suggestions": "Suggestions",
+        "myRecipes": "My Recipes",
+        "loading": "Loading suggestions...",
+        "noSuggestions": {
+          "title": "No suggestions available",
+          "subtitle": "We couldn’t find suitable suggestions for you right now"
+        },
+        "success": "Meal updated successfully"
+      },
+      "error": {
+        "invalidDayTitle": "Invalid day",
+        "invalidDayMessage": "The selected day is invalid or the menu couldn’t be loaded.",
+        "goBack": "Back to menu"
+      },
+      "loading": "Loading your menu...",
+      "recipe": {
+        "detailTitleFallback": "Recipe Details",
+        "loading": "Loading recipe...",
+        "notFoundTitle": "Recipe Not Found",
+        "notFound": "Oops! We couldn’t find the recipe",
+        "couldNotLoad": "There was a problem loading the details. Please try again.",
+        "ingredientsSectionTitle": "Ingredients",
+        "instructionsSectionTitle": "Preparation",
+        "equipmentSectionTitle": "Required Equipment",
+        "nutritionalInfoSectionTitle": "Nutritional Info",
+        "showDetailedNutrients": "Show all nutrients",
+        "hideDetailedNutrients": "Hide detailed nutrients"
+      }
+    }
+  },
+  "profile": {
+    "confirmDeleteTitle": "Delete account?",
+    "confirmDeleteMessage": "This will permanently delete your account and all data. Are you sure?",
+    "confirmDeleteButton": "Yes, delete account",
+    "goalUpdated": "Goal updated successfully",
+    "activityUpdated": "Activity level updated",
+    "dietUpdated": "Diet type updated",
+    "cuisinesUpdated": "Favorite cuisines updated",
+    "intolerancesUpdated": "Intolerances updated",
+    "personalDataUpdated": "Personal data updated",
+    "passwordUpdated": "Password updated successfully",
+    "notSpecifiedA": "Not specified",
+    "notSpecifiedO": "Not specified",
+    "edit": {
+      "goal": {
+        "title": "Update your goal",
+        "paragraph": "Choose the new goal you want to reach.\nThis will recalculate your calorie needs."
+      },
+      "activity": {
+        "title": "Update your activity level",
+        "paragraph": "This is key to better estimate your daily calorie needs"
+      },
+      "diet": {
+        "title": "Update your diet type",
+        "paragraph": "Choose how you eat. If you don’t follow one, select 'Balanced'"
+      },
+      "cuisines": {
+        "title": "Update your favorite cuisines",
+        "paragraph": "Select the cuisines you’d like to include in your diet"
+      },
+      "intolerances": {
+        "title": "Update your intolerances",
+        "paragraph": "Choose the foods you want to avoid in your plans"
+      },
+      "personalData": {
+        "title": "Update your personal data",
+        "paragraph": "Your weight, height and other info help adjust your nutrition plan"
+      },
+      "changePassword": {
+        "title": "Change password",
+        "paragraph": "To protect your account, enter your current password before setting a new one",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password"
+      }
+    },
+    "dailyCalories": "Daily calories",
+    "goal": "Goal",
+    "currentWeight": "Current weight",
+    "weight": "Weight",
+    "height": "Height",
+    "myProfile": "My Profile",
+    "myPlan": "My Plan",
+    "account": "Account",
+    "email": "Email",
+    "personalData": "Personal data",
+    "changePassword": "Change password",
+    "password": "Password",
+    "dietType": "Diet type",
+    "diet": "Diet",
+    "activityLevel": "Activity level",
+    "cuisines": "Favorite cuisines",
+    "cuisinesTitle": "Cuisines",
+    "cuisinesCount": "{{count}} selected",
+    "cuisinesCount_one": "1 selected",
+    "intolerances": "Intolerances",
+    "intolerancesCount": "{{count}} selected",
+    "intolerancesCount_one": "1 selected",
+    "notSpecified": "Not specified",
+    "logout": "Log out",
+    "logout_confirm": "Are you sure you want to log out?",
+    "deleteAccount": "Delete account",
+    "deleteAccount_confirm_title": "Delete your account",
+    "deleteAccount_confirm_message": "This action is irreversible. Your profile, menus and preferences will be permanently deleted. Are you sure you want to continue?"
+  },
+  "recipes": {
+    "myRecipes": {
+      "title": "My Recipes",
+      "emptyState": "You haven't created any recipes yet. Tap the '+' button to add your first one!",
+      "mealType": "Meal Type"
+    },
+    "units": {
+      "metric": "Metric Sys.",
+      "imperial": "Imperial Sys."
+    },
+    "detailLoading": "Loading recipe...",
+    "notDetailed": "Make your recipe shine! Add the missing details.",
+    "noIngredientsMessage": "No ingredients available",
+    "noInstructionsMessage": "No instructions available",
+    "create": { "title": "Create New Recipe" },
+    "edit": { "title": "Edit Recipe" },
+    "form": {
+      "title": "Recipe Title",
+      "description": "Short description",
+      "ingredients": "Ingredients",
+      "ingredientsPlaceholder": "One ingredient per line (e.g., 200g chicken)",
+      "instructions": "Instructions",
+      "instructionsPlaceholder": "One step per line...",
+      "saveButton": "Save Recipe"
+    }
+  },
+  "myRecipes": {
+    "title": "My Recipes",
+    "subtitle": "Create, edit, and manage your personal recipes",
+    "searchPlaceholder": "Search my recipes...",
+    "createPageTitle": "Create recipe",
+    "editPageTitle": "Edit recipe",
+    "emptyState": {
+      "noRecipes": {
+        "title": "Your recipe book is empty",
+        "subtitle": "Create your first recipe to save it here and use it in your menus",
+        "cta": "Create my first recipe"
+      },
+      "noDishType": {
+        "title_male": "You don't have any saved {{mealType, lowercase}}",
+        "title_female": "You don't have any saved {{mealType, lowercase}}",
+        "subtitle": "Create a new recipe to add it to your menu",
+        "cta_male": "Create a new {{mealType, lowercase}}",
+        "cta_female": "Create a new {{mealType, lowercase}}"
+      },
+      "noSearchResults": {
+        "title": "No results found",
+        "subtitle": "Try searching with different keywords"
+      }
+    },
+    "loading": "Loading your recipes...",
+    "cta": {
+      "createFirst": "Create my first recipe"
+    },
+    "noRecipes": {
+      "title": "You don't have any recipes yet",
+      "subtitle": "Start by creating one! You'll be able to add it to your weekly menu anytime"
+    },
+    "card": {
+      "noDescription": "No description",
+      "servings": "Servings"
+    },
+    "delete": {
+      "confirmTitle": "Delete recipe",
+      "confirmMessage": "Are you sure you want to delete '{{title}}'?",
+      "forceTitle": "Recipe in use",
+      "forceMessage": "This recipe is included in your weekly menu. Do you still want to delete it?",
+      "success": "Recipe successfully deleted"
+    },
+    "form": {
+      "title": "Recipe title",
+      "description": "Short description (optional)",
+      "prepTime": "Time (min)",
+      "minutes": "in minutes",
+      "servings": "Servings",
+      "ingredients": "Ingredients",
+      "ingredientName": "Name",
+      "amount": "Amount",
+      "unit": "Unit",
+      "addIngredient": "Add ingredient",
+      "steps": "Preparation steps",
+      "stepDescription": "Describe step {{number}}",
+      "addStep": "Add step"
+    },
+    "create": {
+      "title": "New recipe",
+      "subtitle": "Fill in the details to save your personalized recipe",
+      "success": "Recipe saved successfully"
+    },
+    "edit": {
+      "title": "Edit recipe",
+      "subtitle": "Update your recipe details",
+      "success": "Recipe updated successfully"
+    },
+    "detail": {
+      "notFoundTitle": "Recipe Not Found",
+      "notFound": "Oops! We couldn't find the recipe"
+    }
+  },
+  "shoppingList": {
+    "title": "Shopping List",
+    "subtitle": "Here you can see the ingredients needed for your weekly menu, organized by sections",
+    "shareTitle": "Share my shopping list",
+    "servingsModal": {
+      "title": "Adjust Servings",
+      "text": "Enter how many people the weekly menu is for.",
+      "subText": "We'll calculate proportional amounts to generate an accurate shopping list.",
+      "generate": "Generate list"
+    },
+    "pdf": {
+      "forUser": "Shopping list for {{name}}",
+      "weekOf": "Week of {{startDate}} to {{endDate}}",
+      "introHello": "Hi, {{name}}! 👋 \n",
+      "introText": "Here's your personalized shopping list for this week's menu. We've organized all the ingredients by section to make your shopping faster and easier.",
+      "generatedBy": "Document generated by",
+      "filename": "FastDiet-Shopping-List-{{date}}.pdf"
+    },
+    "clearChecked": "Clear checked",
+    "error": "We couldn't generate your shopping list. Please try again later",
+    "cta": {
+      "generate": "Generate list"
+    },
+    "empty": {
+      "title": "Your shopping list is empty",
+      "subtitle": "Tap the button to generate a shopping list based on the recipes in your weekly menu"
+    },
+    "emptyToast": {
+      "title": "Empty list",
+      "subtitle": "No ingredients found to display."
+    },
+    "successToast": {
+      "title": "List Generated!",
+      "subtitle": "Your shopping list is ready."
+    },
+    "noMenu": {
+      "title": "No menu found",
+      "subtitle": "Generate a menu first to create your shopping list."
+    },
+    "loading": {
+      "collectingIngredients": "Collecting ingredients...",
+      "organizingAisles": "Organizing sections...",
+      "checkingPantry": "Checking pantry...",
+      "finalizingList": "Finalizing list...",
+      "readyToShop": "Shopping list ready!"
+    }
+  },
+  "imagePicker": {
+    "addPhoto": "Add cover photo",
+    "title1Change": "Change image",
+    "title1Select": "Select image",
+    "title2": "What would you like to do?",
+    "takePhoto": "Take photo",
+    "selectGallery": "Choose from gallery",
+    "deletePhoto": "Delete photo",
+    "cancel": "Cancel",
+    "noGalleryPermissions": "You need to allow access to your photos.",
+    "noCameraPermissions": "You need to allow access to the camera."
+  },
+  "units": {
+    "minutesShort": "min",
+    "kcal": "kcal",
+    "servings": "servings",
+    "serving": "serving"
+  },
+  "tabs": {
+    "menu": "Menu",
+    "myRecipes": "My Recipes",
+    "shoppingList": "Shopping",
+    "profile": "Profile"
+  },
+  "sharing": {
+    "notAvailable": "Sharing is not available on this device."
+  },
+  "all": "All",
   "continue": "Continue",
-  "dividerText": "or if you prefer"
+  "change": "Change",
+  "choose": "Choose",
+  "back": "Back",
+  "save": "Save",
+  "accept": "Accept",
+  "saveRecipe": "Save Recipe",
+  "completeRecipe": "Complete Recipe",
+  "updateRecipe": "Update Recipe",
+  "cancel": "Cancel",
+  "error": "Error",
+  "delete": "Delete",
+  "deleteAnyway": "Delete anyway",
+  "dividerText": "or if you prefer",
+  "male": "Male",
+  "female": "Female",
+  "retry": "Retry",
+  "add": "Add",
+  "backToMenu": "Back to Menu",
+  "seeMore": "See more",
+  "seeLess": "See less",
+  "nutrients": {
+    "calories": "Calories",
+    "protein": "Protein",
+    "fat": "Fat",
+    "saturatedfat": "Saturated Fat",
+    "carbohydrates": "Carbohydrates",
+    "netcarbohydrates": "Net Carbs",
+    "sugar": "Sugar",
+    "cholesterol": "Cholesterol",
+    "sodium": "Sodium",
+    "alcohol": "Alcohol",
+    "alcohol%": "Alcohol %",
+    "manganese": "Manganese",
+    "phosphorus": "Phosphorus",
+    "vitaminb1": "Vitamin B1 (Thiamine)",
+    "magnesium": "Magnesium",
+    "fiber": "Fiber",
+    "selenium": "Selenium",
+    "copper": "Copper",
+    "iron": "Iron",
+    "zinc": "Zinc",
+    "vitaminb6": "Vitamin B6",
+    "calcium": "Calcium",
+    "potassium": "Potassium",
+    "folate": "Folate (Vitamin B9)",
+    "vitaminb2": "Vitamin B2 (Riboflavin)",
+    "vitaminb3": "Vitamin B3 (Niacin)",
+    "vitamink": "Vitamin K",
+    "vitaminc": "Vitamin C",
+    "vitamine": "Vitamin E",
+    "vitaminb5": "Vitamin B5 (Pantothenic Acid)",
+    "vitamina": "Vitamin A",
+    "vitaminb12": "Vitamin B12",
+    "vitamind": "Vitamin D",
+    "caffeine": "Caffeine"
+  }
 }

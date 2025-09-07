@@ -22,7 +22,21 @@ export const useShoppingList = () => {
         '/shopping_lists/me',
         { params: { servings } }
       );
-      setShoppingList(response.data);
+      const filtered: ShoppingListResponse = {
+        ...response.data,
+        aisles: response.data.aisles
+          .map(aisle => ({
+            ...aisle,
+            items: aisle.items.filter(item => {
+              const metricAmount = item.measures.metric?.amount ?? 0;
+              const usAmount = item.measures.us?.amount ?? 0;
+              return metricAmount > 0 || usAmount > 0;
+            })
+          }))
+          .filter(aisle => aisle.items.length > 0),
+      };
+
+      setShoppingList(filtered);
       if (response.data.aisles.length === 0) {
         Toast.show({
           type: "info",

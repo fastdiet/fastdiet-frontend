@@ -22,6 +22,7 @@ export default function MyRecipesLayout() {
         name="create"
         options={{ 
           headerTitle: t("myRecipes.createPageTitle"),
+          headerBackTitle: t('back'),
           headerTitleStyle: {
             ...globalStyles.title,
             fontSize: 20,
